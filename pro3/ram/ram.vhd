@@ -107,6 +107,7 @@ PROCESS(CLK,RST)
 						count := 0;--重置计数器					
 						work_state := 3;--进入读状态
 						addr := addr - "000000000000001010";--恢复addr
+						Ram1Addr <= addr;
 						Ram1Data <= "ZZZZZZZZZZZZZZZZ";--写入数据高阻态
 						Ram1OE <= '0';--读
 						Ram1WE <= '1';
