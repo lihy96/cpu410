@@ -48,7 +48,10 @@ entity ram is
 end ram;
 
 architecture Behavioral of ram is
-
+	signal addr : STD_LOGIC_VECTOR(17 DOWNTO 0);
+	signal data : STD_LOGIC_VECTOR(15 DOWNTO 0);
+	signal adder16 : STD_LOGIC_VECTOR(15 DOWNTO 0);
+	signal adder18 : STD_LOGIC_VECTOR(17 DOWNTO 0);
 BEGIN
 PROCESS(CLK,RST)
 	VARIABLE work_state : INTEGER RANGE 0 TO 4 := 0;
@@ -62,13 +65,10 @@ PROCESS(CLK,RST)
 	-- 1:写入
 	-- 2：写保持开始
 	variable count : INTEGER;
-	variable addr : STD_LOGIC_VECTOR(17 DOWNTO 0);
-	variable data : STD_LOGIC_VECTOR(15 DOWNTO 0);
-	variable adder16 : STD_LOGIC_VECTOR(15 DOWNTO 0);
-	variable adder18 : STD_LOGIC_VECTOR(17 DOWNTO 0);
+	
 	BEGIN
-		adder16 := "0000000000000001";
-		adder18 := "000000000000000001";
+		adder16 <= "0000000000000001";
+		adder18 <= "000000000000000001";
 		IF(RST = '0') THEN	--初始化
 			work_state := 0;
 			count := 0;
@@ -77,60 +77,56 @@ PROCESS(CLK,RST)
 		ELSIF(CLK' EVENT AND CLK = '0') THEN
 			case work_state is
 				when 0 =>
-					addr := "00" & SW;
+					addr <= "00" & SW;
 					work_state := work_state + 1;
 					L <= "1111000011110000";
 
 				when 1 =>
-					data := SW;
+					data <= SW;
 					work_state := work_state + 1;
 					L(7 downto 0) <= addr(7 downto 0);--显示低八位
 					L(15 downto 8) <= data(7 downto 0);
-					--addr := addr - adder18;
-					--data := data - adder16;
 					Ram1OE <= '1';--写
 					Ram1WE <= '1';
 					Ram1En <= '0';
 
 				when 2 =>
 					if(count < 10) then--计数器没到10
-						L(7 downto 0) <= addr(7 downto 0);--显示低八位
-						L(15 downto 8) <= data(7 downto 0);
-						addr := addr + adder18;
-						data := data + adder16;
+						addr <= addr + adder18;
+						data <= data + adder16;
 						Ram1Addr <= addr;
 						Ram1Data <= data;
 						Ram1OE <= '1';--写
 						Ram1WE <= '0';
+						L(7 downto 0) <= addr(7 downto 0);--显示低八位
+						L(15 downto 8) <= data(7 downto 0);
 						count := count + 1;
 					else
-						count := 0;--重置计数器					
-						work_state := 3;--进入读状态
-						addr := addr - "000000000000001010";--恢复addr
-						Ram1Addr <= addr;
+						addr <= addr - "000000000000001010";--恢复addr
+						Ram1Addr <= addr - "000000000000001010";
 						Ram1Data <= "ZZZZZZZZZZZZZZZZ";--写入数据高阻态
 						Ram1OE <= '0';--读
 						Ram1WE <= '1';
 						L <= "1111111111111111";
+						count := 0;--重置计数器
+						work_state := 3;--进入读状态
 					end if;
 				
 				when 3 =>
-					if(count < 10) then--计数器没到10
-						addr := addr + adder18;
-						--L <= "1111111111111111";
+					if(count < 10) then--计数器没到10			
 						Ram1Data <= "ZZZZZZZZZZZZZZZZ";--写入数据高阻态
-						Ram1Addr <= addr;
-						--Ram1Data <= data;
+						Ram1Addr <= addr + adder18;--准备下次写的ram1addr
+						addr <= addr + adder18;--自增
 						Ram1OE <= '0';--读
 						Ram1WE <= '1';
-						-- wait for 100 ns;
 						L <= Ram1Data;
 						count := count + 1;
 					else
-						count := 0;--重置计数器
-						work_state := 4;--进入终态
 						L <= "0101010101010101";
+						count := 0;--重置计数器
+						work_state := 4;--进入终态				
 					end if;
+					
 				when 4 =>
 			end case;
 			--end if;
