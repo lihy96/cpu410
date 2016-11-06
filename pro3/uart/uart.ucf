@@ -1,0 +1,29 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "L[7]" LOC = F11;
+NET "L[6]" LOC = E11;
+NET "L[5]" LOC = D11;
+NET "L[4]" LOC = C11;
+NET "L[3]" LOC = B11;
+NET "L[2]" LOC = A11;
+NET "L[1]" LOC = E10;
+NET "L[0]" LOC = D10;
+NET "Ram1Data[7]" LOC = K13;
+NET "Ram1Data[6]" LOC = K12;
+NET "Ram1Data[5]" LOC = J17;
+NET "Ram1Data[4]" LOC = J16;
+NET "Ram1Data[3]" LOC = J15;
+NET "Ram1Data[2]" LOC = J14;
+NET "Ram1Data[1]" LOC = J13;
+NET "Ram1Data[0]" LOC = J12;
+NET "clk" LOC = B8;
+NET "data_ready" LOC = A16;
+NET "Ram1EN" LOC = M15;
+NET "Ram1OE" LOC = M16;
+NET "Ram1WE" LOC = M18;
+NET "rdn" LOC = C14;
+NET "rst" LOC = U10;
+NET "tbre" LOC = D14;
+NET "tsre" LOC = N9;
+NET "wrn" LOC = U5;
