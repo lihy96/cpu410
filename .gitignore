@@ -79,3 +79,5 @@ cache/*
 *.psg
 *.wdf
 *.wpc
+*.xlsx
+*.pptx
