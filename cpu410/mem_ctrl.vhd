@@ -21,6 +21,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use work.constants.all;
 
 entity mem_ctrl is
 	port(
@@ -49,12 +50,11 @@ architecture Behavioral of mem_ctrl is
 		reading
 	);
 	signal state : state_set := init;
-	constant MEM_READ : STD_LOGIC_VECTOR(1 downto 0) := "01";
-	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10";
+	
 begin
 	process(CLK)
 		begin
-		if (CLK'event and CLK = '0') then
+		if (CLK'event and CLK = '1') then
 			case state is
 				when init =>
 					Ram2EN <= '0';
