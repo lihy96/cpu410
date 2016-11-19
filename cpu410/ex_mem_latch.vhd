@@ -50,10 +50,13 @@ entity ex_mem_latch is
 		
 		-- control signal input
 		IN_WB_CONTROL_SIGNAL : in WB_CONTROL_SIGNAL_TYPE;
+		IN_RAM_READ_WRITE : in STD_LOGIC_VECTOR(1 downto 0);
+		IN_RAM1_WE : in STD_LOGIC;
 		
 		-- control signal output
-		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE
-		
+		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE;
+		OUT_RAM_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
+		OUT_RAM1_WE : out STD_LOGIC
 	);
 end ex_mem_latch;
 
@@ -68,6 +71,7 @@ begin
 			OUT_PC <= IN_PC;
 			OUT_REG_NO : IN_REG_NO;
 			-- to be added : control signals
+			OUT_WB_CONTROL_SIGNAL <= IN_WB_CONTROL_SIGNAL;
 		end if;
 	end process;
 
