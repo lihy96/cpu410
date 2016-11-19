@@ -97,6 +97,26 @@ package constants is
 	constant SHIFT_SRA: std_logic_vector(1 downto 0) := "11";	-- 22
 	constant SHIFT_SRL: std_logic_vector(1 downto 0) := "10";	-- ano
 
+
+	-- controller tell alu work what
+	constant THU_ID_ADD: std_logic_vector(4 downto 0) := "00000";
+	constant THU_ID_BRANCH: std_logic_vector(4 downto 0) := "00001";
+	constant THU_ID_BRANCHE: std_logic_vector(4 downto 0) := "00010";
+	constant THU_ID_BRANCHN: std_logic_vector(4 downto 0) := "00011";
+	constant THU_ID_ASSIGN: std_logic_vector(4 downto 0) := "00100";
+	constant THU_ID_NOP: std_logic_vector(4 downto 0) := "00101";
+	constant THU_ID_OR: std_logic_vector(4 downto 0) := "00110";
+	constant THU_ID_SLL: std_logic_vector(4 downto 0) := "00111";
+	constant THU_ID_SRA: std_logic_vector(4 downto 0) := "01000";
+	constant THU_ID_SUB: std_logic_vector(4 downto 0) := "01001";
+	constant THU_ID_SRL: std_logic_vector(4 downto 0) := "01010";
+	constant THU_ID_NOT: std_logic_vector(4 downto 0) := "01011";
+	constant THU_ID_AND: std_logic_vector(4 downto 0) := "01100";
+	constant THU_ID_LOAD: std_logic_vector(4 downto 0) := "01101";
+	constant THU_ID_JR: std_logic_vector(4 downto 0) := "01110";
+	constant THU_ID_CMP: std_logic_vector(4 downto 0) := "01111";
+	constant THU_ID_EQUAL: std_logic_vector(4 downto 0) := "10000";
+
 end package;
 
 
