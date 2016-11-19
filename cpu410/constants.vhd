@@ -36,6 +36,11 @@ package constants is
 	constant ReadDisable: std_logic := '0';
 	constant WriteDisable: std_logic := '0';
 
+	-- controller
+	constant ZERO3: std_logic_vector(2 downto 0) := "000";
+	constant ZERO4: std_logic_vector(3 downto 0) := "0000";
+	constant ZERO16: std_logic_vector(15 downto 0) := "0000000000000000";
+
 
 	-- funct
 	constant OP_ADDIU: std_logic_vector(4 downto 0) := "01001"; -- 1
