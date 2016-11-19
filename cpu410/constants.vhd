@@ -34,9 +34,9 @@ package constants is
 	
 	-- control signal : WB_CHOOSE
 	type WB_CHOOSE_TYPE is (
-		ALU,
-		MEM,
-		PC
+		ALU_ADDR,
+		MEM_DATA,
+		PC_DATA
 	);
 	
 	-- record type for write back control signal

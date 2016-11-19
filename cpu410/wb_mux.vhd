@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date:    20:10:23 11/19/2016 
+-- Create Date:    23:32:57 11/19/2016 
 -- Design Name: 
--- Module Name:    ex_mem_latch - Behavioral 
+-- Module Name:    wb_mux - Behavioral 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -32,7 +32,7 @@ use work.constants.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ex_mem_latch is
+entity wb_mux is
 	Port ( 
 		CLK : in STD_LOGIC;
 		
@@ -40,45 +40,31 @@ entity ex_mem_latch is
 		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
 		IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
 		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
 		
 		-- data output
-		OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
+		OUT_WB_DATA : out STD_LOGIC_VECTOR(15 downto 0);
 		
 		-- control signal input
-		IN_WB_CONTROL_SIGNAL : in WB_CONTROL_SIGNAL_TYPE;
-		IN_RAM1_READ_WRITE : in STD_LOGIC_VECTOR(1 downto 0);
-		IN_CMP_RS : in STD_LOGIC; --对读写地址进行比较后的结果
+		IN_WB_CHOOSE : in WB_CHOOSE_TYPE;
 		
 		-- control signal output
-		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE;
-		OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
-		OUT_RAM2_WE : out STD_LOGIC
 	);
-end ex_mem_latch;
+end wb_mux;
 
-architecture Behavioral of ex_mem_latch is
+architecture Behavioral of wb_mux is
 
 begin
 	process(CLK)
-		begin
+	begin
 		if (CLK'event and CLK = '1') then
-			OUT_ADDR <= IN_ADDR;
-			OUT_DATA <= IN_DATA;
-			OUT_PC <= IN_PC;
-			OUT_REG_NO : IN_REG_NO;
-			-- to be added : control signals
-			OUT_WB_CONTROL_SIGNAL <= IN_WB_CONTROL_SIGNAL;
-			
-			if (IN_CMP_RS = '0') then --读的是RAM1
-				OUT_RAM1_READ_WRITE <= IN_RAM1_READ_WRITE;--读RAM1
-				OUT_RAM2_WE <= '1'; --禁止RAM2使能
-			else
-				OUT_RAM2_WE <= '0'; --打开RAM1使能
-			end if;
+			case IN_WB_CHOOSE is
+				when ALU_ADDR =>
+					OUT_WB_DATA <= IN_ADDR;
+				when MEM_DARA =>
+					OUT_WB_DATA <= IN_DATA;
+				when PC_DATA =>
+					OUT_WB_DATA <= IN_PC;
+			end case;
 		end if;
 	end process;
 

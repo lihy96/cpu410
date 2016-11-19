@@ -35,7 +35,7 @@ entity mem_ctrl is
 		RAM_OUTPUT : out STD_LOGIC_VECTOR(15 downto 0);
 		
 		-- inner signal, out to ram
-		Ram1Addr : out STD_LOGIC_VECTOR(15 downto 0);
+		Ram1Addr : out STD_LOGIC_VECTOR(17 downto 0);
 		Ram1Data : inout STD_LOGIC_VECTOR(15 downto 0);
 		Ram1OE : out STD_LOGIC;
 		Ram1WE : out STD_LOGIC;
@@ -64,13 +64,13 @@ begin
 						Ram1OE <= '1';
 						Ram1WE <= '1';
 						Ram1Data <= RAM_DATA;
-						Ram1Addr <= RAM_ADDR;
+						Ram1Addr <= "00" & RAM_ADDR;
 					elsif RAM_READ_WRITE = MEM_READ then
 						state <= reading;
 						Ram1OE <= '1';
 						Ram1WE <= '1';
 						Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-						Ram1Addr <= RAM_ADDR;
+						Ram1Addr <= "00" & RAM_ADDR;
 					end if;
 						
 				when writing =>
