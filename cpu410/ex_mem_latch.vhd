@@ -50,13 +50,13 @@ entity ex_mem_latch is
 		
 		-- control signal input
 		IN_WB_CONTROL_SIGNAL : in WB_CONTROL_SIGNAL_TYPE;
-		IN_RAM_READ_WRITE : in STD_LOGIC_VECTOR(1 downto 0);
-		IN_RAM1_WE : in STD_LOGIC;
+		IN_RAM1_READ_WRITE : in STD_LOGIC_VECTOR(1 downto 0);
+		IN_CMP_RS : in STD_LOGIC; --对读写地址进行比较后的结果
 		
 		-- control signal output
 		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE;
-		OUT_RAM_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
-		OUT_RAM1_WE : out STD_LOGIC
+		OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
+		OUT_RAM2_WE : out STD_LOGIC
 	);
 end ex_mem_latch;
 
@@ -72,6 +72,13 @@ begin
 			OUT_REG_NO : IN_REG_NO;
 			-- to be added : control signals
 			OUT_WB_CONTROL_SIGNAL <= IN_WB_CONTROL_SIGNAL;
+			
+			if (IN_CMP_RS = '0') then --读的是RAM1
+				OUT_RAM1_READ_WRITE <= IN_RAM1_READ_WRITE;--读RAM1
+				OUT_RAM2_WE <= '1'; --禁止RAM2使能
+			else
+				OUT_RAM2_WE <= '0'; --打开RAM1使能
+			end if
 		end if;
 	end process;
 
