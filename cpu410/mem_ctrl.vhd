@@ -35,11 +35,11 @@ entity mem_ctrl is
 		RAM_OUTPUT : out STD_LOGIC_VECTOR(15 downto 0);
 		
 		-- inner signal, out to ram
-		Ram2Addr : out STD_LOGIC_VECTOR(15 downto 0);
-		Ram2Data : inout STD_LOGIC_VECTOR(15 downto 0);
-		Ram2OE : out STD_LOGIC;
-		Ram2WE : out STD_LOGIC;
-		Ram2EN : out STD_LOGIC
+		Ram1Addr : out STD_LOGIC_VECTOR(15 downto 0);
+		Ram1Data : inout STD_LOGIC_VECTOR(15 downto 0);
+		Ram1OE : out STD_LOGIC;
+		Ram1WE : out STD_LOGIC;
+		Ram1EN : out STD_LOGIC
 	);
 end mem_ctrl;
 
@@ -57,30 +57,30 @@ begin
 		if (CLK'event and CLK = '1') then
 			case state is
 				when init =>
-					Ram2EN <= '0';
-					--Ram2EN <= '0';
+					Ram1EN <= '0';
+					--Ram1EN <= '0';
 					if RAM_READ_WRITE = MEM_WRITE then
 						state <= writing;
-						Ram2OE <= '1';
-						Ram2WE <= '1';
-						Ram2Data <= RAM_DATA;
-						Ram2Addr <= RAM_ADDR;
+						Ram1OE <= '1';
+						Ram1WE <= '1';
+						Ram1Data <= RAM_DATA;
+						Ram1Addr <= RAM_ADDR;
 					elsif RAM_READ_WRITE = MEM_READ then
 						state <= reading;
-						Ram2OE <= '1';
-						Ram2WE <= '1';
-						Ram2Data <= "ZZZZZZZZZZZZZZZZ";
-						Ram2Addr <= RAM_ADDR;
+						Ram1OE <= '1';
+						Ram1WE <= '1';
+						Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+						Ram1Addr <= RAM_ADDR;
 					end if;
 						
 				when writing =>
-					Ram2WE <= '0';
+					Ram1WE <= '0';
 					RAM_OUTPUT <= "1111111111111111";
 					state <= init;
 				
 				when reading =>
-					Ram2OE <= '0';
-					RAM_OUTPUT <= Ram2Data;
+					Ram1OE <= '0';
+					RAM_OUTPUT <= Ram1Data;
 					state <= init;
 			end case;
 		end if;
