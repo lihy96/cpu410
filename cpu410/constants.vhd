@@ -38,6 +38,13 @@ package constants is
 		MEM,
 		PC
 	);
+	
+	-- record type for write back control signal
+	type WB_CONTROL_SIGNAL_TYPE is record
+		WB_FORWARD : STD_LOGIC;
+		WB_CHOOSE : WB_CHOOSE_TYPE;
+		REG_WN : STD_LOGIC;
+	end record;
 end package;
 
 

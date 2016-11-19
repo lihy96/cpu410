@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date:    21:16:57 11/18/2016 
+-- Create Date:    20:10:23 11/19/2016 
 -- Design Name: 
--- Module Name:    mem_wb_latch - Behavioral 
+-- Module Name:    ex_mem_latch - Behavioral 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -23,7 +23,16 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.constants.all;
 
-entity mem_wb_latch is
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity ex_mem_latch is
 	Port ( 
 		CLK : in STD_LOGIC;
 		
@@ -43,14 +52,12 @@ entity mem_wb_latch is
 		IN_WB_CONTROL_SIGNAL : in WB_CONTROL_SIGNAL_TYPE;
 		
 		-- control signal output
-		OUT_WB_FORWARD : out STD_LOGIC;
-		OUT_WB_CHOOSE : out WB_CHOOSE_TYPE;
-		OUT_REG_WN : out STD_LOGIC
+		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE
 		
 	);
-end mem_wb_latch;
+end ex_mem_latch;
 
-architecture Behavioral of mem_wb_latch is
+architecture Behavioral of ex_mem_latch is
 
 begin
 	process(CLK)
@@ -61,9 +68,6 @@ begin
 			OUT_PC <= IN_PC;
 			OUT_REG_NO : IN_REG_NO;
 			-- to be added : control signals
-			OUT_WB_FORWARD <= IN_WB_CONTROL_SIGNAL.WB_FORWARD;
-			OUT_WB_CHOOSE <= IN_WB_CONTROL_SIGNAL.WB_CHOOSE;
-			OUT_REG_WN <= IN_WB_CONTROL_SIGNAL.WB_REG_WN;
 		end if;
 	end process;
 
