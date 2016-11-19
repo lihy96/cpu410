@@ -25,31 +25,20 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity mem_ctrl is
 	port(
 		-- control signal
-		RST : in STD_LOGIC;
 		CLK : in STD_LOGIC;
-		RAM_READ : in STD_LOGIC;
-		RAM_WRITE : in STD_LOGIC;
+		RAM_READ_WRITE : in STD_LOGIC_VECTOR(1 downto 0);
 		-- data signal
-		RAM_ADDR : in STD_LOGIC_VECTOR(17 downto 0);
+		RAM_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
 		RAM_DATA : in STD_LOGIC_VECTOR(15 downto 0);
 		-- data output
 		RAM_OUTPUT : out STD_LOGIC_VECTOR(15 downto 0);
 		
 		-- inner signal, out to ram
-		Ram1Addr : out STD_LOGIC_VECTOR(17 downto 0);
-		Ram1Data : inout STD_LOGIC_VECTOR(15 downto 0);
-		Ram1OE : out STD_LOGIC;
-		Ram1WE : out STD_LOGIC;
-		Ram1EN : out STD_LOGIC;
-		
-		--Ram2Addr : out STD_LOGIC_VECTOR(17 downto 0);
-		--Ram2Data : inout STD_LOGIC_VECTOR(15 downto 0);
-		--Ram2OE : out STD_LOGIC;
-		--Ram2WE : out STD_LOGIC;
-		--Ram2EN : out STD_LOGIC;
-		
-		rdn : out STD_LOGIC;
-		wrn : out STD_LOGIC
+		Ram2Addr : out STD_LOGIC_VECTOR(15 downto 0);
+		Ram2Data : inout STD_LOGIC_VECTOR(15 downto 0);
+		Ram2OE : out STD_LOGIC;
+		Ram2WE : out STD_LOGIC;
+		Ram2EN : out STD_LOGIC
 	);
 end mem_ctrl;
 
@@ -60,41 +49,38 @@ architecture Behavioral of mem_ctrl is
 		reading
 	);
 	signal state : state_set := init;
+	constant MEM_READ : STD_LOGIC_VECTOR(1 downto 0) := "01";
+	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10";
 begin
-	process(CLK, RST)
+	process(CLK)
 		begin
-		if (RST = '0') then
-			rdn <= '1';
-			wrn <= '1';
-			Ram1EN <= '0';
-			--Ram2EN <= '0';
-			state <= init;
-		elsif (CLK'event and CLK = '0') then
+		if (CLK'event and CLK = '0') then
 			case state is
 				when init =>
-					Ram1EN <= '0';
+					Ram2EN <= '0';
 					--Ram2EN <= '0';
-					if RAM_WRITE = '1' then
+					if RAM_READ_WRITE = MEM_WRITE then
 						state <= writing;
-						Ram1OE <= '1';
-						Ram1WE <= '1';
-						Ram1Data <= RAM_DATA;
-						Ram1Addr <= RAM_ADDR;
-					end if;
-					if RAM_READ = '1' then
+						Ram2OE <= '1';
+						Ram2WE <= '1';
+						Ram2Data <= RAM_DATA;
+						Ram2Addr <= RAM_ADDR;
+					elsif RAM_READ_WRITE = MEM_READ then
 						state <= reading;
-						Ram1OE <= '1';
-						Ram1WE <= '1';
-						Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-						Ram1Addr <= RAM_ADDR;
+						Ram2OE <= '1';
+						Ram2WE <= '1';
+						Ram2Data <= "ZZZZZZZZZZZZZZZZ";
+						Ram2Addr <= RAM_ADDR;
 					end if;
 						
 				when writing =>
-					Ram1WE <= '0';
+					Ram2WE <= '0';
+					RAM_OUTPUT <= "1111111111111111";
 					state <= init;
 				
 				when reading =>
-					RAM_OUTPUT <= Ram1Data;
+					Ram2OE <= '0';
+					RAM_OUTPUT <= Ram2Data;
 					state <= init;
 			end case;
 		end if;
