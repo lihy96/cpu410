@@ -49,14 +49,15 @@ entity ex_mem_latch is
 		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
 		
 		-- control signal input
-		IN_WB_CONTROL_SIGNAL : in WB_CONTROL_SIGNAL_TYPE;
-		IN_RAM1_READ_WRITE : in STD_LOGIC_VECTOR(1 downto 0);
+		IN_WB_CTRL : in WB_CTRL_TYPE;
+		IN_MEM_CTRL : in MEM_CTRL_TYPE;
 		IN_CMP_RS : in STD_LOGIC; --对读写地址进行比较后的结果
 		
 		-- control signal output
 		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE;
 		OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
-		OUT_RAM2_WE : out STD_LOGIC
+		OUT_RAM2_WE : out STD_LOGIC;
+		OUT_MEM_FORWARD : out STD_LOGIC
 	);
 end ex_mem_latch;
 
@@ -71,14 +72,17 @@ begin
 			OUT_PC <= IN_PC;
 			OUT_REG_NO <= IN_REG_NO;
 			-- to be added : control signals
-			OUT_WB_CONTROL_SIGNAL <= IN_WB_CONTROL_SIGNAL;
+			OUT_WB_CONTROL_SIGNAL <= IN_WB_CTRL.WB_CONTROL_SIGNAL;
 			
-			if (IN_CMP_RS = '0') then --读的是RAM1
-				OUT_RAM1_READ_WRITE <= IN_RAM1_READ_WRITE;--读RAM1
+			if (IN_CMP_RS = Data_ram1) then --读的是RAM1
+				OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM1_READ_WRITE;--读RAM1
 				OUT_RAM2_WE <= '1'; --禁止RAM2使能
 			else
+				OUT_RAM1_READ_WRITE <= "11"; --不读不写RAM1
 				OUT_RAM2_WE <= '0'; --打开RAM1使能
 			end if;
+			
+			OUT_MEM_FORWARD <= IN_WB_CTRL.MEM_FORWARD;
 		end if;
 	end process;
 
