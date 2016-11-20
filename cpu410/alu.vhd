@@ -1,20 +1,21 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 use work.constants.all;
+
 
 entity alu is
 	port (
 		alu_op1 , alu_op2 :   in std_logic_vector(15 downto 0);
 		alu_inst :   in std_logic_vector(4 downto 0);
-		alu_res: out std_logic_vector(15 downto 0)
+		alu_res : out std_logic_vector(15 downto 0)
 	  );
 end alu;
 
 architecture Behavioral of alu is
 begin
-process(clk)
+process(alu_op1, alu_op2, alu_inst)
 	variable res : std_logic_vector(15 downto 0) := ZeroWord;
 	begin
 		case alu_inst  is
@@ -54,5 +55,8 @@ process(clk)
 			when others =>
 				NULL;
 		end case;
+
+		alu_res <= res;
+
 	end process;
 end Behavioral;

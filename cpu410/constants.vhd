@@ -42,6 +42,9 @@ package constants is
 	constant ReadDisable: std_logic := '0';
 	constant WriteDisable: std_logic := '0';
 
+	-- if id latch
+	constant IF_ID_LATCH_PAUSE : std_logic := '1';
+
 	-- controller
 	constant ZERO1: std_logic := '0';
 	constant ZERO3: std_logic_vector(2 downto 0) := "000";
@@ -134,6 +137,22 @@ package constants is
 	constant THU_ID_JR: std_logic_vector(4 downto 0) := "01110";
 	constant THU_ID_CMP: std_logic_vector(4 downto 0) := "01111";
 	constant THU_ID_EQUAL: std_logic_vector(4 downto 0) := "10000";
+
+
+	-- alu
+	constant ALU_NOP: std_logic_vector(4 downto 0) := "00101";
+	constant ALU_ADD: std_logic_vector(4 downto 0) := "00000";
+	constant ALU_SUB: std_logic_vector(4 downto 0) := "01001";
+	constant ALU_ASSIGN: std_logic_vector(4 downto 0) := "00100";
+	constant ALU_OR: std_logic_vector(4 downto 0) := "00110";
+	constant ALU_AND: std_logic_vector(4 downto 0) := "01100"; 
+	constant ALU_SLL: std_logic_vector(4 downto 0) := "00111";
+	constant ALU_SRA: std_logic_vector(4 downto 0) := "01000";
+	constant ALU_SRL: std_logic_vector(4 downto 0) := "01010";
+	constant ALU_NOT: std_logic_vector(4 downto 0) := "01011";
+	constant ALU_LOAD: std_logic_vector(4 downto 0) := "01101";
+	constant ALU_CMP: std_logic_vector(4 downto 0) := "01111";
+	constant ALU_EQUAL: std_logic_vector(4 downto 0) := "10000";
 
 	--euqal
 	constant EQUAL_YES: std_logic_vector(15 downto 0) := "1111111111111111";
