@@ -38,9 +38,21 @@ package constants is
 	constant WriteDisable: std_logic := '0';
 
 	-- controller
+	constant ZERO1: std_logic := "0";
 	constant ZERO3: std_logic_vector(2 downto 0) := "000";
 	constant ZERO4: std_logic_vector(3 downto 0) := "0000";
 	constant ZERO16: std_logic_vector(15 downto 0) := "0000000000000000";
+
+	constant ONE1: std_logic := "1";
+
+	constant JR_YES :    std_logic := "1";
+	constant JR_NO  :    std_logic := "0";
+	constant B_INST_YES: std_logic := "1";
+	constant B_INST_NO:  std_logic := "0";
+
+	constant And_Door_True: std_logic := "1";
+	constant And_Door_False: std_logic := "0";
+	constant And_Door_No_use: std_logic := "Z";
 
 
 	-- funct
@@ -117,6 +129,11 @@ package constants is
 	constant THU_ID_JR: std_logic_vector(4 downto 0) := "01110";
 	constant THU_ID_CMP: std_logic_vector(4 downto 0) := "01111";
 	constant THU_ID_EQUAL: std_logic_vector(4 downto 0) := "10000";
+
+	--euqal
+	constant EQUAL_YES: std_logic_vector(15 downto 0) := "1111111111111111";
+	constant EQUAL_NO:  std_logic_vector(15 downto 0) := "0000000000000000";
+
 
 end package;
 
