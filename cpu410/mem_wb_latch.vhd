@@ -59,11 +59,11 @@ begin
 			OUT_ADDR <= IN_ADDR;
 			OUT_DATA <= IN_DATA;
 			OUT_PC <= IN_PC;
-			OUT_REG_NO : IN_REG_NO;
+			OUT_REG_NO <= IN_REG_NO;
 			-- to be added : control signals
 			OUT_WB_FORWARD <= IN_WB_CONTROL_SIGNAL.WB_FORWARD;
 			OUT_WB_CHOOSE <= IN_WB_CONTROL_SIGNAL.WB_CHOOSE;
-			OUT_REG_WN <= IN_WB_CONTROL_SIGNAL.WB_REG_WN;
+			OUT_REG_WN <= IN_WB_CONTROL_SIGNAL.REG_WN;
 		end if;
 	end process;
 

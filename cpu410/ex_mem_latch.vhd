@@ -69,7 +69,7 @@ begin
 			OUT_ADDR <= IN_ADDR;
 			OUT_DATA <= IN_DATA;
 			OUT_PC <= IN_PC;
-			OUT_REG_NO : IN_REG_NO;
+			OUT_REG_NO <= IN_REG_NO;
 			-- to be added : control signals
 			OUT_WB_CONTROL_SIGNAL <= IN_WB_CONTROL_SIGNAL;
 			

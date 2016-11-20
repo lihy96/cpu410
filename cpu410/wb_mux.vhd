@@ -45,7 +45,7 @@ entity wb_mux is
 		OUT_WB_DATA : out STD_LOGIC_VECTOR(15 downto 0);
 		
 		-- control signal input
-		IN_WB_CHOOSE : in WB_CHOOSE_TYPE;
+		IN_WB_CHOOSE : in WB_CHOOSE_TYPE
 		
 		-- control signal output
 	);
@@ -60,7 +60,7 @@ begin
 			case IN_WB_CHOOSE is
 				when ALU_ADDR =>
 					OUT_WB_DATA <= IN_ADDR;
-				when MEM_DARA =>
+				when MEM_DATA =>
 					OUT_WB_DATA <= IN_DATA;
 				when PC_DATA =>
 					OUT_WB_DATA <= IN_PC;
