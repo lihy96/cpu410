@@ -173,13 +173,20 @@ package constants is
 	);
 	
 	-- record type for write back control signal
-	type WB_CONTROL_SIGNAL_TYPE is record
+	type WB_CONTROL_SIGNAL_TYPE is record --传给ex-mem锁存器的record type
 		WB_FORWARD : STD_LOGIC;
 		WB_CHOOSE : WB_CHOOSE_TYPE;
 		REG_WN : STD_LOGIC;
 	end record;
+	
+	type WB_CTRL_TYPE is record --传给mem-wb锁存器的record type
+		WB_CONTROL_SIGNAL : WB_CONTROL_SIGNAL_TYPE;
+		MEM_FORWARD : STD_LOGIC;
+	end record;
 
-
+	type MEM_CTRL_TYPE is record
+		RAM1_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
+	end record;
 
 	-- cmp with 8000
 	constant Inst_ram2 : std_logic := '1';
