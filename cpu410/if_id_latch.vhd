@@ -25,20 +25,27 @@ use work.constants.all;
 
 entity if_id_latch is
 	port (
-		clk, rst: in std_logic;
-		pc_in, inst_in: in std_logic_vector(15 downto 0);
-		all_pause_signal: in std_logic_vector(0 to 4);
-		pc_out, inst_out: in std_logic_vector(15 downto 0)
+		clk: in std_logic;
+		pause: in std_logic;
+		in_pc,  in_pc_plus1,  in_inst:   in std_logic_vector(15 downto 0);
+		out_pc, out_pc_plus1, out_inst: out std_logic_vector(15 downto 0)
+
 	  );
 end if_id_latch;
 
+
 architecture Behavioral of if_id_latch is
-
 begin
-	process
+process(clk)
 	begin
-	
-	end process;
-
+	if rising_edge(clk) then
+		if pause /= IF_ID_LATCH_PAUSE then
+			out_pc <= in_pc;
+			out_pc_plus1 <= in_pc_plus1;
+			out_inst <= in_inst;
+		end if;
+	end if;
+end process;
 end Behavioral;
+
 

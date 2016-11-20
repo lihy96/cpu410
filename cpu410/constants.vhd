@@ -22,10 +22,15 @@ use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
 package constants is
+	
+	constant RstEnable: std_logic := '1';
+	constant RstDisable: std_logic := '0'; 
+
 	constant Pc_reset: std_logic := '1';	--pc是否reset的控制信号
 	constant Pc_pause: std_logic := '1';	--pc是否pause的控制信号
 	constant Pc_origin_address : std_logic_vector(15 downto 0) := "0000000000000000";	--pc的初始地址
 	constant Pc_offset: std_logic_vector(15 downto 0) := "0000000000000001";	--每次pc的偏移量
+
 	type RegArray is array(11 downto 0) of std_logic_vector(15 downto 0);	-- 11个寄存器？8个通用？？？？？？？
 	
 	constant ZeroWord: std_logic_vector(15 downto 0) := "0000000000000000";	--全0
@@ -37,10 +42,25 @@ package constants is
 	constant ReadDisable: std_logic := '0';
 	constant WriteDisable: std_logic := '0';
 
+	-- if id latch
+	constant IF_ID_LATCH_PAUSE : std_logic := '1';
+
 	-- controller
+	constant ZERO1: std_logic := '0';
 	constant ZERO3: std_logic_vector(2 downto 0) := "000";
 	constant ZERO4: std_logic_vector(3 downto 0) := "0000";
 	constant ZERO16: std_logic_vector(15 downto 0) := "0000000000000000";
+
+	constant ONE1: std_logic := '1';
+
+	constant JR_YES :    std_logic := '1';
+	constant JR_NO  :    std_logic := '0';
+	constant B_INST_YES: std_logic := '1';
+	constant B_INST_NO:  std_logic := '0';
+
+	constant And_Door_True: std_logic := '1';
+	constant And_Door_False: std_logic := '0';
+	constant And_Door_No_use: std_logic := 'Z';
 
 
 	-- funct
@@ -117,6 +137,26 @@ package constants is
 	constant THU_ID_JR: std_logic_vector(4 downto 0) := "01110";
 	constant THU_ID_CMP: std_logic_vector(4 downto 0) := "01111";
 	constant THU_ID_EQUAL: std_logic_vector(4 downto 0) := "10000";
+
+	-- alu
+	constant ALU_NOP: std_logic_vector(4 downto 0) := "00101";
+	constant ALU_ADD: std_logic_vector(4 downto 0) := "00000";
+	constant ALU_SUB: std_logic_vector(4 downto 0) := "01001";
+	constant ALU_ASSIGN: std_logic_vector(4 downto 0) := "00100";
+	constant ALU_OR: std_logic_vector(4 downto 0) := "00110";
+	constant ALU_AND: std_logic_vector(4 downto 0) := "01100"; 
+	constant ALU_SLL: std_logic_vector(4 downto 0) := "00111";
+	constant ALU_SRA: std_logic_vector(4 downto 0) := "01000";
+	constant ALU_SRL: std_logic_vector(4 downto 0) := "01010";
+	constant ALU_NOT: std_logic_vector(4 downto 0) := "01011";
+	constant ALU_LOAD: std_logic_vector(4 downto 0) := "01101";
+	constant ALU_CMP: std_logic_vector(4 downto 0) := "01111";
+	constant ALU_EQUAL: std_logic_vector(4 downto 0) := "10000";
+
+	--euqal
+	constant EQUAL_YES: std_logic_vector(15 downto 0) := "1111111111111111";
+	constant EQUAL_NO:  std_logic_vector(15 downto 0) := "0000000000000000";
+
 	
 	-- added by evan69
 	-- constant defination for ex_mem_latch to MEM
@@ -138,6 +178,13 @@ package constants is
 		WB_CHOOSE : WB_CHOOSE_TYPE;
 		REG_WN : STD_LOGIC;
 	end record;
+
+
+
+	-- cmp with 8000
+	constant Inst_ram2 : std_logic := '1';
+	constant Data_ram1 : std_logic := '0';
+
 end package;
 
 
