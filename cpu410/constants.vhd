@@ -193,7 +193,7 @@ package constants is
 
 
 	type MEM_CTRL_TYPE is record
-		RAM1_READ_WRITE : std_logic_vector(1 downto 0);
+		RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
 	end record;
 
 	type ID_EX_LATCH_MEM is record	--id_ex锁存器中mem的输入部分
