@@ -30,6 +30,7 @@ package constants is
 	
 	constant ZeroWord: std_logic_vector(15 downto 0) := "0000000000000000";	--全0
 	constant OneWord: std_logic_vector(15 downto 0) := "0000000000000001";	--1
+	constant HIGH_RESIST : std_logic_vector(15 downto 0) := "ZZZZZZZZZZZZZZZZ";
 
 	constant ReadEnable: std_logic := '1';
 	constant WriteEnable: std_logic := '1';
