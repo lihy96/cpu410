@@ -6,7 +6,7 @@ use work.constants.ALL;
 entity mux2 is
     Port ( 
     	   choose : in  STD_LOGIC;
-           data1. data2 : in  STD_LOGIC_VECTOR (15 downto 0);
+           data1, data2 : in  STD_LOGIC_VECTOR (15 downto 0);
            outdata : out  STD_LOGIC_VECTOR (15 downto 0)
          );
 end mux2;

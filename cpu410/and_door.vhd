@@ -11,7 +11,7 @@ entity and_door is
 	);
 end entity ;
 
-
+architecture bhv of and_door is
 begin
 	process(data1, data2)
 	begin
@@ -24,6 +24,6 @@ begin
 		
 		else  -- no use
 			outdata <= And_Door_No_use;
-
+		end if;
 	end process;
-end Behavioral;
+end bhv;

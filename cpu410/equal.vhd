@@ -5,7 +5,7 @@ use work.constants.ALL;
 
 entity equal is
     Port ( 
-           data1. data2 : in  STD_LOGIC_VECTOR (15 downto 0);
+           data1, data2 : in  STD_LOGIC_VECTOR (15 downto 0);
            result : out  STD_LOGIC_VECTOR (15 downto 0)
          );
 end equal;
@@ -16,9 +16,9 @@ begin
 	process(data1, data2)
 	begin
 		if data1 = data2 then
-			result = EQUAL_YES;
+			result <= EQUAL_YES;
 		else
-			result = EQUAL_NO;
+			result <= EQUAL_NO;
 		end if;
 	end process;
 end Behavioral;

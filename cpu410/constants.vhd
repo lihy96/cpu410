@@ -22,11 +22,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
 package constants is
+	
+	constant RstEnable: std_logic := '1';
+	constant RstDisable: std_logic := '0'; 
+
 	constant Pc_reset: std_logic := '1';	--pc是否reset的控制信号
 	constant Pc_pause: std_logic := '1';	--pc是否pause的控制信号
 	constant Pc_origin_address : std_logic_vector(15 downto 0) := "0000000000000000";	--pc的初始地址
 	constant Pc_offset: std_logic_vector(15 downto 0) := "0000000000000001";	--每次pc的偏移量
-	type RegArray is array(11 down to 0) of std_logic_vector(15 downto 0);	-- 11个寄存器？8个通用？？？？？？？
+	
+	type RegArray is array(11 downto 0) of std_logic_vector(15 downto 0);	-- 11个寄存器？8个通用？？？？？？？
 	
 	constant ZeroWord: std_logic_vector(15 downto 0) := "0000000000000000";	--全0
 	constant OneWord: std_logic_vector(15 downto 0) := "0000000000000001";	--1
@@ -38,21 +43,21 @@ package constants is
 	constant WriteDisable: std_logic := '0';
 
 	-- controller
-	constant ZERO1: std_logic := "0";
+	constant ZERO1: std_logic := '0';
 	constant ZERO3: std_logic_vector(2 downto 0) := "000";
 	constant ZERO4: std_logic_vector(3 downto 0) := "0000";
 	constant ZERO16: std_logic_vector(15 downto 0) := "0000000000000000";
 
-	constant ONE1: std_logic := "1";
+	constant ONE1: std_logic := '1';
 
-	constant JR_YES :    std_logic := "1";
-	constant JR_NO  :    std_logic := "0";
-	constant B_INST_YES: std_logic := "1";
-	constant B_INST_NO:  std_logic := "0";
+	constant JR_YES :    std_logic := '1';
+	constant JR_NO  :    std_logic := '0';
+	constant B_INST_YES: std_logic := '1';
+	constant B_INST_NO:  std_logic := '0';
 
-	constant And_Door_True: std_logic := "1";
-	constant And_Door_False: std_logic := "0";
-	constant And_Door_No_use: std_logic := "Z";
+	constant And_Door_True: std_logic := '1';
+	constant And_Door_False: std_logic := '0';
+	constant And_Door_No_use: std_logic := 'Z';
 
 
 	-- funct

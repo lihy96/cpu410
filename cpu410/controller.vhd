@@ -21,11 +21,11 @@ end entity ;
 architecture arch of controller is
 begin
 	process(pc, instruction)
-	signal inst_15_to_11: std_logic_vector(4 downto 0);
-	jr_or_not <= JR_NO;
-	b_inst <= B_INST_NO;
+	variable inst_15_to_11: std_logic_vector(4 downto 0) ;
 	begin
-		inst_15_to_11 := instruction(15 downto 11);
+	 	inst_15_to_11 := instruction(15 downto 11);
+		jr_or_not <= JR_NO;
+		b_inst <= B_INST_NO;
 		case (inst_15_to_11) is
 			when OP_ADDIU =>
  				immd(15 downto 8) <= (others => instruction(7));
@@ -249,8 +249,8 @@ begin
  			
  			when others =>
 				immd <= ZERO16;
-				alu_inst <= ALU_NOP;
+				alu_inst <= THU_ID_NOP;
 
 		end case;
 	end process;	
-end architecture ; -- arch
+end architecture; -- arch

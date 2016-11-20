@@ -32,13 +32,4 @@ entity if_id_latch is
 	  );
 end if_id_latch;
 
-architecture Behavioral of if_id_latch is
-
-begin
-	process
-	begin
-	
-	end process;
-
-end Behavioral;
 
