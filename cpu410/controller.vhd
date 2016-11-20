@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 use work.constants.all;
-
+--TODO: sw and related ones
 
 entity controller is
  	port (
@@ -13,7 +13,11 @@ entity controller is
  		alu_inst: out std_logic_vector(4 downto 0);	-- instruction that put to alu
  		immd: out std_logic_vector(15 downto 0);	-- immediate that output
  		jr_or_not: out std_logic;
- 		b_inst: out std_logic
+ 		b_inst: out std_logic;
+ 		reg_wb_type: out std_logic_vector(1 downto 0)
+ 		-- what kind of value will be written back?
+ 		-- an ALU calculated(known after EXE)?
+ 		-- or read from alu(known after MEM)?
 	);
 end entity ;
 
@@ -30,13 +34,14 @@ begin
 			when OP_ADDIU =>
  				immd(15 downto 8) <= (others => instruction(7));
  				immd(7 downto 0) <= instruction(7 downto 0);
- 				
+ 				reg_wb_type <= WB_EXE;
+
  				alu_inst <= THU_ID_ADD;
  			
  			when OP_ADDIU3 =>
  				immd(15 downto 4) <= (others => instruction(3));
  				immd(3 downto 0) <= instruction(3 downto 0);
- 				
+ 				reg_wb_type <= WB_EXE;
  				alu_inst <= THU_ID_ADD;
  			
  			when OP_B =>
@@ -67,26 +72,31 @@ begin
  				immd(15 downto 8) <= (others => '0');
  				immd(7 downto 0) <= instruction(7 downto 0);
  				alu_inst <= THU_ID_ASSIGN;
+ 				reg_wb_type <= WB_EXE;
  			
  			when OP_LW =>
  				immd(15 downto 5) <= (others => instruction(4));
  				immd(4 downto 0) <= instruction(4 downto 0); 	
  				alu_inst <= THU_ID_LOAD;		
+ 				reg_wb_type <= WB_MEM;
  			
  			when OP_LW_SP =>
  				immd(15 downto 8) <= (others => instruction(7));
  				immd(7 downto 0) <= instruction(7 downto 0); 
  				alu_inst <= THU_ID_LOAD;			
+ 				reg_wb_type <= WB_MEM;
  			
  			when OP_IH =>
  				case( instruction(7 downto 0) ) is				
  					when IH_MFIH =>
 		 				immd(15 downto 0) <= ZERO16;
 						alu_inst <= THU_ID_ASSIGN;
+						reg_wb_type <= WB_EXE;
  					
  					when IH_MTIH =>
 		 				immd(15 downto 0) <= ZERO16;
 		 				alu_inst <= THU_ID_ASSIGN;
+		 				reg_wb_type <= WB_EXE;
  					when others =>	
 
  				end case ;
@@ -100,6 +110,7 @@ begin
  					
  					when SHIFT_SLL =>
  						alu_inst <= THU_ID_SLL;
+ 						reg_wb_type <= WB_EXE;
 		 				if (instruction(4 downto 2) = "000") then
 			 				immd(15 downto 4) <= (others => '0');
 			 				immd(3 downto 0) <= "1000";
@@ -110,6 +121,7 @@ begin
  					
  					when SHIFT_SRA =>
 						alu_inst <= THU_ID_SRA;
+						reg_wb_type <= WB_EXE;
 		 				if (instruction(4 downto 2) = "000") then
 			 				immd(15 downto 4) <= (others => '0');
 			 				immd(3 downto 0) <= "1000";
@@ -120,6 +132,7 @@ begin
  					
  					when SHIFT_SRL =>
 						alu_inst <= THU_ID_SRL;
+						reg_wb_type <= WB_EXE;
 		 				if (instruction(4 downto 2) = "000") then
 			 				immd(15 downto 4) <= (others => '0');
 			 				immd(3 downto 0) <= "1000";
@@ -136,11 +149,13 @@ begin
  				immd(15 downto 5) <= (others => instruction(4));
  				immd(4 downto 0) <= instruction(4 downto 0); 
  				alu_inst <= THU_ID_ADD;	
+ 				reg_wb_type <= WB_MEN;
  			
  			when OP_SW_SP =>
  				immd(15 downto 8) <= (others => instruction(7));
  				immd(7 downto 0) <= instruction(7 downto 0); 
  				alu_inst <= THU_ID_ADD;	
+ 				reg_wb_type <= WB_MEM;
  			
  			when OP_ADDSP3 =>
  				immd(15 downto 8) <= (others => instruction(7));
@@ -151,6 +166,7 @@ begin
  				immd(15 downto 8) <= (others => instruction(7));
  				immd(7 downto 0) <= instruction(7 downto 0); 	
  				alu_inst <= THU_ID_CMP;
+ 				reg_wb_type <= WB_EXE;
  			
  			when OP_SLTUI =>
  				immd(15 downto 8) <= (others => '0');
@@ -164,7 +180,7 @@ begin
 		 				immd(15 downto 8) <= (others => instruction(7));
 		 				immd(7 downto 0) <= instruction(7 downto 0); 	
 		 				alu_inst <= THU_ID_ADD;	
- 					
+ 						reg_wb_type <= WB_EXE;
  					when SPECIAL_BTEQZ =>
 		 				immd(15 downto 8) <= (others => instruction(7));
 		 				immd(7 downto 0) <= instruction(7 downto 0);
@@ -188,6 +204,7 @@ begin
 		 				immd(15 downto 8) <= (others => instruction(7));
 		 				immd(7 downto 0) <= instruction(7 downto 0); 
 		 				alu_inst <= THU_ID_ADD;					
+		 				reg_wb_type <= WB_MEM;
  					
  					when others =>
  				
@@ -196,18 +213,21 @@ begin
  			when OP_ADD_SUB_U =>
  				immd(15 downto 0) <= ZERO16;
  				alu_inst <= THU_ID_SUB;
- 			
+ 				reg_wb_type <= WB_EXE;
+
  			when OP_LOGIC =>
  				case( instruction(4 downto 0) ) is				
  					
  					when LOGIC_AND =>
 		 				immd(15 downto 0) <= ZERO16;
 		 				alu_inst <= THU_ID_AND;
- 					
+ 						reg_wb_type <= WB_EXE;
+ 						
  					when LOGIC_CMP =>
 		 				immd(15 downto 0) <= ZERO16;
 		 				alu_inst <= THU_ID_EQUAL;
-		 			
+		 				reg_wb_type <= WB_EXE;
+
 		 			when LOGIC_PC =>
 		 				case( instruction(7 downto 5) ) is		 				
 		 					
@@ -226,7 +246,8 @@ begin
 		 			when LOGIC_OR =>
 		 				immd(15 downto 0) <= ZERO16;
 		 				alu_inst <= THU_ID_OR;
-		 			
+		 				reg_wb_type <= WB_EXE;
+
 		 			when LOGIC_SRAV =>
 		 				immd(15 downto 0) <= ZERO16;
 		 				alu_inst <= THU_ID_SRA;
@@ -238,10 +259,12 @@ begin
 		 			when LOGIC_SLLV =>
 		 				immd(15 downto 0) <= ZERO16;
 		 				alu_inst <= THU_ID_SLL;
-		 			
+		 				reg_wb_type <= WB_EXE;
+
 		 			when LOGIC_SRLV =>
 		 				immd <= ZERO16;
 		 				alu_inst <= THU_ID_SRL;
+		 				reg_wb_type <= WB_EXE;
  					
  					when others =>
 

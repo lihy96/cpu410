@@ -13,7 +13,7 @@ entity id_ex_latch is
 
 		in_mem: in ID_EX_LATCH_MEM;
 		out_mem_ctrl: out MEM_CTRL_TYPE;
-		out_pause: out std_logic_vector(3 downto 0);
+		out_pause: out std_logic_vector(1 downto 0);
 
 		in_ex: in ID_EX_LATCH_EX;
 		out_reg_num_choose: out std_logic_vector(2 downto 0);
