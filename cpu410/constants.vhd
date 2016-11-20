@@ -117,7 +117,27 @@ package constants is
 	constant THU_ID_JR: std_logic_vector(4 downto 0) := "01110";
 	constant THU_ID_CMP: std_logic_vector(4 downto 0) := "01111";
 	constant THU_ID_EQUAL: std_logic_vector(4 downto 0) := "10000";
-
+	
+	-- added by evan69
+	-- constant defination for ex_mem_latch to MEM
+	constant MEM_READ : STD_LOGIC_VECTOR(1 downto 0) := "01"; --控制数据存储器进行读
+	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10"; --控制数据存储器进行写
+	constant COM_STATUS_ADDR : std_logic_vector(15 downto 0) := "1011111100000001"; --BF01
+	constant COM_DATA_ADDR : std_logic_vector(15 downto 0) := "1011111100000000"; --BF00
+	
+	-- control signal : WB_CHOOSE
+	type WB_CHOOSE_TYPE is (
+		ALU_ADDR,
+		MEM_DATA,
+		PC_DATA
+	);
+	
+	-- record type for write back control signal
+	type WB_CONTROL_SIGNAL_TYPE is record
+		WB_FORWARD : STD_LOGIC;
+		WB_CHOOSE : WB_CHOOSE_TYPE;
+		REG_WN : STD_LOGIC;
+	end record;
 end package;
 
 
