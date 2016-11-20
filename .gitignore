@@ -42,6 +42,14 @@
 *_usage.xml
 *_xst.xrpt
 
+
+# added by evan69
+*.ini
+*.exe
+*.cmd
+*.wdb
+# end add
+
 # iMPACT generated files
 _impactbatch.log
 impact.xsl
