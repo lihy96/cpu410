@@ -185,7 +185,7 @@ package constants is
 	end record;
 
 	type MEM_CTRL_TYPE is record
-		RAM1_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
+		RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
 	end record;
 
 	-- cmp with 8000

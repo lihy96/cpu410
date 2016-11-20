@@ -56,7 +56,7 @@ entity ex_mem_latch is
 		-- control signal output
 		OUT_WB_CONTROL_SIGNAL : out WB_CONTROL_SIGNAL_TYPE;
 		OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
-		OUT_RAM2_WE : out STD_LOGIC;
+		OUT_RAM2_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
 		OUT_MEM_FORWARD : out STD_LOGIC
 	);
 end ex_mem_latch;
@@ -75,11 +75,11 @@ begin
 			OUT_WB_CONTROL_SIGNAL <= IN_WB_CTRL.WB_CONTROL_SIGNAL;
 			
 			if (IN_CMP_RS = Data_ram1) then --读的是RAM1
-				OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM1_READ_WRITE;--读RAM1
-				OUT_RAM2_WE <= '1'; --禁止RAM2使能
+				OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE;--读写RAM1
+				OUT_RAM2_READ_WRITE <= "11"; --不读不写RAM2
 			else
 				OUT_RAM1_READ_WRITE <= "11"; --不读不写RAM1
-				OUT_RAM2_WE <= '0'; --打开RAM1使能
+				OUT_RAM2_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE; --读写RAM2
 			end if;
 			
 			OUT_MEM_FORWARD <= IN_WB_CTRL.MEM_FORWARD;
