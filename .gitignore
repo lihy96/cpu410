@@ -90,3 +90,4 @@ cache/*
 *.xlsx
 *.pptx
 *.xise
+cpu410/work/*
