@@ -30,7 +30,7 @@ package constants is
 	constant Pc_pause: std_logic := '1';	--pc是否pause的控制信号
 	constant Pc_origin_address : std_logic_vector(15 downto 0) := "0000000000000000";	--pc的初始地址
 	constant Pc_offset: std_logic_vector(15 downto 0) := "0000000000000001";	--每次pc的偏移量
-	
+
 	type RegArray is array(11 downto 0) of std_logic_vector(15 downto 0);	-- 11个寄存器？8个通用？？？？？？？
 	
 	constant ZeroWord: std_logic_vector(15 downto 0) := "0000000000000000";	--全0
@@ -138,7 +138,6 @@ package constants is
 	constant THU_ID_CMP: std_logic_vector(4 downto 0) := "01111";
 	constant THU_ID_EQUAL: std_logic_vector(4 downto 0) := "10000";
 
-
 	-- alu
 	constant ALU_NOP: std_logic_vector(4 downto 0) := "00101";
 	constant ALU_ADD: std_logic_vector(4 downto 0) := "00000";
@@ -158,6 +157,33 @@ package constants is
 	constant EQUAL_YES: std_logic_vector(15 downto 0) := "1111111111111111";
 	constant EQUAL_NO:  std_logic_vector(15 downto 0) := "0000000000000000";
 
+	
+	-- added by evan69
+	-- constant defination for ex_mem_latch to MEM
+	constant MEM_READ : STD_LOGIC_VECTOR(1 downto 0) := "01"; --控制数据存储器进行读
+	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10"; --控制数据存储器进行写
+	constant COM_STATUS_ADDR : std_logic_vector(15 downto 0) := "1011111100000001"; --BF01
+	constant COM_DATA_ADDR : std_logic_vector(15 downto 0) := "1011111100000000"; --BF00
+	
+	-- control signal : WB_CHOOSE
+	type WB_CHOOSE_TYPE is (
+		ALU_ADDR,
+		MEM_DATA,
+		PC_DATA
+	);
+	
+	-- record type for write back control signal
+	type WB_CONTROL_SIGNAL_TYPE is record
+		WB_FORWARD : STD_LOGIC;
+		WB_CHOOSE : WB_CHOOSE_TYPE;
+		REG_WN : STD_LOGIC;
+	end record;
+
+
+
+	-- cmp with 8000
+	constant Inst_ram2 : std_logic := '1';
+	constant Data_ram1 : std_logic := '0';
 
 end package;
 
