@@ -1,92 +1,10 @@
-# intermediate build files
-*.bgn
-*.bit
-*.bld
-*.cmd_log
-*.drc
-*.ll
-*.lso
-*.msd
-*.msk
-*.ncd
-*.ngc
-*.ngd
-*.ngr
-*.pad
-*.par
-*.pcf
-*.prj
-*.ptwx
-*.rbb
-*.rbd
-*.stx
-*.syr
-*.twr
-*.twx
-*.unroutes
-*.ut
-*.xpi
-*.xst
-*_bitgen.xwbt
-*_envsettings.html
-*_map.map
-*_map.mrp
-*_map.ngm
-*_map.xrpt
-*_ngdbuild.xrpt
-*_pad.csv
-*_pad.txt
-*_par.xrpt
-*_summary.html
-*_summary.xml
-*_usage.xml
-*_xst.xrpt
-
-
-# added by evan69
-*.ini
-*.exe
-*.cmd
-*.wdb
-# end add
-
-# iMPACT generated files
-_impactbatch.log
-impact.xsl
-impact_impact.xwbt
-ise_impact.cmd
-webtalk_impact.xml
-
-# Core Generator generated files
-xaw2verilog.log
-
-# project-wide generated files
-*.gise
-par_usage_statistics.html
-usage_statistics_webtalk.html
-webtalk.log
-webtalk_pn.xml
-
-# generated folders
-iseconfig/
-xlnx_auto_0_xdb/
-xst/
-_ngo/
-_xmsgs/
-
-# log
-*.log
-*.debug
-*.jou
-
-pro3/uart/chuankou.ucf
-pro3/uart/planAhead_run_2/
-*.tcl
-cache/*
-*.xml
-*.psg
-*.wdf
-*.wpc
-*.xlsx
-*.pptx
-*.xise
+# .gitignore
+# 首先忽略所有的文件
+*
+# 忽略目录
+*/
+# 不忽略一些指定的目录名
+!cpu410/work/
+# 不忽略下面指定的文件类型
+!*.vhd
+!*.sch
