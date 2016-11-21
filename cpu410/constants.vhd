@@ -175,6 +175,18 @@ package constants is
 	-- used for id_ex_latch and pause_pipeline. if the reg known after MEM/EXE, or not needed
 	constant WB_EXE: std_logic_vector(1 downto 0) := "10";
 	constant WB_MEM: std_logic_vector(1 downto 0) := "01";
+	-- alu data choose
+	constant ALU_CHOOSE2_REG2: std_logic_vector(1 downto 0) := "00";
+	constant ALU_CHOOSE2_EXEFWD: std_logic_vector(1 downto 0) := "01";
+	constant ALU_CHOOSE2_MEMFWD: std_logic_vector(1 downto 0) := "10";
+	constant ALU_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "00";
+	constant ALU_CHOOSE1_RI: std_logic_vector(1 downto 0) := "01";
+	constant ALU_CHOOSE1_MEMFWD: std_logic_vector(1 downto 0) := "10";
+	-- register output choose. used for Bxxx instructions
+	constant REG_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "00";
+	constant REG_CHOOSE1_RF: std_logic_vector(1 downto 0) := "01" ;
+	constant REG_CHOOSE1_MEMFWD: std_logic_vector(1 downto 0) := "10";
+	
 	-- control signal : WB_CHOOSE
 	type WB_CHOOSE_TYPE is (
 		ALU_ADDR,
@@ -199,6 +211,7 @@ package constants is
 	type ID_EX_LATCH_EX is record
 		REG_NUM_CHOOSE : std_logic_vector(2 downto 0);
 		ALU_OP : std_logic_vector(4 downto 0);
+		ALU1_RI_CHOOSE: std_logic;
 	end record;
 
 
