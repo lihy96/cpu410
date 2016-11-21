@@ -11,6 +11,7 @@ entity id_ex_latch is
 		in_wb: in WB_CONTROL_TYPE;
 		out_wb_ctrl: out WB_CONTROL_TYPE;
 
+
 		in_mem: in ID_EX_LATCH_MEM;
 		out_mem_ctrl: out MEM_CTRL_TYPE;
 		out_pause: out std_logic_vector(1 downto 0);

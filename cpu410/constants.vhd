@@ -162,6 +162,7 @@ package constants is
 	-- constant defination for ex_mem_latch to MEM
 	constant MEM_READ : STD_LOGIC_VECTOR(1 downto 0) := "01"; --控制数据存储器进行读
 	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10"; --控制数据存储器进行写
+	constant MEM_NONE: std_logic_vector(1 downto 0) := "11";
 	constant COM_STATUS_ADDR : std_logic_vector(15 downto 0) := "1011111100000001"; --BF01
 	constant COM_DATA_ADDR : std_logic_vector(15 downto 0) := "1011111100000000"; --BF00
 
@@ -175,6 +176,7 @@ package constants is
 	-- used for id_ex_latch and pause_pipeline. if the reg known after MEM/EXE, or not needed
 	constant WB_EXE: std_logic_vector(1 downto 0) := "10";
 	constant WB_MEM: std_logic_vector(1 downto 0) := "01";
+	constant WB_NONE: std_logic_vector(1 downto 0) := "00";
 	-- alu data choose
 	constant ALU_CHOOSE2_REG2: std_logic_vector(1 downto 0) := "00";
 	constant ALU_CHOOSE2_EXEFWD: std_logic_vector(1 downto 0) := "01";
@@ -187,6 +189,7 @@ package constants is
 	constant REG_CHOOSE1_RF: std_logic_vector(1 downto 0) := "01" ;
 	constant REG_CHOOSE1_MEMFWD: std_logic_vector(1 downto 0) := "10";
 	
+	--constant reg
 	-- control signal : WB_CHOOSE
 	type WB_CHOOSE_TYPE is (
 		ALU_DATA,
