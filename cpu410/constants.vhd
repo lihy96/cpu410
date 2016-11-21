@@ -164,7 +164,8 @@ package constants is
 	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10"; --控制数据存储器进行写
 	constant COM_STATUS_ADDR : std_logic_vector(15 downto 0) := "1011111100000001"; --BF01
 	constant COM_DATA_ADDR : std_logic_vector(15 downto 0) := "1011111100000000"; --BF00
-	
+
+		
 	-- control signal : WB_CHOOSE
 	type WB_CHOOSE_TYPE is (
 		ALU_ADDR,
