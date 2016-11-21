@@ -8,8 +8,8 @@ entity id_ex_latch is
 	port (
 		clk: in std_logic;
 
-		in_wb: in WB_COTNROL_TYPE;
-		out_wb_ctrl: out WB_CTRL_TYPE;
+		in_wb: in WB_CONTROL_TYPE;
+		out_wb_ctrl: out WB_CONTROL_TYPE;
 
 		in_mem: in ID_EX_LATCH_MEM;
 		out_mem_ctrl: out MEM_CTRL_TYPE;
