@@ -388,7 +388,7 @@ begin
 							when PC_MFPC =>
 								immd(15 downto 0) <= ZERO16;
 								ex_ctrl.ALU_OP <= THU_ID_ASSIGN;
-								reg_wb_type <= WB_NONE;
+								reg_wb_type <= WB_MEM;
 								wb_ctrl.WB_CHOOSE <= PC_DATA;
 								wb_ctrl.REG_WN <= WriteEnable;
 								mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
