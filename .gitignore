@@ -90,3 +90,13 @@ cache/*
 *.xlsx
 *.pptx
 *.xise
+cpu410/work/*
+*/transcript
+
+# .gitignore
+# 忽略目录
+cpu410/*/
+# 不忽略一些指定的目录名
+# 不忽略下面指定的文件类型
+!cpu410/*.vhd
+!cpu410/*.sch

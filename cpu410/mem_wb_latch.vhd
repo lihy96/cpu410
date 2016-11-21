@@ -40,10 +40,10 @@ entity mem_wb_latch is
 		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
 		
 		-- control signal input
-		IN_WB_CONTROL_SIGNAL : in WB_CONTROL_SIGNAL_TYPE;
+		IN_WB_CONTROL : in WB_CONTROL_TYPE;
 		
 		-- control signal output
-		OUT_WB_FORWARD : out STD_LOGIC;
+		--OUT_WB_FORWARD : out STD_LOGIC;
 		OUT_WB_CHOOSE : out WB_CHOOSE_TYPE;
 		OUT_REG_WN : out STD_LOGIC
 		
@@ -61,9 +61,9 @@ begin
 			OUT_PC <= IN_PC;
 			OUT_REG_NO <= IN_REG_NO;
 			-- to be added : control signals
-			OUT_WB_FORWARD <= IN_WB_CONTROL_SIGNAL.WB_FORWARD;
-			OUT_WB_CHOOSE <= IN_WB_CONTROL_SIGNAL.WB_CHOOSE;
-			OUT_REG_WN <= IN_WB_CONTROL_SIGNAL.REG_WN;
+			--OUT_WB_FORWARD <= IN_WB_CONTROL.WB_FORWARD;
+			OUT_WB_CHOOSE <= IN_WB_CONTROL.WB_CHOOSE;
+			OUT_REG_WN <= IN_WB_CONTROL.REG_WN;
 		end if;
 	end process;
 

@@ -164,31 +164,47 @@ package constants is
 	constant MEM_WRITE : STD_LOGIC_VECTOR(1 downto 0) := "10"; --控制数据存储器进行写
 	constant COM_STATUS_ADDR : std_logic_vector(15 downto 0) := "1011111100000001"; --BF01
 	constant COM_DATA_ADDR : std_logic_vector(15 downto 0) := "1011111100000000"; --BF00
+
+	-- added by whz
+	-- special registers
+	constant T_REG: std_logic_vector(3 downto 0) := "1000" ;--T regieter
+	constant SP_REG: std_logic_vector(3 downto 0) := "1001"; -- stack pointer register
+	constant IH_REG: std_logic_vector(3 downto 0) := "1010"; --IH reg
+	constant RA_REG: std_logic_vector(3 downto 0) := "1011"; -- RA reg
+	constant IMG_REG: std_logic_vector(3 downto 0) := "1111"; -- the imageined register, deesn't exist actually, used for expressing 'None Register'
+	-- used for id_ex_latch and pause_pipeline. if the reg known after MEM/EXE, or not needed
+	constant WB_EXE: std_logic_vector(1 downto 0) := "10";
+	constant WB_MEM: std_logic_vector(1 downto 0) := "01";
+	-- alu data choose
+	constant ALU_CHOOSE2_REG2: std_logic_vector(1 downto 0) := "00";
+	constant ALU_CHOOSE2_EXEFWD: std_logic_vector(1 downto 0) := "01";
+	constant ALU_CHOOSE2_MEMFWD: std_logic_vector(1 downto 0) := "10";
+	constant ALU_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "00";
+	constant ALU_CHOOSE1_RI: std_logic_vector(1 downto 0) := "01";
+	constant ALU_CHOOSE1_MEMFWD: std_logic_vector(1 downto 0) := "10";
+	-- register output choose. used for Bxxx instructions
+	constant REG_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "00";
+	constant REG_CHOOSE1_RF: std_logic_vector(1 downto 0) := "01" ;
+	constant REG_CHOOSE1_MEMFWD: std_logic_vector(1 downto 0) := "10";
 	
 	-- control signal : WB_CHOOSE
 	type WB_CHOOSE_TYPE is (
-		ALU_ADDR,
+		ALU_DATA,
 		MEM_DATA,
 		PC_DATA
 	);
 	
 	-- record type for write back control signal
-	type WB_CONTROL_SIGNAL_TYPE is record --传给ex-mem锁存器的record type
-		WB_FORWARD : STD_LOGIC;
+	type WB_CONTROL_TYPE is record --传给ex-mem锁存器的record type
 		WB_CHOOSE : WB_CHOOSE_TYPE;
 		REG_WN : STD_LOGIC;
 	end record;
 	
-	type WB_CTRL_TYPE is record --传给mem-wb锁存器的record type
-		WB_CONTROL_SIGNAL : WB_CONTROL_SIGNAL_TYPE;
-		MEM_FORWARD : STD_LOGIC;
-	end record;
-
-
 	-- record type for write back control signal
 	type ID_EX_LATCH_EX is record
 		REG_NUM_CHOOSE : std_logic_vector(2 downto 0);
 		ALU_OP : std_logic_vector(4 downto 0);
+		ALU1_RI_CHOOSE: std_logic;
 	end record;
 
 
@@ -198,7 +214,7 @@ package constants is
 
 	type ID_EX_LATCH_MEM is record	--id_ex锁存器中mem的输入部分
 		ID_EX_LATCH_MEM_MEMCTRL : MEM_CTRL_TYPE;
-		ID_EX_LATCH_MEM_PAUSE: std_logic_vector(3 downto 0);
+		ID_EX_LATCH_MEM_PAUSE: std_logic_vector(1 downto 0);
 	end record;
 
 
