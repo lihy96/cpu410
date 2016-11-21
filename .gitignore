@@ -91,13 +91,11 @@ cache/*
 *.pptx
 *.xise
 cpu410/work/*
+
 # .gitignore
-# 首先忽略所有的文件
-*
 # 忽略目录
-*cpu410/
+cpu410/*/
 # 不忽略一些指定的目录名
-cpu410/work/
 # 不忽略下面指定的文件类型
-!*.vhd
-!*.sch
+!cpu410/*.vhd
+!cpu410/*.sch

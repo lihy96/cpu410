@@ -43,7 +43,7 @@ entity mem_wb_latch is
 		IN_WB_CONTROL : in WB_CONTROL_TYPE;
 		
 		-- control signal output
-		OUT_WB_FORWARD : out STD_LOGIC;
+		--OUT_WB_FORWARD : out STD_LOGIC;
 		OUT_WB_CHOOSE : out WB_CHOOSE_TYPE;
 		OUT_REG_WN : out STD_LOGIC
 		
