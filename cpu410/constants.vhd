@@ -195,18 +195,11 @@ package constants is
 	);
 	
 	-- record type for write back control signal
-	type WB_CONTROL_SIGNAL_TYPE is record --传给ex-mem锁存器的record type
-		WB_FORWARD : STD_LOGIC;
+	type WB_CONTROL_TYPE is record --传给ex-mem锁存器的record type
 		WB_CHOOSE : WB_CHOOSE_TYPE;
 		REG_WN : STD_LOGIC;
 	end record;
 	
-	type WB_CTRL_TYPE is record --传给mem-wb锁存器的record type
-		WB_CONTROL_SIGNAL : WB_CONTROL_SIGNAL_TYPE;
-		MEM_FORWARD : STD_LOGIC;
-	end record;
-
-
 	-- record type for write back control signal
 	type ID_EX_LATCH_EX is record
 		REG_NUM_CHOOSE : std_logic_vector(2 downto 0);

@@ -7,24 +7,28 @@ use work.constants.all;
 
 entity controller is
  	port (
- 		pc : in std_logic_vector(15 downto 0); 
  		instruction : in std_logic_vector(15 downto 0);	-- input instruction
 
  		alu_inst: out std_logic_vector(4 downto 0);	-- instruction that put to alu
  		immd: out std_logic_vector(15 downto 0);	-- immediate that output
  		jr_or_not: out std_logic;
  		b_inst: out std_logic;
+ 		
+ 		wb_ctrl: out WB_COTNROL_TYPE;
+
  		reg_wb_type: out std_logic_vector(1 downto 0)
+ 		mem_ctrl: out MEM_STRL_TYPE;
  		-- what kind of value will be written back?
  		-- an ALU calculated(known after EXE)?
- 		-- or read from alu(known after MEM)?
+ 		-- or read from mem(known after MEM)?
+ 		ex_ctrl: out ID_EX_LATCH_EX
 	);
 end entity ;
 
 
 architecture arch of controller is
 begin
-	process(pc, instruction)
+	process(instruction)
 	variable inst_15_to_11: std_logic_vector(4 downto 0) ;
 	begin
 	 	inst_15_to_11 := instruction(15 downto 11);
@@ -35,7 +39,8 @@ begin
  				immd(15 downto 8) <= (others => instruction(7));
  				immd(7 downto 0) <= instruction(7 downto 0);
  				reg_wb_type <= WB_EXE;
-
+ 				wb_ctrl.WB_CHOOSE <= 
+ 				wb_ctrl.REG_WN <= 
  				alu_inst <= THU_ID_ADD;
  			
  			when OP_ADDIU3 =>
@@ -237,7 +242,7 @@ begin
 				 				jr_or_not <= JR_YES;
 
 		 					when PC_MFPC =>
-				 				immd(15 downto 0) <= pc;
+				 				immd(15 downto 0) <= ZERO16;
 				 				alu_inst <= THU_ID_ASSIGN;
 		 					
 		 					when others =>		 				
