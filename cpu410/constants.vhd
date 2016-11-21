@@ -189,7 +189,7 @@ package constants is
 	
 	-- control signal : WB_CHOOSE
 	type WB_CHOOSE_TYPE is (
-		ALU_ADDR,
+		ALU_DATA,
 		MEM_DATA,
 		PC_DATA
 	);

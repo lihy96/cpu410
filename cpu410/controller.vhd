@@ -39,7 +39,7 @@ begin
  				immd(15 downto 8) <= (others => instruction(7));
  				immd(7 downto 0) <= instruction(7 downto 0);
  				reg_wb_type <= WB_EXE;
- 				wb_ctrl.WB_CHOOSE <= 
+ 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
  				wb_ctrl.REG_WN <= 
  				alu_inst <= THU_ID_ADD;
  			

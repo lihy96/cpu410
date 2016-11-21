@@ -91,6 +91,7 @@ cache/*
 *.pptx
 *.xise
 cpu410/work/*
+*/transcript
 
 # .gitignore
 # 忽略目录

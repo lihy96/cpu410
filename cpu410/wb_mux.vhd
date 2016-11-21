@@ -37,8 +37,8 @@ entity wb_mux is
 		CLK : in STD_LOGIC;
 		
 		-- data input
-		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_ALU_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_MEM_DATA : in STD_LOGIC_VECTOR(15 downto 0);
 		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
 		
 		-- data output
@@ -58,10 +58,10 @@ begin
 	begin
 		if (CLK'event and CLK = '1') then
 			case IN_WB_CHOOSE is
-				when ALU_ADDR =>
-					OUT_WB_DATA <= IN_ADDR;
+				when ALU_DATA =>
+					OUT_WB_DATA <= IN_ALU_DATA;
 				when MEM_DATA =>
-					OUT_WB_DATA <= IN_DATA;
+					OUT_WB_DATA <= IN_MEM_DATA;
 				when PC_DATA =>
 					OUT_WB_DATA <= IN_PC;
 			end case;
