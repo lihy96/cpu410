@@ -46,7 +46,7 @@ begin
 		end if ;
 
 		if reg2 = reg_prev and reg_prev_type = WB_EXE then
-			nxt_alu2 <= AUL_CHOOSE2_EXEFWD;
+			nxt_alu2 <= ALU_CHOOSE2_EXEFWD;
 		elsif reg2 = reg_prev1 and reg1_prev_type = WB_MEM then
 			nxt_alu2 <= ALU_CHOOSE2_MEMFWD;
 		else

@@ -227,6 +227,19 @@ package constants is
 	constant Inst_ram2 : std_logic := '1';
 	constant Data_ram1 : std_logic := '0';
 
+	-- write back register number
+	constant WB_reg_num_Rx: std_logic_vector(2 downto 0) := "000";
+	constant WB_reg_num_Ry: std_logic_vector(2 downto 0) := "001";
+	constant WB_reg_num_Rz: std_logic_vector(2 downto 0) := "010";
+	constant WB_reg_num_T: std_logic_vector(2 downto 0) := "011";
+	constant WB_reg_num_SP: std_logic_vector(2 downto 0) := "100";
+	constant WB_reg_num_IH: std_logic_vector(2 downto 0) := "101";
+	constant WB_reg_NO: std_logic_vector(2 downto 0) := "110";
+
+	-- alu No.2 src in from register or immmediate of instruction
+	constant ALU_SRC2_FROM_REG : std_logic := '0';
+	constant ALU_SRC2_FROM_INS : std_logic := '1';
+
 end package;
 
 
