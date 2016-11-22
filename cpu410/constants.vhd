@@ -243,6 +243,12 @@ package constants is
 	constant ALU_SRC2_FROM_REG : std_logic := '0';
 	constant ALU_SRC2_FROM_INS : std_logic := '1';
 
+	-- FOR THE MUX THAT WILL GIVE VALUE TO PC (LIHY)
+	constant PC_NEXT_VAL_FROM_B: std_logic := '1';
+	constant PC_NEXT_VAL_NOT_FROM_B: std_logic := '0';
+	constant PC_NEXT_VAL_FROM_JR: std_logic := '1';
+	constant PC_NEXT_VAL_NOT_FROM_JR: std_logic := '0';
+
 end package;
 
 
