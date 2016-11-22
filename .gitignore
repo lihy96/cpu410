@@ -2,6 +2,10 @@
 # 忽略
 cpu410/*/
 cpu410/*
+pro3/*
+pro3/*/
+*.xlsx
+*.pptx
 # 不忽略下面指定的文件类型
 !cpu410/*.vhd
 !cpu410/*.sch

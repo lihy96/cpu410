@@ -205,7 +205,7 @@ package constants is
 	
 	-- record type for write back control signal
 	type ID_EX_LATCH_EX is record
-		REG_NUM_CHOOSE : std_logic_vector(2 downto 0);
+		REG_WB_CHOOSE : std_logic_vector(3 downto 0);
 		ALU_OP : std_logic_vector(4 downto 0);
 		ALU1_RI_CHOOSE: std_logic;
 	end record;
