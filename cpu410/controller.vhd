@@ -13,15 +13,18 @@ entity controller is
 		immd: out std_logic_vector(15 downto 0);	-- immediate that output
 		jr_or_not: out std_logic;
 		b_inst: out std_logic;
+		b_eq_ne: out std_logic;
 
 		wb_ctrl: out WB_CONTROL_TYPE;
 
 		reg_wb_type: out std_logic_vector(1 downto 0);
-		mem_ctrl: out MEM_CTRL_TYPE;
 		-- what kind of value will be written back?
 		-- an ALU calculated(known after EXE)?
 		-- or read from mem(known after MEM)?
-		ex_ctrl: out ID_EX_LATCH_EX
+		mem_ctrl: out MEM_CTRL_TYPE;
+		ex_ctrl: out ID_EX_LATCH_EX;
+		reg_r1: out std_logic_vector(3 downto 0);
+		reg_r2: out std_logic_vector(3 downto 0)
 	);
 end entity ;
 
@@ -34,6 +37,7 @@ begin
 		inst_15_to_11 := instruction(15 downto 11);
 		jr_or_not <= JR_NO;
 		b_inst <= B_INST_NO;
+		b_eq_ne <= B_EQ;
 		case (inst_15_to_11) is
 			when OP_ADDIU =>
 				immd(15 downto 8) <= (others => instruction(7));
@@ -42,10 +46,11 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteEnable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+				ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
-
 				ex_ctrl.ALU_OP <= THU_ID_ADD;
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= IMG_REG;
 
 			when OP_ADDIU3 =>
 				immd(15 downto 4) <= (others => instruction(3));
@@ -55,8 +60,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteEnable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Ry;
+				ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(7 downto 5);
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= IMG_REG;
 
 			when OP_B =>
 				immd(15 downto 11) <= (others => instruction(10));
@@ -67,8 +74,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteDisable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= ZERO_REG;
+				reg_r2 <= ZERO_REG;
 				b_inst <= B_INST_YES;
 
 			when OP_BEQZ =>
@@ -80,8 +89,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteDisable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= ZERO_REG;
 				b_inst <= B_INST_YES;
 
 			when OP_BNEZ =>
@@ -91,10 +102,12 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteDisable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
 				ex_ctrl.ALU_OP <= THU_ID_BRANCHN;
-
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= ZERO_REG;
+				b_eq_ne <= B_NE;
 				b_inst <= B_INST_YES;
 
 			when OP_LI =>
@@ -105,8 +118,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteEnable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+				ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= IMG_REG;
+				reg_r2 <= IMG_REG;
 
 			when OP_LW =>
 				immd(15 downto 5) <= (others => instruction(4));
@@ -116,8 +131,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= MEM_DATA;
 				wb_ctrl.REG_WN <= WriteEnable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_READ;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Ry;
+				ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(7 downto 5);
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= IMG_REG;
 
 			when OP_LW_SP =>
 				immd(15 downto 8) <= (others => instruction(7));
@@ -127,8 +144,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= MEM_DATA;
 				wb_ctrl.REG_WN <= WriteEnable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_READ;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+				ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= SP_REG;
+				reg_r2 <= IMG_REG;
 
 			when OP_IH =>
 				case( instruction(7 downto 0) ) is
@@ -139,8 +158,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= IH_REG;
+						reg_r2 <= IMG_REG;
 
 					when IH_MTIH =>
 						immd(15 downto 0) <= ZERO16;
@@ -149,8 +170,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_IH;
+						ex_ctrl.REG_WB_CHOOSE <= IH_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= IMG_REG;
 					when others =>
 
 				end case ;
@@ -162,7 +185,7 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteDisable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
 
 			when OP_SHIFT =>
@@ -174,8 +197,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+						reg_r1 <= '0' & instruction(7 downto 5);
+						reg_r2 <= IMG_REG;
 						if (instruction(4 downto 2) = "000") then
 							immd(15 downto 4) <= (others => '0');
 							immd(3 downto 0) <= "1000";
@@ -190,8 +215,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+						reg_r1 <= '0' & instruction(7 downto 5);
+						reg_r2 <= IMG_REG;
 						if (instruction(4 downto 2) = "000") then
 							immd(15 downto 4) <= (others => '0');
 							immd(3 downto 0) <= "1000";
@@ -223,8 +250,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteDisable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_WRITE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= '0' & instruction(7 downto 5);
 
 			when OP_SW_SP =>
 				immd(15 downto 8) <= (others => instruction(7));
@@ -234,8 +263,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteDisable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_WRITE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= SP_REG;
+				reg_r2 <= '0' & instruction(10 downto 8);
 
 			-- THIS INSTR WE NOT USE SO IT IS NOT COMPLETE
 			when OP_ADDSP3 =>
@@ -251,8 +282,10 @@ begin
 				wb_ctrl.WB_CHOOSE <= ALU_DATA;
 				wb_ctrl.REG_WN <= WriteEnable;
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-				ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_T;
+				ex_ctrl.REG_WB_CHOOSE <= T_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= '0' & instruction(10 downto 8);
+				reg_r2 <= IMG_REG;
 
 			-- THIS INS WE NOT HAVE
 			when OP_SLTUI =>
@@ -271,8 +304,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_SP;
+						ex_ctrl.REG_WB_CHOOSE <= SP_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+						reg_r1 <= SP_REG;
+						reg_r2 <= IMG_REG;
 
 					when SPECIAL_BTEQZ =>
 						immd(15 downto 8) <= (others => instruction(7));
@@ -282,8 +317,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteDisable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+						reg_r1 <= T_REG;
+						reg_r2 <= ZERO_REG;
 						b_inst <= B_INST_YES;
 
 					when SPECIAL_MTSP =>
@@ -293,8 +330,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_SP;
+						ex_ctrl.REG_WB_CHOOSE <= SP_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(7 downto 5);
+						reg_r2 <= IMG_REG;
 
 					when SPECIAL_BTNEZ =>
 
@@ -305,8 +344,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteDisable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+						reg_r1 <= T_REG;
+						reg_r2 <= ONE_REG;
 						b_inst <= B_INST_YES;
 
 					when SPECIAL_SW_RS =>
@@ -318,8 +359,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteDisable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_WRITE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+						reg_r1 <= SP_REG;
+						reg_r2 <= RA_REG;
 
 					when others =>
 
@@ -334,8 +377,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rz;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(4 downto 2);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
 					when (ADD_SUB_U_SUBU) =>
 						immd(15 downto 0) <= ZERO16;
 						ex_ctrl.ALU_OP <= THU_ID_SUB;
@@ -343,8 +388,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rz;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(4 downto 2);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
 					when others =>
 				end case ;
 
@@ -358,8 +405,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
 
 					when LOGIC_CMP =>
 						immd(15 downto 0) <= ZERO16;
@@ -368,7 +417,9 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_T;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
+						ex_ctrl.REG_WB_CHOOSE <= T_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 
 					when LOGIC_PC =>
@@ -381,8 +432,10 @@ begin
 								reg_wb_type <= WB_NONE;
 								wb_ctrl.WB_CHOOSE <= ALU_DATA;
 								wb_ctrl.REG_WN <= WriteDisable;
+								reg_r1 <= IMG_REG;
+								reg_r2 <= IMG_REG;
 								mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-								ex_ctrl.REG_NUM_CHOOSE <= WB_reg_NO;
+								ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 								ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 
 							when PC_MFPC =>
@@ -392,8 +445,10 @@ begin
 								wb_ctrl.WB_CHOOSE <= PC_DATA;
 								wb_ctrl.REG_WN <= WriteEnable;
 								mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-								ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+								ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 								ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+								reg_r1 <= IMG_REG;
+								reg_r2 <= IMG_REG;
 
 							when others =>
 						end case ;
@@ -405,8 +460,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Rx;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
 
 					when LOGIC_SRAV =>
 						immd(15 downto 0) <= ZERO16;
@@ -423,8 +480,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Ry;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(7 downto 5);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
 
 					when LOGIC_SRLV =>
 						immd <= ZERO16;
@@ -433,8 +492,10 @@ begin
 						wb_ctrl.WB_CHOOSE <= ALU_DATA;
 						wb_ctrl.REG_WN <= WriteEnable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
-						ex_ctrl.REG_NUM_CHOOSE <= WB_reg_num_Ry;
+						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(7 downto 5);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						reg_r1 <= '0' & instruction(10 downto 8);
+						reg_r2 <= '0' & instruction(7 downto 5);
 
 					when others =>
 

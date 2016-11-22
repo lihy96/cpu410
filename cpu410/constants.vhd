@@ -57,7 +57,8 @@ package constants is
 	constant JR_NO  :    std_logic := '0';
 	constant B_INST_YES: std_logic := '1';
 	constant B_INST_NO:  std_logic := '0';
-
+	constant B_NE: std_logic := '1';
+	constant B_EQ: std_logic := '0';
 	constant And_Door_True: std_logic := '1';
 	constant And_Door_False: std_logic := '0';
 	constant And_Door_No_use: std_logic := 'Z';
@@ -172,6 +173,8 @@ package constants is
 	constant SP_REG: std_logic_vector(3 downto 0) := "1001"; -- stack pointer register
 	constant IH_REG: std_logic_vector(3 downto 0) := "1010"; --IH reg
 	constant RA_REG: std_logic_vector(3 downto 0) := "1011"; -- RA reg
+	constant ZERO_REG: std_logic_vector(3 downto 0) := "1100"; -- this register always 0
+	constant ONE_REG: std_logic_vector(3 downto 0) := "1101"; -- this register always 1
 	constant IMG_REG: std_logic_vector(3 downto 0) := "1111"; -- the imageined register, deesn't exist actually, used for expressing 'None Register'
 	-- used for id_ex_latch and pause_pipeline. if the reg known after MEM/EXE, or not needed
 	constant WB_EXE: std_logic_vector(1 downto 0) := "10";
@@ -205,7 +208,7 @@ package constants is
 	
 	-- record type for write back control signal
 	type ID_EX_LATCH_EX is record
-		REG_NUM_CHOOSE : std_logic_vector(2 downto 0);
+		REG_WB_CHOOSE : std_logic_vector(3 downto 0);
 		ALU_OP : std_logic_vector(4 downto 0);
 		ALU1_RI_CHOOSE: std_logic;
 	end record;
