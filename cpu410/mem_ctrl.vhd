@@ -65,7 +65,7 @@ begin
 	process(CLK)
 		variable temp:std_logic_vector(15 downto 0);
 		begin
-		if (CLK'event and CLK = '1') then
+		if falling_edge(CLK) then
 			case state is
 				when init =>
 					case RAM_ADDR is
