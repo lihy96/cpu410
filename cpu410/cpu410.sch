@@ -65,14 +65,12 @@
         <signal name="XLXN_84(1:0)" />
         <signal name="XLXN_85(11:0)" />
         <signal name="XLXN_88(15:0)" />
-        <signal name="XLXN_89(15:0)" />
         <signal name="XLXN_90" />
         <signal name="XLXN_98" />
         <signal name="XLXN_99(15:0)" />
         <signal name="XLXN_100(3:0)" />
-        <signal name="XLXN_101(15:0)" />
         <blockdef name="alu">
-            <timestamp>2016-11-23T8:26:20</timestamp>
+            <timestamp>2016-11-23T16:55:41</timestamp>
             <rect width="304" x="64" y="-192" height="192" />
             <rect width="64" x="0" y="-172" height="24" />
             <line x2="0" y1="-160" y2="-160" x1="64" />
@@ -94,7 +92,7 @@
             <line x2="416" y1="-96" y2="-96" x1="352" />
         </blockdef>
         <blockdef name="if_id_latch">
-            <timestamp>2016-11-23T8:24:14</timestamp>
+            <timestamp>2016-11-23T16:56:5</timestamp>
             <rect width="400" x="64" y="-320" height="320" />
             <line x2="0" y1="-288" y2="-288" x1="64" />
             <line x2="0" y1="-224" y2="-224" x1="64" />
@@ -112,40 +110,40 @@
             <line x2="528" y1="-32" y2="-32" x1="464" />
         </blockdef>
         <blockdef name="id_ex_latch">
-            <timestamp>2016-11-23T12:5:20</timestamp>
-            <rect width="448" x="64" y="-960" height="960" />
-            <line x2="0" y1="-928" y2="-928" x1="64" />
-            <line x2="0" y1="-864" y2="-864" x1="64" />
-            <line x2="0" y1="-800" y2="-800" x1="64" />
-            <line x2="0" y1="-736" y2="-736" x1="64" />
-            <rect width="64" x="0" y="-684" height="24" />
-            <line x2="0" y1="-672" y2="-672" x1="64" />
-            <rect width="64" x="0" y="-620" height="24" />
+            <timestamp>2016-11-23T16:56:11</timestamp>
+            <rect width="448" x="64" y="-640" height="640" />
             <line x2="0" y1="-608" y2="-608" x1="64" />
-            <rect width="64" x="0" y="-556" height="24" />
-            <line x2="0" y1="-544" y2="-544" x1="64" />
-            <rect width="64" x="0" y="-492" height="24" />
-            <line x2="0" y1="-480" y2="-480" x1="64" />
-            <line x2="576" y1="-928" y2="-928" x1="512" />
-            <line x2="576" y1="-864" y2="-864" x1="512" />
-            <line x2="576" y1="-800" y2="-800" x1="512" />
-            <rect width="64" x="512" y="-748" height="24" />
-            <line x2="576" y1="-736" y2="-736" x1="512" />
-            <rect width="64" x="512" y="-684" height="24" />
-            <line x2="576" y1="-672" y2="-672" x1="512" />
-            <rect width="64" x="512" y="-620" height="24" />
+            <line x2="0" y1="-528" y2="-528" x1="64" />
+            <line x2="0" y1="-448" y2="-448" x1="64" />
+            <line x2="0" y1="-368" y2="-368" x1="64" />
+            <rect width="64" x="0" y="-300" height="24" />
+            <line x2="0" y1="-288" y2="-288" x1="64" />
+            <rect width="64" x="0" y="-220" height="24" />
+            <line x2="0" y1="-208" y2="-208" x1="64" />
+            <rect width="64" x="0" y="-140" height="24" />
+            <line x2="0" y1="-128" y2="-128" x1="64" />
+            <rect width="64" x="0" y="-60" height="24" />
+            <line x2="0" y1="-48" y2="-48" x1="64" />
             <line x2="576" y1="-608" y2="-608" x1="512" />
-            <rect width="64" x="512" y="-556" height="24" />
             <line x2="576" y1="-544" y2="-544" x1="512" />
-            <rect width="64" x="512" y="-492" height="24" />
             <line x2="576" y1="-480" y2="-480" x1="512" />
             <rect width="64" x="512" y="-428" height="24" />
             <line x2="576" y1="-416" y2="-416" x1="512" />
             <rect width="64" x="512" y="-364" height="24" />
             <line x2="576" y1="-352" y2="-352" x1="512" />
+            <rect width="64" x="512" y="-300" height="24" />
+            <line x2="576" y1="-288" y2="-288" x1="512" />
+            <rect width="64" x="512" y="-236" height="24" />
+            <line x2="576" y1="-224" y2="-224" x1="512" />
+            <rect width="64" x="512" y="-172" height="24" />
+            <line x2="576" y1="-160" y2="-160" x1="512" />
+            <rect width="64" x="512" y="-108" height="24" />
+            <line x2="576" y1="-96" y2="-96" x1="512" />
+            <rect width="64" x="512" y="-44" height="24" />
+            <line x2="576" y1="-32" y2="-32" x1="512" />
         </blockdef>
         <blockdef name="mem_wb_latch">
-            <timestamp>2016-11-23T8:24:26</timestamp>
+            <timestamp>2016-11-23T16:56:17</timestamp>
             <rect width="416" x="64" y="-384" height="384" />
             <line x2="0" y1="-352" y2="-352" x1="64" />
             <line x2="0" y1="-288" y2="-288" x1="64" />
@@ -169,7 +167,7 @@
             <line x2="544" y1="-32" y2="-32" x1="480" />
         </blockdef>
         <blockdef name="ex_mem_latch">
-            <timestamp>2016-11-23T8:24:33</timestamp>
+            <timestamp>2016-11-23T16:56:24</timestamp>
             <rect width="512" x="64" y="-512" height="512" />
             <line x2="0" y1="-480" y2="-480" x1="64" />
             <line x2="0" y1="-416" y2="-416" x1="64" />
@@ -198,7 +196,7 @@
             <line x2="640" y1="-96" y2="-96" x1="576" />
         </blockdef>
         <blockdef name="pc_reg">
-            <timestamp>2016-11-23T8:24:39</timestamp>
+            <timestamp>2016-11-23T16:56:30</timestamp>
             <rect width="320" x="64" y="-256" height="256" />
             <line x2="0" y1="-224" y2="-224" x1="64" />
             <line x2="0" y1="-160" y2="-160" x1="64" />
@@ -209,7 +207,7 @@
             <line x2="448" y1="-224" y2="-224" x1="384" />
         </blockdef>
         <blockdef name="pc_adder">
-            <timestamp>2016-11-23T8:24:45</timestamp>
+            <timestamp>2016-11-23T16:56:35</timestamp>
             <rect width="400" x="64" y="-64" height="64" />
             <rect width="64" x="0" y="-44" height="24" />
             <line x2="0" y1="-32" y2="-32" x1="64" />
@@ -217,7 +215,7 @@
             <line x2="528" y1="-32" y2="-32" x1="464" />
         </blockdef>
         <blockdef name="inst_ram">
-            <timestamp>2016-11-23T8:24:51</timestamp>
+            <timestamp>2016-11-23T16:56:41</timestamp>
             <rect width="480" x="64" y="-384" height="384" />
             <line x2="0" y1="-352" y2="-352" x1="64" />
             <rect width="64" x="0" y="-268" height="24" />
@@ -237,7 +235,7 @@
             <line x2="608" y1="-32" y2="-32" x1="544" />
         </blockdef>
         <blockdef name="mux3">
-            <timestamp>2016-11-23T8:24:56</timestamp>
+            <timestamp>2016-11-23T16:56:47</timestamp>
             <rect width="256" x="64" y="-256" height="256" />
             <rect width="64" x="0" y="-236" height="24" />
             <line x2="0" y1="-224" y2="-224" x1="64" />
@@ -251,7 +249,7 @@
             <line x2="384" y1="-224" y2="-224" x1="320" />
         </blockdef>
         <blockdef name="registers">
-            <timestamp>2016-11-23T8:25:4</timestamp>
+            <timestamp>2016-11-23T16:56:54</timestamp>
             <rect width="336" x="64" y="-448" height="448" />
             <line x2="0" y1="-416" y2="-416" x1="64" />
             <line x2="0" y1="-352" y2="-352" x1="64" />
@@ -270,7 +268,7 @@
             <line x2="464" y1="-32" y2="-32" x1="400" />
         </blockdef>
         <blockdef name="mem_ctrl">
-            <timestamp>2016-11-23T8:25:13</timestamp>
+            <timestamp>2016-11-23T16:57:0</timestamp>
             <rect width="480" x="64" y="-512" height="512" />
             <line x2="0" y1="-480" y2="-480" x1="64" />
             <line x2="0" y1="-416" y2="-416" x1="64" />
@@ -295,7 +293,7 @@
             <line x2="608" y1="-32" y2="-32" x1="544" />
         </blockdef>
         <blockdef name="wb_mux">
-            <timestamp>2016-11-23T8:25:20</timestamp>
+            <timestamp>2016-11-23T16:57:7</timestamp>
             <rect width="464" x="64" y="-320" height="320" />
             <line x2="0" y1="-288" y2="-288" x1="64" />
             <line x2="0" y1="-224" y2="-224" x1="64" />
@@ -309,14 +307,14 @@
             <line x2="592" y1="-288" y2="-288" x1="528" />
         </blockdef>
         <blockdef name="cmp8k">
-            <timestamp>2016-11-23T8:25:31</timestamp>
+            <timestamp>2016-11-23T16:57:13</timestamp>
             <rect width="256" x="64" y="-64" height="64" />
             <rect width="64" x="0" y="-44" height="24" />
             <line x2="0" y1="-32" y2="-32" x1="64" />
             <line x2="384" y1="-32" y2="-32" x1="320" />
         </blockdef>
         <blockdef name="mux2_pc_inst">
-            <timestamp>2016-11-23T8:26:48</timestamp>
+            <timestamp>2016-11-23T16:57:18</timestamp>
             <rect width="256" x="64" y="-192" height="192" />
             <rect width="64" x="0" y="-172" height="24" />
             <line x2="0" y1="-160" y2="-160" x1="64" />
@@ -328,7 +326,7 @@
             <line x2="384" y1="-160" y2="-160" x1="320" />
         </blockdef>
         <blockdef name="controller">
-            <timestamp>2016-11-23T9:2:6</timestamp>
+            <timestamp>2016-11-23T16:57:24</timestamp>
             <rect width="368" x="64" y="-640" height="640" />
             <rect width="64" x="0" y="-620" height="24" />
             <line x2="0" y1="-608" y2="-608" x1="64" />
@@ -348,7 +346,7 @@
             <line x2="496" y1="-32" y2="-32" x1="432" />
         </blockdef>
         <blockdef name="mux3_pc">
-            <timestamp>2016-11-23T8:27:29</timestamp>
+            <timestamp>2016-11-23T16:57:30</timestamp>
             <rect width="384" x="64" y="-320" height="320" />
             <line x2="0" y1="-288" y2="-288" x1="64" />
             <line x2="0" y1="-224" y2="-224" x1="64" />
@@ -362,47 +360,47 @@
             <line x2="512" y1="-288" y2="-288" x1="448" />
         </blockdef>
         <blockdef name="and_xor_equal">
-            <timestamp>2016-11-23T11:40:6</timestamp>
-            <rect width="64" x="0" y="20" height="24" />
-            <line x2="0" y1="32" y2="32" x1="64" />
-            <rect width="64" x="0" y="84" height="24" />
-            <line x2="0" y1="96" y2="96" x1="64" />
+            <timestamp>2016-11-23T16:57:36</timestamp>
+            <rect width="256" x="64" y="-256" height="256" />
+            <line x2="0" y1="-224" y2="-224" x1="64" />
+            <line x2="0" y1="-160" y2="-160" x1="64" />
+            <rect width="64" x="0" y="-108" height="24" />
             <line x2="0" y1="-96" y2="-96" x1="64" />
+            <rect width="64" x="0" y="-44" height="24" />
             <line x2="0" y1="-32" y2="-32" x1="64" />
             <line x2="384" y1="-224" y2="-224" x1="320" />
-            <rect width="256" x="64" y="-256" height="384" />
         </blockdef>
         <blockdef name="ctrl_mux">
-            <timestamp>2016-11-23T11:3:38</timestamp>
-            <rect width="64" x="0" y="20" height="24" />
-            <line x2="0" y1="32" y2="32" x1="64" />
-            <line x2="432" y1="32" y2="32" x1="368" />
+            <timestamp>2016-11-23T16:57:42</timestamp>
+            <rect width="384" x="64" y="-320" height="320" />
+            <line x2="0" y1="-288" y2="-288" x1="64" />
             <line x2="0" y1="-224" y2="-224" x1="64" />
             <line x2="0" y1="-160" y2="-160" x1="64" />
             <line x2="0" y1="-96" y2="-96" x1="64" />
+            <rect width="64" x="0" y="-44" height="24" />
             <line x2="0" y1="-32" y2="-32" x1="64" />
-            <line x2="432" y1="-224" y2="-224" x1="368" />
-            <line x2="432" y1="-32" y2="-32" x1="368" />
-            <rect width="304" x="64" y="-256" height="320" />
+            <line x2="512" y1="-288" y2="-288" x1="448" />
+            <line x2="512" y1="-160" y2="-160" x1="448" />
+            <line x2="512" y1="-32" y2="-32" x1="448" />
         </blockdef>
         <blockdef name="pause_pipeline">
-            <timestamp>2016-11-23T12:15:46</timestamp>
-            <rect width="400" x="64" y="-320" height="320" />
-            <line x2="0" y1="-288" y2="-288" x1="64" />
-            <rect width="64" x="0" y="-220" height="24" />
-            <line x2="0" y1="-208" y2="-208" x1="64" />
-            <rect width="64" x="0" y="-140" height="24" />
-            <line x2="0" y1="-128" y2="-128" x1="64" />
-            <rect width="64" x="0" y="-60" height="24" />
-            <line x2="0" y1="-48" y2="-48" x1="64" />
-            <line x2="528" y1="-288" y2="-288" x1="464" />
+            <timestamp>2016-11-23T16:57:47</timestamp>
+            <rect width="400" x="64" y="-256" height="256" />
+            <line x2="0" y1="-224" y2="-224" x1="64" />
+            <rect width="64" x="0" y="-172" height="24" />
+            <line x2="0" y1="-160" y2="-160" x1="64" />
+            <rect width="64" x="0" y="-108" height="24" />
+            <line x2="0" y1="-96" y2="-96" x1="64" />
+            <rect width="64" x="0" y="-44" height="24" />
+            <line x2="0" y1="-32" y2="-32" x1="64" />
             <line x2="528" y1="-224" y2="-224" x1="464" />
             <line x2="528" y1="-160" y2="-160" x1="464" />
-            <rect width="64" x="464" y="-108" height="24" />
             <line x2="528" y1="-96" y2="-96" x1="464" />
+            <rect width="64" x="464" y="-44" height="24" />
+            <line x2="528" y1="-32" y2="-32" x1="464" />
         </blockdef>
         <blockdef name="mux2">
-            <timestamp>2016-11-23T11:52:45</timestamp>
+            <timestamp>2016-11-23T16:57:53</timestamp>
             <rect width="256" x="64" y="-192" height="192" />
             <line x2="0" y1="-160" y2="-160" x1="64" />
             <rect width="64" x="0" y="-108" height="24" />
@@ -413,8 +411,9 @@
             <line x2="384" y1="-160" y2="-160" x1="320" />
         </blockdef>
         <blockdef name="forward">
-            <timestamp>2016-11-23T12:1:30</timestamp>
-            <line x2="0" y1="32" y2="32" x1="64" />
+            <timestamp>2016-11-23T16:57:59</timestamp>
+            <rect width="400" x="64" y="-384" height="384" />
+            <line x2="0" y1="-352" y2="-352" x1="64" />
             <rect width="64" x="0" y="-300" height="24" />
             <line x2="0" y1="-288" y2="-288" x1="64" />
             <rect width="64" x="0" y="-236" height="24" />
@@ -425,13 +424,12 @@
             <line x2="0" y1="-96" y2="-96" x1="64" />
             <rect width="64" x="0" y="-44" height="24" />
             <line x2="0" y1="-32" y2="-32" x1="64" />
-            <rect width="64" x="464" y="-300" height="24" />
-            <line x2="528" y1="-288" y2="-288" x1="464" />
-            <rect width="64" x="464" y="-172" height="24" />
-            <line x2="528" y1="-160" y2="-160" x1="464" />
+            <rect width="64" x="464" y="-364" height="24" />
+            <line x2="528" y1="-352" y2="-352" x1="464" />
+            <rect width="64" x="464" y="-204" height="24" />
+            <line x2="528" y1="-192" y2="-192" x1="464" />
             <rect width="64" x="464" y="-44" height="24" />
             <line x2="528" y1="-32" y2="-32" x1="464" />
-            <rect width="400" x="64" y="-320" height="384" />
         </blockdef>
         <block symbolname="if_id_latch" name="XLXI_3">
             <blockpin name="clk" />
@@ -444,24 +442,24 @@
             <blockpin signalname="XLXN_29(15:0)" name="out_inst(15:0)" />
         </block>
         <block symbolname="id_ex_latch" name="XLXI_4">
-            <blockpin name="clk" />
-            <blockpin signalname="XLXN_47" name="in_wb" />
-            <blockpin signalname="XLXN_60" name="in_mem" />
-            <blockpin signalname="XLXN_45" name="in_ex" />
-            <blockpin signalname="XLXN_65(15:0)" name="in_Rx_val(15:0)" />
-            <blockpin signalname="XLXN_63(15:0)" name="in_Ry_val(15:0)" />
-            <blockpin signalname="XLXN_38(15:0)" name="in_imme(15:0)" />
-            <blockpin signalname="XLXN_24(15:0)" name="in_pc(15:0)" />
-            <blockpin signalname="XLXN_17" name="out_wb_ctrl" />
-            <blockpin signalname="XLXN_16" name="out_mem_ctrl" />
-            <blockpin signalname="XLXN_74" name="out_alu1_ri_choose" />
-            <blockpin signalname="XLXN_62(1:0)" name="out_pause(1:0)" />
-            <blockpin signalname="XLXN_81(3:0)" name="out_reg_num_choose(3:0)" />
-            <blockpin signalname="XLXN_70(4:0)" name="out_alu_op(4:0)" />
-            <blockpin signalname="XLXN_71(15:0)" name="out_Rx_val(15:0)" />
-            <blockpin signalname="XLXN_72(15:0)" name="out_Ry_val(15:0)" />
-            <blockpin signalname="XLXN_73(15:0)" name="out_imme(15:0)" />
-            <blockpin signalname="XLXN_25(15:0)" name="out_pc(15:0)" />
+            <blockpin signalname="XLXN_63(15:0)" name="clk" />
+            <blockpin name="in_wb" />
+            <blockpin name="in_mem" />
+            <blockpin name="in_ex" />
+            <blockpin name="in_Rx_val(15:0)" />
+            <blockpin name="in_Ry_val(15:0)" />
+            <blockpin name="in_imme(15:0)" />
+            <blockpin name="in_pc(15:0)" />
+            <blockpin signalname="XLXN_70(4:0)" name="out_wb_ctrl" />
+            <blockpin signalname="XLXN_71(15:0)" name="out_mem_ctrl" />
+            <blockpin signalname="XLXN_72(15:0)" name="out_alu1_ri_choose" />
+            <blockpin signalname="XLXN_73(15:0)" name="out_pause(1:0)" />
+            <blockpin signalname="XLXN_25(15:0)" name="out_reg_num_choose(3:0)" />
+            <blockpin name="out_alu_op(4:0)" />
+            <blockpin name="out_Rx_val(15:0)" />
+            <blockpin name="out_Ry_val(15:0)" />
+            <blockpin name="out_imme(15:0)" />
+            <blockpin name="out_pc(15:0)" />
         </block>
         <block symbolname="mem_wb_latch" name="XLXI_5">
             <blockpin name="CLK" />
@@ -610,31 +608,31 @@
             <blockpin signalname="XLXN_35(15:0)" name="out_next_pc(15:0)" />
         </block>
         <block symbolname="and_xor_equal" name="XLXI_25">
-            <blockpin signalname="XLXN_32" name="b_inst" />
-            <blockpin signalname="XLXN_54" name="b_eq_ne" />
+            <blockpin name="b_inst" />
+            <blockpin name="b_eq_ne" />
+            <blockpin signalname="XLXN_32" name="reg1(15:0)" />
+            <blockpin signalname="XLXN_54" name="reg2(15:0)" />
             <blockpin signalname="XLXN_56" name="out_and_gate" />
-            <blockpin signalname="XLXN_65(15:0)" name="reg1(15:0)" />
-            <blockpin signalname="XLXN_63(15:0)" name="reg2(15:0)" />
         </block>
         <block symbolname="ctrl_mux" name="XLXI_27">
-            <blockpin signalname="XLXN_42" name="in_wb_ctrl" />
+            <blockpin name="in_wb_ctrl" />
             <blockpin signalname="XLXN_42" name="in_mem_ctrl" />
-            <blockpin signalname="XLXN_43" name="in_ex_ctrl" />
-            <blockpin signalname="XLXN_48" name="pause_or_not" />
-            <blockpin signalname="XLXN_47" name="out_wb_ctrl" />
-            <blockpin signalname="XLXN_45" name="out_ex_ctrl" />
-            <blockpin signalname="XLXN_61(1:0)" name="in_reg_wb_type(1:0)" />
-            <blockpin signalname="XLXN_60" name="out_latch_mem" />
+            <blockpin signalname="XLXN_42" name="in_ex_ctrl" />
+            <blockpin signalname="XLXN_43" name="pause_or_not" />
+            <blockpin signalname="XLXN_48" name="in_reg_wb_type(1:0)" />
+            <blockpin name="out_wb_ctrl" />
+            <blockpin name="out_ex_ctrl" />
+            <blockpin signalname="XLXN_45" name="out_latch_mem" />
         </block>
         <block symbolname="pause_pipeline" name="XLXI_28">
             <blockpin name="clk" />
-            <blockpin signalname="XLXN_81(3:0)" name="prev_reg(3:0)" />
-            <blockpin signalname="XLXN_29(15:0)" name="instr(15:0)" />
-            <blockpin signalname="XLXN_62(1:0)" name="prev_reg_type(1:0)" />
-            <blockpin signalname="XLXN_58" name="latch_1_pause_ctrl" />
-            <blockpin signalname="XLXN_59" name="pc_pause_ctrl" />
-            <blockpin signalname="XLXN_48" name="ctrl_choose" />
-            <blockpin signalname="XLXN_85(11:0)" name="reg_bus(11:0)" />
+            <blockpin name="prev_reg(3:0)" />
+            <blockpin name="instr(15:0)" />
+            <blockpin name="prev_reg_type(1:0)" />
+            <blockpin signalname="XLXN_59" name="latch_1_pause_ctrl" />
+            <blockpin signalname="XLXN_48" name="pc_pause_ctrl" />
+            <blockpin signalname="XLXN_85(11:0)" name="ctrl_choose" />
+            <blockpin name="reg_bus(11:0)" />
         </block>
         <block symbolname="mux3" name="XLXI_29">
             <blockpin signalname="XLXN_88(15:0)" name="data1(15:0)" />
@@ -650,15 +648,15 @@
             <blockpin signalname="XLXN_75(15:0)" name="outdata(15:0)" />
         </block>
         <block symbolname="forward" name="XLXI_31">
+            <blockpin signalname="XLXN_25(15:0)" name="clk" />
             <blockpin signalname="XLXN_85(11:0)" name="reg_bus(11:0)" />
             <blockpin signalname="XLXN_81(3:0)" name="reg_prev(3:0)" />
             <blockpin name="reg_prev1(3:0)" />
             <blockpin name="reg_prev2(3:0)" />
             <blockpin name="reg_prev_type(1:0)" />
-            <blockpin signalname="XLXN_82(1:0)" name="alu_choose1(1:0)" />
-            <blockpin signalname="XLXN_83(1:0)" name="alu_choose2(1:0)" />
+            <blockpin signalname="XLXN_25(15:0)" name="alu_choose1(1:0)" />
+            <blockpin name="alu_choose2(1:0)" />
             <blockpin signalname="XLXN_84(1:0)" name="reg_choose1(1:0)" />
-            <blockpin name="clk" />
         </block>
     </netlist>
     <sheet sheetnum="1" width="16000" height="16000">
@@ -672,8 +670,7 @@
         </instance>
         <instance x="7296" y="8608" name="XLXI_4" orien="R0">
         </instance>
-        <instance x="5632" y="7248" name="XLXI_12" orien="R0">
-        </instance>
+        <instance x="5632" y="7248" name="XLXI_12" orien="R0" />
         <instance x="4368" y="8304" name="XLXI_3" orien="R0">
         </instance>
         <instance x="3040" y="8336" name="XLXI_10" orien="R0">
@@ -829,7 +826,9 @@
         <branch name="XLXN_25(15:0)">
             <wire x2="9712" y1="8256" y2="8256" x1="7872" />
             <wire x2="9712" y1="8256" y2="8352" x1="9712" />
-            <wire x2="11568" y1="8352" y2="8352" x1="9712" />
+            <wire x2="10160" y1="8352" y2="8352" x1="9712" />
+            <wire x2="10688" y1="8352" y2="8352" x1="10160" />
+            <wire x2="11568" y1="8352" y2="8352" x1="10688" />
         </branch>
         <instance x="2016" y="9232" name="XLXI_22" orien="R0">
         </instance>
@@ -911,7 +910,8 @@
             <wire x2="7296" y1="7872" y2="7872" x1="7216" />
             <wire x2="7216" y1="7872" y2="8688" x1="7216" />
             <wire x2="7904" y1="8688" y2="8688" x1="7216" />
-            <wire x2="7904" y1="6416" y2="6416" x1="7344" />
+            <wire x2="7424" y1="6416" y2="6416" x1="7344" />
+            <wire x2="7904" y1="6416" y2="6416" x1="7424" />
             <wire x2="7904" y1="6416" y2="8688" x1="7904" />
         </branch>
         <branch name="XLXN_47">
