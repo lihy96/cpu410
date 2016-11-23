@@ -42,7 +42,7 @@ begin
 		elsif reg1 = reg_prev1 and reg1_prev_type = WB_MEM then
 			nxt_alu1 <= ALU_CHOOSE1_MEMFWD;
 		else
-			nxt_alu1 <= ALU_CHOOSE1_RI;
+			nxt_alu1 <= ALU_CHOOSE1_REG1;
 		end if ;
 
 		if reg2 = reg_prev and reg_prev_type = WB_EXE then
@@ -50,7 +50,7 @@ begin
 		elsif reg2 = reg_prev1 and reg1_prev_type = WB_MEM then
 			nxt_alu2 <= ALU_CHOOSE2_MEMFWD;
 		else
-			nxt_alu2 <= ALU_CHOOSE2_REG2;
+			nxt_alu2 <= ALU_CHOOSE2_RI;
 		end if;
 		if rising_edge(clk) then
 			reg1_prev_type <= reg_prev_type;

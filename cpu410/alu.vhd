@@ -30,13 +30,13 @@ process(alu_op1, alu_op2, alu_inst)
 			when ALU_NOT =>
 				res := not(alu_op2);
 			when ALU_SLL =>
-				res := to_stdlogicvector(to_bitvector(alu_op2) sll conv_integer(alu_op1));
+				res := to_stdlogicvector(to_bitvector(alu_op1) sll conv_integer(alu_op2));
 			when ALU_SRL =>
-				res := to_stdlogicvector(to_bitvector(alu_op2) srl conv_integer(alu_op1));
+				res := to_stdlogicvector(to_bitvector(alu_op1) srl conv_integer(alu_op2));
 			when ALU_SRA =>
-				res := to_stdlogicvector(to_bitvector(alu_op2) sra conv_integer(alu_op1));
+				res := to_stdlogicvector(to_bitvector(alu_op1) sra conv_integer(alu_op2));
 			when ALU_ASSIGN =>
-				res := alu_op1;
+				res := alu_op2;
 			when ALU_LOAD =>
 				res := alu_op1 + alu_op2;
 			when ALU_CMP =>
