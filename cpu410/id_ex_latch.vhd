@@ -25,10 +25,7 @@ entity id_ex_latch is
 		out_Rx_val, out_Ry_val: out std_logic_vector(15 downto 0);
 
 		in_imme, in_pc : in std_logic_vector(15 downto 0);
-		out_imme, out_pc: out std_logic_vector(15 downto 0);
-
-		 in_Rx_num,  in_Ry_num,  in_Rz_num,  in_T_num,  in_SP_num : in std_logic_vector(3 downto 0);
-		out_Rx_num, out_Ry_num, out_Rz_num, out_T_num, out_SP_num : out std_logic_vector(3 downto 0)
+		out_imme, out_pc: out std_logic_vector(15 downto 0)
 	  );
 end id_ex_latch;
 
@@ -52,12 +49,6 @@ process(clk)
 
 		out_imme <= in_imme;
 		out_pc <= in_pc;
-
-		out_Rx_num <= in_Rx_num;
-		out_Ry_num <= in_Ry_num;
-		out_Rz_num <= in_Rz_num;
-		out_T_num <= in_T_num;
-		out_SP_num <= in_SP_num;
 
 	end if;
 end process;
