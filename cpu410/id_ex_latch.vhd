@@ -43,7 +43,7 @@ process(clk)
 		out_mem_ctrl <= in_mem.ID_EX_LATCH_MEM_MEMCTRL;
 		out_pause <= in_mem.ID_EX_LATCH_MEM_PAUSE;
 
-		out_reg_num_choose <= in_ex.REG_NUM_CHOOSE;
+		out_reg_num_choose <= in_ex.REG_WB_CHOOSE;
 		out_alu_op <= in_ex.ALU_OP;
 		out_alu1_ri_choose <= in_ex.ALU1_RI_CHOOSE;
 
