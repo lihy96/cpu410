@@ -181,12 +181,12 @@ package constants is
 	constant WB_MEM: std_logic_vector(1 downto 0) := "01";
 	constant WB_NONE: std_logic_vector(1 downto 0) := "00";
 	-- alu data choose
-	constant ALU_CHOOSE2_REG2: std_logic_vector(1 downto 0) := "00";
-	constant ALU_CHOOSE2_EXEFWD: std_logic_vector(1 downto 0) := "01";
-	constant ALU_CHOOSE2_MEMFWD: std_logic_vector(1 downto 0) := "10";
-	constant ALU_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "00";
-	constant ALU_CHOOSE1_RI: std_logic_vector(1 downto 0) := "01";
+	constant ALU_CHOOSE1_REG1: std_logic_vector(1 downto 0) := "00";
+	constant ALU_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "01";
 	constant ALU_CHOOSE1_MEMFWD: std_logic_vector(1 downto 0) := "10";
+	constant ALU_CHOOSE2_EXEFWD: std_logic_vector(1 downto 0) := "00";
+	constant ALU_CHOOSE2_RI: std_logic_vector(1 downto 0) := "01";
+	constant ALU_CHOOSE2_MEMFWD: std_logic_vector(1 downto 0) := "10";
 	-- register output choose. used for Bxxx instructions
 	constant REG_CHOOSE1_EXEFWD: std_logic_vector(1 downto 0) := "00";
 	constant REG_CHOOSE1_RF: std_logic_vector(1 downto 0) := "01" ;
@@ -248,6 +248,9 @@ package constants is
 	constant PC_NEXT_VAL_NOT_FROM_B: std_logic := '0';
 	constant PC_NEXT_VAL_FROM_JR: std_logic := '1';
 	constant PC_NEXT_VAL_NOT_FROM_JR: std_logic := '0';
+
+	-- clock by lihy
+	constant Clock_wait_num_before_work: integer := 10000;
 
 end package;
 

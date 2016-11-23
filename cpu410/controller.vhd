@@ -160,8 +160,8 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(10 downto 8);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
-						reg_r1 <= IH_REG;
-						reg_r2 <= IMG_REG;
+						reg_r2 <= IH_REG;
+						reg_r1 <= IMG_REG;
 
 					when IH_MTIH =>
 						immd(15 downto 0) <= ZERO16;
@@ -172,8 +172,8 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.REG_WB_CHOOSE <= IH_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
-						reg_r1 <= '0' & instruction(10 downto 8);
-						reg_r2 <= IMG_REG;
+						reg_r2 <= '0' & instruction(10 downto 8);
+						reg_r1 <= IMG_REG;
 					when others =>
 
 				end case ;
@@ -332,8 +332,8 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.REG_WB_CHOOSE <= SP_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
-						reg_r1 <= '0' & instruction(7 downto 5);
-						reg_r2 <= IMG_REG;
+						reg_r2 <= '0' & instruction(7 downto 5);
+						reg_r1 <= IMG_REG;
 
 					when SPECIAL_BTNEZ =>
 
@@ -440,7 +440,7 @@ begin
 
 							when PC_MFPC =>
 								immd(15 downto 0) <= ZERO16;
-								ex_ctrl.ALU_OP <= THU_ID_ASSIGN;
+								ex_ctrl.ALU_OP <= THU_ID_ASSIGN; -- THIS IS NO USE !!!
 								reg_wb_type <= WB_MEM;
 								wb_ctrl.WB_CHOOSE <= PC_DATA;
 								wb_ctrl.REG_WN <= WriteEnable;
