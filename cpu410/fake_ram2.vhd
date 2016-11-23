@@ -31,7 +31,7 @@ begin
 	constant BNEZ_R4_F: std_logic_vector(15 downto 0) := "0010110011111001";
 	begin
 		if ram2OE = '0' and ram2EN = '0' then
-			wait for 1 ns;
+			-- wait for 1 ns;
 			case addr_in is
 				when "0000000000000000" =>
 					data_out <= NOP;

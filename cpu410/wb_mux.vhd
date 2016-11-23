@@ -56,16 +56,14 @@ architecture Behavioral of wb_mux is
 begin
 	process(CLK)
 	begin
-		if (CLK'event and CLK = '1') then
-			case IN_WB_CHOOSE is
-				when ALU_DATA =>
-					OUT_WB_DATA <= IN_ALU_DATA;
-				when MEM_DATA =>
-					OUT_WB_DATA <= IN_MEM_DATA;
-				when PC_DATA =>
-					OUT_WB_DATA <= IN_PC;
-			end case;
-		end if;
+		case IN_WB_CHOOSE is
+			when ALU_DATA =>
+				OUT_WB_DATA <= IN_ALU_DATA;
+			when MEM_DATA =>
+				OUT_WB_DATA <= IN_MEM_DATA;
+			when PC_DATA =>
+				OUT_WB_DATA <= IN_PC;
+		end case;
 	end process;
 
 end Behavioral;
