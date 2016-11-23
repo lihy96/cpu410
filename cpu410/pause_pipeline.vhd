@@ -34,7 +34,6 @@ entity pause_pipeline is
            pc_pause_ctrl : out  STD_LOGIC;
            ctrl_choose : out  STD_LOGIC; -- '1' for pause, that is to choose all '0' this period
            reg_bus: out std_logic_vector(11 downto 0) ;
-           fwd_bus: out std_logic_vector(3 downto 0) ;
            clk: in STD_LOGIC;
            prev_reg : in  STD_LOGIC_VECTOR (3 downto 0);
            instr : in  STD_LOGIC_VECTOR (15 downto 0);
@@ -49,13 +48,11 @@ signal prev_reg1: std_logic_vector(3 downto 0);
 signal prev_reg2: std_logic_vector(3 downto 0) ;
 signal prev_reg1_type: std_logic_vector(1 downto 0);
 signal prev_reg2_type: std_logic_vector(1 downto 0);
-signal tmp_fwd_bus: std_logic_vector(3 downto 0) ;
 signal pause: std_logic;
 begin
 	prev_reg1 <= prev_reg;
 	prev_reg1_type <= prev_reg_type;
 	reg_bus <= reg1 & reg2 & reg0;
-	fwd_bus <= tmp_fwd_bus;
 	process(instr, clk, prev_reg, prev_reg_type)
 	begin
 		case instr(15 downto 11) is

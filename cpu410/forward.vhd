@@ -4,6 +4,7 @@ use work.constants.all;
 
 entity forward is
   port (
+	clk: in std_logic;
   	reg_bus: in std_logic_vector(11 downto 0) ;
   	reg_prev: in std_logic_vector(3 downto 0) ;
  	reg_prev1: in std_logic_vector(3 downto 0) ;

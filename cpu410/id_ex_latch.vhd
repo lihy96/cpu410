@@ -17,7 +17,7 @@ entity id_ex_latch is
 		out_pause: out std_logic_vector(1 downto 0);
 
 		in_ex: in ID_EX_LATCH_EX;
-		out_reg_num_choose: out std_logic_vector(2 downto 0);
+		out_reg_num_choose: out std_logic_vector(3 downto 0);
 		out_alu_op: out std_logic_vector(4 downto 0);
 		out_alu1_ri_choose: out std_logic;
 

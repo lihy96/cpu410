@@ -6,8 +6,9 @@ use work.constants.ALL;
 
 entity and_xor_equal is
     Port ( 
-           reg1, reg2, b_inst, b_eq_ne: in  STD_LOGIC;
-           out_and_gate : out  STD_LOGIC 
+           reg1, reg2: in std_logic_vector(15 downto 0) ;
+           b_inst, b_eq_ne: in  STD_LOGIC;
+           out_and_gate : out  STD_LOGIC
 	);
 end and_xor_equal;
 
