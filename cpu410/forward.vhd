@@ -28,7 +28,7 @@ begin
 	reg1 <= reg_bus(11 downto 8);
 	reg2 <= reg_bus(7 downto 4);
 	reg0 <= reg_bus(3 downto 0);
-	process(clk, reg0, reg1, reg2, reg_prev1, reg_prev2, reg_bus, reg_prev, reg_prev1, reg_prev2, reg_prev_type, reg1_prev_type, reg2_prev_type)
+	process(clk, reg0, reg1, reg2, reg_bus, reg_prev, reg_prev1, reg_prev2, reg_prev_type, reg1_prev_type, reg2_prev_type)
 	begin
 		if reg0 = reg_prev1 and reg1_prev_type = WB_EXE then
 			reg_choose1 <= REG_CHOOSE1_EXEFWD;

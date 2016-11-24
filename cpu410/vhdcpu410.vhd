@@ -419,7 +419,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    end component;
    
 begin
-   XLXI_3 : if_id_latch
+   IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
                 in_inst(15 downto 0)=>XLXN_21(15 downto 0),
                 in_pc(15 downto 0)=>XLXN_18(15 downto 0),
@@ -429,7 +429,7 @@ begin
                 out_pc(15 downto 0)=>XLXN_103(15 downto 0),
                 out_pc_plus1(15 downto 0)=>XLXN_23(15 downto 0));
    
-   XLXI_4 : id_ex_latch
+   IdExLatch : id_ex_latch
       port map (clk=>XLXN_102,
                 in_ex=>XLXN_45,
                 in_imme(15 downto 0)=>XLXN_38(15 downto 0),
@@ -449,7 +449,7 @@ begin
                 out_Ry_val(15 downto 0)=>XLXN_72(15 downto 0),
                 out_wb_ctrl=>XLXN_17);
    
-   XLXI_5 : mem_wb_latch
+   MemWbLatch : mem_wb_latch
       port map (CLK=>XLXN_102,
                 IN_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
                 IN_DATA(15 downto 0)=>XLXN_5(15 downto 0),
@@ -463,7 +463,7 @@ begin
                 OUT_REG_WN=>XLXN_98,
                 OUT_WB_CHOOSE=>XLXN_14);
    
-   XLXI_6 : ex_mem_latch
+   ExMemLatch : ex_mem_latch
       port map (CLK=>XLXN_102,
                 IN_ADDR(15 downto 0)=>XLXN_12(15 downto 0),
                 IN_CMP_RS=>XLXN_15,
