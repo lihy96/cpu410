@@ -6,7 +6,8 @@ use work.constants.ALL;
 entity fake_ram2 is
     Port ( 
            data_in, addr_in : in  STD_LOGIC_VECTOR (15 downto 0);
-           ram2OE, ram2WE, ram2EN: in std_logic;
+           --ram2OE, ram2WE, ram2EN: in std_logic;
+		   RAM_READ_WRITE: in std_logic_vector(1 downto 0);
            data_out: out  STD_LOGIC_VECTOR (15 downto 0)
          );
 end fake_ram2;
@@ -14,7 +15,11 @@ end fake_ram2;
 architecture Behavioral of fake_ram2 is
 --type Inst_Array is array(11 downto 0) of std_logic_vector(15 downto 0);
 --signal  ia: Inst_Array := 
+signal ram2OE, ram2WE, ram2EN: std_logic;
 begin
+	ram2EN <= '0';
+	ram2OE <= RAM_READ_WRITE(1);
+	ram2WE <= RAM_READ_WRITE(0);
 	process
 	constant NOP: std_logic_vector(15 downto 0) := "0000100000000000";
 	constant LI_R1_1: std_logic_vector(15 downto 0) := "0110100100000001";

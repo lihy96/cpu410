@@ -17,9 +17,9 @@ port (
 end entity;
 
 architecture bhv of registers is
-signal reg_array: RegArray := (others => ZeroWord);
+signal reg_array: RegArray := (13 => OneWord, others => ZeroWord);
 begin
-	reg_array(conv_integer(unsigned(ONE_REG))) <= OneWord;	-- one reg 's value is 0000000000000001
+	--reg_array(conv_integer(unsigned(ONE_REG))) <= OneWord;	-- one reg 's value is 0000000000000001
 	process (clk)
 	begin
 		if falling_edge(clk) then	-- ??????????????????下降沿？？？？？
@@ -31,7 +31,7 @@ begin
 		end if;
 	end process;
 
-	process (clk, rst, r1_addr, write_addr, write_data, write_en)
+	process (clk, rst, r1_addr, r2_addr, write_addr, write_data, write_en)
 	begin
 		if rst = RstEnable then
 			r1_data <= ZeroWord;

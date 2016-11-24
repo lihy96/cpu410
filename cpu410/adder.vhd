@@ -14,7 +14,7 @@ end adder;
 
 architecture Behavioral of adder is
 begin
-	process(pc_old)
+	process(pc_old, imm)
 	begin
 		pc_new <= pc_old + imm;
 	end process;

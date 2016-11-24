@@ -22,6 +22,7 @@
 library ieee;
 use ieee.std_logic_1164.ALL;
 use ieee.numeric_std.ALL;
+use work.constants.all;
 --library UNISIM;
 --use UNISIM.Vcomponents.ALL;
 
@@ -38,12 +39,12 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_8                        : std_logic_vector (15 downto 0);
    signal XLXN_9                        : std_logic_vector (15 downto 0);
    signal XLXN_10                       : std_logic_vector (3 downto 0);
-   signal XLXN_11                       : std_logic;
+   signal XLXN_11                       : WB_CONTROL_TYPE;
    signal XLXN_12                       : std_logic_vector (15 downto 0);
-   signal XLXN_14                       : std_logic;
+   signal XLXN_14                       : WB_CHOOSE_TYPE;
    signal XLXN_15                       : std_logic;
-   signal XLXN_16                       : std_logic;
-   signal XLXN_17                       : std_logic;
+   signal XLXN_16                       : MEM_CTRL_TYPE;
+   signal XLXN_17                       : WB_CONTROL_TYPE;
    signal XLXN_18                       : std_logic_vector (15 downto 0);
    signal XLXN_20                       : std_logic_vector (1 downto 0);
    signal XLXN_21                       : std_logic_vector (15 downto 0);
@@ -57,16 +58,17 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_35                       : std_logic_vector (15 downto 0);
    signal XLXN_36                       : std_logic_vector (15 downto 0);
    signal XLXN_38                       : std_logic_vector (15 downto 0);
-   signal XLXN_42                       : std_logic;
-   signal XLXN_43                       : std_logic;
-   signal XLXN_45                       : std_logic;
-   signal XLXN_47                       : std_logic;
+   signal XLXN_42_mem                   : MEM_CTRL_TYPE;
+   signal XLXN_42_wb                    : WB_CONTROL_TYPE;
+   signal XLXN_43                       : ID_EX_LATCH_EX;
+   signal XLXN_45                       : ID_EX_LATCH_EX; --change to record
+   signal XLXN_47                       : WB_CONTROL_TYPE;
    signal XLXN_48                       : std_logic;
    signal XLXN_54                       : std_logic;
    signal XLXN_56                       : std_logic;
    signal XLXN_58                       : std_logic;
    signal XLXN_59                       : std_logic;
-   signal XLXN_60                       : std_logic;
+   signal XLXN_60                       : ID_EX_LATCH_MEM; --change to record
    signal XLXN_61                       : std_logic_vector (1 downto 0);
    signal XLXN_62                       : std_logic_vector (1 downto 0);
    signal XLXN_63                       : std_logic_vector (15 downto 0);
@@ -118,57 +120,84 @@ architecture BEHAVIORAL of vhdcpu410 is
    end component;
    
    component id_ex_latch
-      port ( clk                : in    std_logic; 
-             in_wb              : in    std_logic; 
-             in_mem             : in    std_logic; 
-             in_ex              : in    std_logic; 
-             in_Rx_val          : in    std_logic_vector (15 downto 0); 
-             in_Ry_val          : in    std_logic_vector (15 downto 0); 
-             in_imme            : in    std_logic_vector (15 downto 0); 
-             in_pc              : in    std_logic_vector (15 downto 0); 
-             out_wb_ctrl        : out   std_logic; 
-             out_mem_ctrl       : out   std_logic; 
-             out_alu1_ri_choose : out   std_logic; 
-             out_pause          : out   std_logic_vector (1 downto 0); 
-             out_reg_num_choose : out   std_logic_vector (3 downto 0); 
-             out_alu_op         : out   std_logic_vector (4 downto 0); 
-             out_Rx_val         : out   std_logic_vector (15 downto 0); 
-             out_Ry_val         : out   std_logic_vector (15 downto 0); 
-             out_imme           : out   std_logic_vector (15 downto 0); 
-             out_pc             : out   std_logic_vector (15 downto 0));
+      port (
+		clk: in std_logic;
+
+		in_wb: in WB_CONTROL_TYPE;
+		out_wb_ctrl: out WB_CONTROL_TYPE;
+
+
+		in_mem: in ID_EX_LATCH_MEM;
+		out_mem_ctrl: out MEM_CTRL_TYPE;
+		out_pause: out std_logic_vector(1 downto 0);
+
+		in_ex: in ID_EX_LATCH_EX;
+		out_reg_num_choose: out std_logic_vector(3 downto 0);
+		out_alu_op: out std_logic_vector(4 downto 0);
+		out_alu1_ri_choose: out std_logic;
+
+		in_Rx_val, in_Ry_val: in std_logic_vector(15 downto 0);
+		out_Rx_val, out_Ry_val: out std_logic_vector(15 downto 0);
+
+		in_imme, in_pc : in std_logic_vector(15 downto 0);
+		out_imme, out_pc: out std_logic_vector(15 downto 0)
+	  );
    end component;
    
    component mem_wb_latch
-      port ( CLK           : in    std_logic; 
-             IN_WB_CONTROL : in    std_logic; 
-             IN_ADDR       : in    std_logic_vector (15 downto 0); 
-             IN_DATA       : in    std_logic_vector (15 downto 0); 
-             IN_PC         : in    std_logic_vector (15 downto 0); 
-             IN_REG_NO     : in    std_logic_vector (3 downto 0); 
-             OUT_WB_CHOOSE : out   std_logic; 
-             OUT_REG_WN    : out   std_logic; 
-             OUT_ADDR      : out   std_logic_vector (15 downto 0); 
-             OUT_DATA      : out   std_logic_vector (15 downto 0); 
-             OUT_PC        : out   std_logic_vector (15 downto 0); 
-             OUT_REG_NO    : out   std_logic_vector (3 downto 0));
+      Port ( 
+		CLK : in STD_LOGIC;
+		
+		-- data input
+		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
+		
+		-- data output
+		OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
+		OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
+		OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
+		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
+		
+		-- control signal input
+		IN_WB_CONTROL : in WB_CONTROL_TYPE;
+		
+		-- control signal output
+		--OUT_WB_FORWARD : out STD_LOGIC;
+		OUT_WB_CHOOSE : out WB_CHOOSE_TYPE;
+		OUT_REG_WN : out STD_LOGIC
+		
+	);
    end component;
    
    component ex_mem_latch
-      port ( CLK                 : in    std_logic; 
-             IN_WB_CTRL          : in    std_logic; 
-             IN_MEM_CTRL         : in    std_logic; 
-             IN_CMP_RS           : in    std_logic; 
-             IN_ADDR             : in    std_logic_vector (15 downto 0); 
-             IN_DATA             : in    std_logic_vector (15 downto 0); 
-             IN_PC               : in    std_logic_vector (15 downto 0); 
-             IN_REG_NO           : in    std_logic_vector (3 downto 0); 
-             OUT_WB_CONTROL      : out   std_logic; 
-             OUT_ADDR            : out   std_logic_vector (15 downto 0); 
-             OUT_DATA            : out   std_logic_vector (15 downto 0); 
-             OUT_PC              : out   std_logic_vector (15 downto 0); 
-             OUT_REG_NO          : out   std_logic_vector (3 downto 0); 
-             OUT_RAM1_READ_WRITE : out   std_logic_vector (1 downto 0); 
-             OUT_RAM2_READ_WRITE : out   std_logic_vector (1 downto 0));
+      Port ( 
+		CLK : in STD_LOGIC;
+		
+		-- data input
+		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
+		
+		-- data output
+		OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
+		OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
+		OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
+		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
+		
+		-- control signal input
+		IN_WB_CTRL : in WB_CONTROL_TYPE;
+		IN_MEM_CTRL : in MEM_CTRL_TYPE;
+		IN_CMP_RS : in STD_LOGIC; --对读写地址进行比较后的结果
+		
+		-- control signal output
+		OUT_WB_CONTROL : out WB_CONTROL_TYPE;
+		OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
+		OUT_RAM2_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0)
+		-- OUT_MEM_FORWARD : out STD_LOGIC
+	);
    end component;
    
    component pc_reg
@@ -184,18 +213,25 @@ architecture BEHAVIORAL of vhdcpu410 is
              pc_adder_out : out   std_logic_vector (15 downto 0));
    end component;
    
-   component inst_ram
-      port ( CLK            : in    std_logic; 
-             RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
-             RAM_ADDR       : in    std_logic_vector (15 downto 0); 
-             RAM_DATA       : in    std_logic_vector (15 downto 0); 
-             Ram2Data       : inout std_logic_vector (15 downto 0); 
-             Ram2OE         : out   std_logic; 
-             Ram2WE         : out   std_logic; 
-             Ram2EN         : out   std_logic; 
-             RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
-             Ram2Addr       : out   std_logic_vector (17 downto 0));
-   end component;
+--   component inst_ram
+--      port ( CLK            : in    std_logic; 
+--             RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
+--             RAM_ADDR       : in    std_logic_vector (15 downto 0); 
+--             RAM_DATA       : in    std_logic_vector (15 downto 0); 
+--             Ram2Data       : inout std_logic_vector (15 downto 0); 
+--             Ram2OE         : out   std_logic; 
+--             Ram2WE         : out   std_logic; 
+--             Ram2EN         : out   std_logic; 
+--             RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
+--             Ram2Addr       : out   std_logic_vector (17 downto 0));
+--   end component;
+	component fake_ram2
+		Port ( 
+           data_in, addr_in : in  STD_LOGIC_VECTOR (15 downto 0);
+           --ram2OE, ram2WE, ram2EN: in std_logic;
+			  RAM_READ_WRITE: in std_logic_vector(1 downto 0);
+           data_out: out  STD_LOGIC_VECTOR (15 downto 0));
+	end component;
    
    component adder
       port ( pc_old : in    std_logic_vector (15 downto 0); 
@@ -249,13 +285,22 @@ architecture BEHAVIORAL of vhdcpu410 is
    end component;
    
    component wb_mux
-      port ( 
-        --CLK          : in    std_logic; 
-             IN_WB_CHOOSE : in    std_logic; 
-             IN_ALU_DATA  : in    std_logic_vector (15 downto 0); 
-             IN_MEM_DATA  : in    std_logic_vector (15 downto 0); 
-             IN_PC        : in    std_logic_vector (15 downto 0); 
-             OUT_WB_DATA  : out   std_logic_vector (15 downto 0));
+      Port ( 
+		--CLK : in STD_LOGIC;
+		
+		-- data input
+		IN_ALU_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_MEM_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
+		
+		-- data output
+		OUT_WB_DATA : out STD_LOGIC_VECTOR(15 downto 0);
+		
+		-- control signal input
+		IN_WB_CHOOSE : in WB_CHOOSE_TYPE
+		
+		-- control signal output
+	);
    end component;
    
    component cmp8k
@@ -271,17 +316,26 @@ architecture BEHAVIORAL of vhdcpu410 is
    end component;
    
    component controller
-      port ( instruction : in    std_logic_vector (15 downto 0); 
-             jr_or_not   : out   std_logic; 
-             b_inst      : out   std_logic; 
-             b_eq_ne     : out   std_logic; 
-             wb_ctrl     : out   std_logic; 
-             mem_ctrl    : out   std_logic; 
-             ex_ctrl     : out   std_logic; 
-             immd        : out   std_logic_vector (15 downto 0); 
-             reg_wb_type : out   std_logic_vector (1 downto 0); 
-             reg_r1      : out   std_logic_vector (3 downto 0); 
-             reg_r2      : out   std_logic_vector (3 downto 0));
+      port (
+		instruction : in std_logic_vector(15 downto 0);	-- input instruction
+
+		--lu_inst: out std_logic_vector(4 downto 0);	-- instruction that put to alu
+		immd: out std_logic_vector(15 downto 0);	-- immediate that output
+		jr_or_not: out std_logic;
+		b_inst: out std_logic;
+		b_eq_ne: out std_logic;
+
+		wb_ctrl: out WB_CONTROL_TYPE;
+
+		reg_wb_type: out std_logic_vector(1 downto 0);
+		-- what kind of value will be written back?
+		-- an ALU calculated(known after EXE)?
+		-- or read from mem(known after MEM)?
+		mem_ctrl: out MEM_CTRL_TYPE;
+		ex_ctrl: out ID_EX_LATCH_EX;
+		reg_r1: out std_logic_vector(3 downto 0);
+		reg_r2: out std_logic_vector(3 downto 0)
+	);
    end component;
    
    component mux3_pc
@@ -302,14 +356,18 @@ architecture BEHAVIORAL of vhdcpu410 is
    end component;
    
    component ctrl_mux
-      port ( in_wb_ctrl     : in    std_logic; 
-             in_mem_ctrl    : in    std_logic; 
-             in_ex_ctrl     : in    std_logic; 
-             pause_or_not   : in    std_logic; 
-             in_reg_wb_type : in    std_logic_vector (1 downto 0); 
-             out_wb_ctrl    : out   std_logic; 
-             out_ex_ctrl    : out   std_logic; 
-             out_latch_mem  : out   std_logic);
+      Port ( 
+    	in_wb_ctrl: in WB_CONTROL_TYPE;
+    	in_mem_ctrl: in MEM_CTRL_TYPE;
+    	in_ex_ctrl: in ID_EX_LATCH_EX;
+		in_reg_wb_type: in std_logic_vector(1 downto 0);
+    	pause_or_not: in std_logic;
+    	out_wb_ctrl: out WB_CONTROL_TYPE;
+    	--out_mem_ctrl: out MEM_CTRL_TYPE;
+    	out_ex_ctrl: out ID_EX_LATCH_EX;
+		--out_reg_wb_type: out std_logic_vector(1 downto 0)
+		out_latch_mem: out ID_EX_LATCH_MEM
+         );
    end component;
    
    component pause_pipeline
@@ -422,17 +480,25 @@ begin
       port map (pc_adder_in(15 downto 0)=>XLXN_18(15 downto 0),
                 pc_adder_out(15 downto 0)=>XLXN_22(15 downto 0));
    
-   XLXI_10 : inst_ram
-      port map (CLK=>XLXN_101,
-                RAM_ADDR(15 downto 0)=>XLXN_28(15 downto 0),
-                RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
-                RAM_READ_WRITE(1 downto 0)=>XLXN_20(1 downto 0),
-                RAM_OUTPUT(15 downto 0)=>XLXN_21(15 downto 0),
-                Ram2Addr=>open,
-                Ram2EN=>open,
-                Ram2OE=>open,
-                Ram2WE=>open,
-                Ram2Data=>open);
+--   XLXI_10 : inst_ram
+--      port map (CLK=>XLXN_101,
+--                RAM_ADDR(15 downto 0)=>XLXN_28(15 downto 0),
+--                RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
+--                RAM_READ_WRITE(1 downto 0)=>XLXN_20(1 downto 0),
+--                RAM_OUTPUT(15 downto 0)=>XLXN_21(15 downto 0),
+--                Ram2Addr=>open,
+--                Ram2EN=>open,
+--                Ram2OE=>open,
+--                Ram2WE=>open,
+--                Ram2Data=>open);
+	XLXI_10: fake_ram2
+	    Port map( 
+           data_in => XLXN_8(15 downto 0),
+			  addr_in => XLXN_28(15 downto 0),
+           --ram2OE, ram2WE, ram2EN: in std_logic;
+			  RAM_READ_WRITE(1 downto 0) => XLXN_20(1 downto 0),
+           data_out => XLXN_21(15 downto 0)
+         );
    
    XLXI_12 : adder
       port map (imm(15 downto 0)=>XLXN_38(15 downto 0),
@@ -513,11 +579,11 @@ begin
                 ex_ctrl=>XLXN_43,
                 immd(15 downto 0)=>XLXN_38(15 downto 0),
                 jr_or_not=>XLXN_31,
-                mem_ctrl=>XLXN_42,
+                mem_ctrl=>XLXN_42_mem,
                 reg_r1(3 downto 0)=>XLXN_68(3 downto 0),
                 reg_r2(3 downto 0)=>XLXN_69(3 downto 0),
                 reg_wb_type(1 downto 0)=>XLXN_61(1 downto 0),
-                wb_ctrl=>XLXN_42);
+                wb_ctrl=>XLXN_42_wb);
    
    XLXI_24 : mux3_pc
       port map (b_or_not=>XLXN_56,
@@ -536,9 +602,9 @@ begin
    
    XLXI_27 : ctrl_mux
       port map (in_ex_ctrl=>XLXN_43,
-                in_mem_ctrl=>XLXN_42,
+                in_mem_ctrl=>XLXN_42_mem,
                 in_reg_wb_type(1 downto 0)=>XLXN_61(1 downto 0),
-                in_wb_ctrl=>XLXN_42,
+                in_wb_ctrl=>XLXN_42_wb,
                 pause_or_not=>XLXN_48,
                 out_ex_ctrl=>XLXN_45,
                 out_latch_mem=>XLXN_60,
@@ -586,9 +652,9 @@ begin
    process(clk)
    begin
      XLXI_13_rst_openSignal <= RstEnable;
-     wait for 1 ns;
+     --wait for 1 ns;
      XLXI_13_rst_openSignal <= RstDisable;
-     wait;
+     --wait;
    end process ; -- mp
    
 end BEHAVIORAL;

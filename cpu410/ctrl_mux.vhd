@@ -21,7 +21,7 @@ end ctrl_mux;
 architecture Behavioral of ctrl_mux is
 
 begin
-	process(in_wb_ctrl, in_mem_ctrl, in_ex_ctrl, pause_or_not)
+	process(in_wb_ctrl, in_mem_ctrl, in_ex_ctrl, pause_or_not, in_reg_wb_type)
 	begin
 		case pause_or_not  is
 			when '1' => -- choose the do nothing

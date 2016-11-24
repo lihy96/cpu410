@@ -53,7 +53,7 @@ begin
 	prev_reg1 <= prev_reg;
 	prev_reg1_type <= prev_reg_type;
 	reg_bus <= reg1 & reg2 & reg0;
-	process(instr, clk, prev_reg, prev_reg_type)
+	process(instr, clk, prev_reg, prev_reg_type, prev_reg1_type, prev_reg1, prev_reg2_type, prev_reg2)
 	begin
 		case instr(15 downto 11) is
 			when OP_ADDIU | OP_ADDIU3 | OP_LW | OP_SLTI | OP_SW_SP | OP_LI=>

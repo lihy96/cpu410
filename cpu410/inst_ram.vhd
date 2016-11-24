@@ -32,21 +32,21 @@ architecture Behavioral of inst_ram is
 	signal state : state_set := init;
 	
 begin
+	Ram2EN <= '0';
 	process(CLK)
 		begin
-		if (CLK'event and CLK = '1') then
+		if (falling_edge(CLK)) then
 			case state is
 				when init =>
 					if RAM_READ_WRITE = MEM_WRITE then --内存�
 						state <= writing;
-						Ram2EN <= '0';
 						Ram2OE <= '1';
 						Ram2WE <= '1';
 						Ram2Data <= RAM_DATA;
 						Ram2Addr <= "00" & RAM_ADDR;
 					elsif RAM_READ_WRITE = MEM_READ then --内存�
 						state <= reading;
-						Ram2EN <= '0';
+						--Ram2EN <= '0';
 						Ram2OE <= '1';
 						Ram2WE <= '1';
 						Ram2Data <= "ZZZZZZZZZZZZZZZZ";
