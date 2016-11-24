@@ -19,7 +19,7 @@ end entity;
 architecture bhv of registers is
 signal reg_array: RegArray := (others => ZeroWord);
 begin
-
+	reg_array(conv_integer(unsigned(ONE_REG))) <= OneWord;	-- one reg 's value is 0000000000000001
 	process (clk)
 	begin
 		if falling_edge(clk) then	-- ??????????????????下降沿？？？？？

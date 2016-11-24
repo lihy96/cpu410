@@ -432,7 +432,7 @@ begin
 								reg_wb_type <= WB_NONE;
 								wb_ctrl.WB_CHOOSE <= ALU_DATA;
 								wb_ctrl.REG_WN <= WriteDisable;
-								reg_r1 <= instruction(10 downto 8);
+								reg_r1 <= '0' & instruction(10 downto 8);
 								reg_r2 <= IMG_REG;
 								mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 								ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
@@ -482,7 +482,7 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.REG_WB_CHOOSE <= '0' & instruction(7 downto 5);
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
-						reg_r1 <= '0' & instruction(7 downto 6);
+						reg_r1 <= '0' & instruction(7 downto 5);
 						reg_r2 <= '0' & instruction(10 downto 8);
 
 					when LOGIC_SRLV =>

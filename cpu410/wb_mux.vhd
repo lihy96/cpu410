@@ -34,7 +34,7 @@ use work.constants.all;
 
 entity wb_mux is
 	Port ( 
-		CLK : in STD_LOGIC;
+		--CLK : in STD_LOGIC;
 		
 		-- data input
 		IN_ALU_DATA : in STD_LOGIC_VECTOR(15 downto 0);
@@ -54,7 +54,7 @@ end wb_mux;
 architecture Behavioral of wb_mux is
 
 begin
-	process(CLK)
+	process(IN_ALU_DATA, IN_MEM_DATA, in_pc, IN_WB_CHOOSE)
 	begin
 		case IN_WB_CHOOSE is
 			when ALU_DATA =>

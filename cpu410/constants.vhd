@@ -31,7 +31,7 @@ package constants is
 	constant Pc_origin_address : std_logic_vector(15 downto 0) := "0000000000000000";	--pc的初始地址
 	constant Pc_offset: std_logic_vector(15 downto 0) := "0000000000000001";	--每次pc的偏移量
 
-	type RegArray is array(11 downto 0) of std_logic_vector(15 downto 0);	-- 11个寄存器？8个通用？？？？？？？
+	type RegArray is array(15 downto 0) of std_logic_vector(15 downto 0);	-- 11个寄存器？8个通用？？？？？？？
 	
 	constant ZeroWord: std_logic_vector(15 downto 0) := "0000000000000000";	--全0
 	constant OneWord: std_logic_vector(15 downto 0) := "0000000000000001";	--1
