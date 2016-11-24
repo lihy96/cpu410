@@ -41,14 +41,16 @@ entity pc_reg is
 end pc_reg;
 
 architecture Behavioral of pc_reg is
-
+signal mypc: std_logic_vector(15 downto 0) ;
 begin
+	mypc <= new_pc;
 	process(clk, rst)
 	begin
 		if rst = Pc_reset then
 			pc_output <= Pc_origin_address;
-		elsif (pc_pause /= Pc_pause and falling_edge(clk)) then
-			pc_output <= new_pc;
+		elsif (falling_edge(clk)) then
+		--pc_pause /= Pc_pause and 
+			pc_output <= mypc;
 		end if;
 	end process;
 end Behavioral;

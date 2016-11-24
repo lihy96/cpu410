@@ -27,7 +27,18 @@ use work.constants.all;
 --use UNISIM.Vcomponents.ALL;
 
 entity vhdcpu410 is
-   port ( clk: in std_logic);
+   port (
+      clk: in std_logic;
+      Ram1OE: out std_logic;
+      Ram1EN: out std_logic;
+      Ram1WE: out std_logic;
+      Ram1Addr: out std_logic_vector(17 downto 0);
+      wrn: out std_logic;
+      rdn: out std_logic;
+      tbre: in std_logic;
+      tsre: in std_logic;
+      data_ready: in std_logic
+			);
 end vhdcpu410;
 
 architecture BEHAVIORAL of vhdcpu410 is
@@ -96,18 +107,18 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_102                      : std_logic;
    signal XLXN_103                      : std_logic_vector (15 downto 0);
    signal XLXN_104                      : std_logic_vector (3 downto 0);
-   signal XLXI_4_clk_openSignal         : std_logic;
-   signal XLXI_7_clk_openSignal         : std_logic;
+	--signal XLXI_4_clk_openSignal         : std_logic;
+   --signal XLXI_7_clk_openSignal         : std_logic;
    signal XLXI_7_rst_openSignal         : std_logic;
-   signal XLXI_13_clk_openSignal        : std_logic;
+   --signal XLXI_13_clk_openSignal        : std_logic;
    signal XLXI_13_rst_openSignal        : std_logic;
-   signal XLXI_18_data_ready_openSignal : std_logic;
-   signal XLXI_18_tbre_openSignal       : std_logic;
-   signal XLXI_18_tsre_openSignal       : std_logic;
-   signal XLXI_19_CLK_openSignal        : std_logic;
-   signal XLXI_28_clk_openSignal        : std_logic;
-   signal XLXI_31_clk_openSignal        : std_logic;
-   signal XLXI_32_clk_openSignal        : std_logic;
+   --signal XLXI_18_data_ready_openSignal : std_logic;
+   --signal XLXI_18_tbre_openSignal       : std_logic;
+   --signal XLXI_18_tsre_openSignal       : std_logic;
+   --signal XLXI_19_CLK_openSignal        : std_logic;
+   --signal XLXI_28_clk_openSignal        : std_logic;
+   --signal XLXI_31_clk_openSignal        : std_logic;
+   --signal XLXI_32_clk_openSignal        : std_logic;
    component if_id_latch
       port ( clk          : in    std_logic; 
              pause        : in    std_logic; 
@@ -401,9 +412,9 @@ architecture BEHAVIORAL of vhdcpu410 is
    end component;
    
    component clk_ctrl
-      port ( clk         : in    std_logic; 
-             origin_clk  : out   std_logic; 
-             half_clk    : out   std_logic; 
+      port ( clk         : in    std_logic;
+             origin_clk  : out   std_logic;
+             half_clk    : out   std_logic;
              quarter_clk : out   std_logic);
    end component;
    
@@ -538,19 +549,19 @@ begin
    
    XLXI_18 : mem_ctrl
       port map (CLK=>XLXN_101,
-                data_ready=>XLXI_18_data_ready_openSignal,
+                data_ready=>data_ready,--XLXI_18_data_ready_openSignal,
                 RAM_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
                 RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
                 RAM_READ_WRITE(1 downto 0)=>XLXN_6(1 downto 0),
-                tbre=>XLXI_18_tbre_openSignal,
-                tsre=>XLXI_18_tsre_openSignal,
+                tbre=>tbre,--XLXI_18_tbre_openSignal,
+                tsre=>tsre,--XLXI_18_tsre_openSignal,
                 RAM_OUTPUT(15 downto 0)=>XLXN_5(15 downto 0),
-                Ram1Addr=>open,
-                Ram1EN=>open,
-                Ram1OE=>open,
-                Ram1WE=>open,
-                rdn=>open,
-                wrn=>open,
+                Ram1Addr=>Ram1Addr,
+                Ram1EN=>Ram1EN,
+                Ram1OE=>Ram1OE,
+                Ram1WE=>Ram1WE,
+                rdn=>rdn,
+                wrn=>wrn,
                 Ram1Data=>open);
    
    XLXI_19 : wb_mux
@@ -651,9 +662,10 @@ begin
                 quarter_clk=>open);
    process(clk)
    begin
-     XLXI_13_rst_openSignal <= RstEnable;
+     --XLXI_13_rst_openSignal <= RstEnable;
      --wait for 1 ns;
      XLXI_13_rst_openSignal <= RstDisable;
+	  XLXI_7_rst_openSignal <= not Pc_reset;
      --wait;
    end process ; -- mp
    
