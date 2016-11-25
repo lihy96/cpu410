@@ -18,8 +18,8 @@ architecture Behavioral of fake_ram2 is
 signal ram2OE, ram2WE, ram2EN: std_logic;
 begin
 	ram2EN <= '0';
-	ram2OE <= RAM_READ_WRITE(1);
 	ram2WE <= RAM_READ_WRITE(0);
+	ram2OE <= not ram2WE;
 	process(data_in, addr_in, ram_read_write)
 	constant NOP: std_logic_vector(15 downto 0) := "0000100000000000";
 	constant LI_R1_1: std_logic_vector(15 downto 0) := "0110100100000001";
