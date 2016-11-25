@@ -20,13 +20,13 @@ begin
 	begin
 		case choose is
 			when "00" =>
-				outdata <= data1;
+				outdata_origin <= data1;
 			when "01" =>
-				outdata <= data2;
+				outdata_origin <= data2;
 			when "10" =>
-				outdata <= data3;
+				outdata_origin <= data3;
 			when others =>
-				outdata <= HIGH_RESIST;
+				outdata_origin <= HIGH_RESIST;
 		end case;
 	end process;
 end Behavioral;

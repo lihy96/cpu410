@@ -19,11 +19,11 @@ begin
 	begin
 		case choose is
 			when '0' =>
-				outdata <= data1;
+				outdata_origin <= data1;
 			when '1' =>
-				outdata <= data2;
+				outdata_origin <= data2;
 			when others =>
-				outdata <= HIGH_RESIST;
+				outdata_origin <= HIGH_RESIST;
 		end case;
 	end process;
 end Behavioral;

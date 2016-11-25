@@ -45,9 +45,9 @@ process(clk)
 	begin
 	if rising_edge(clk) then
 		if pause /= IF_ID_LATCH_PAUSE then
-			out_pc <= in_pc;
-			out_pc_plus1 <= in_pc_plus1;
-			out_inst <= in_inst;
+			out_pc_origin <= in_pc;
+			out_pc_plus1_origin <= in_pc_plus1;
+			out_inst_origin <= in_inst;
 		end if;
 	end if;
 end process;

@@ -37,22 +37,22 @@ begin
 	process (clk, rst, r1_addr, r2_addr, write_addr, write_data, write_en)
 	begin
 		if rst = RstEnable then
-			r1_data <= ZeroWord;
+			r1_data_origin <= ZeroWord;
 		elsif r1_addr = write_addr and write_en = WriteEnable then
-			r1_data <= write_data;
+			r1_data_origin <= write_data;
 		else 
-			r1_data <= reg_array(conv_integer(r1_addr));
+			r1_data_origin <= reg_array(conv_integer(r1_addr));
 		end if;
 	end process;
 
 	process (clk, rst, r2_addr, write_addr, write_data, write_en)
 	begin
 		if rst = RstEnable then
-			r2_data <= ZeroWord;
+			r2_data_origin <= ZeroWord;
 		elsif r2_addr = write_addr and write_en = WriteEnable then
-			r2_data <= write_data;
+			r2_data_origin <= write_data;
 		else 
-			r2_data <= reg_array(conv_integer(r2_addr));
+			r2_data_origin <= reg_array(conv_integer(r2_addr));
 		end if;
 end process;
 end architecture;
