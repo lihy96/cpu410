@@ -32,7 +32,7 @@ begin
 	begin
 		if reg0 = reg_prev1 and reg1_prev_type = WB_EXE then
 			reg_choose1 <= REG_CHOOSE1_EXEFWD;
-		elsif reg0 = reg_prev2 and reg2_prev_type = WB_MEM then
+		elsif reg0 = reg_prev2 then
 			reg_choose1 <= REG_CHOOSE1_MEMFWD;
 		else
 			reg_choose1 <= REG_CHOOSE1_RF;
@@ -40,7 +40,7 @@ begin
 
 		if reg1 = reg_prev and reg_prev_type = WB_EXE then
 			nxt_alu1 <= ALU_CHOOSE1_EXEFWD;
-		elsif reg1 = reg_prev1 and reg1_prev_type = WB_MEM then
+		elsif reg1 = reg_prev1 then
 			nxt_alu1 <= ALU_CHOOSE1_MEMFWD;
 		else
 			nxt_alu1 <= ALU_CHOOSE1_REG1;
@@ -48,7 +48,7 @@ begin
 
 		if reg2 = reg_prev and reg_prev_type = WB_EXE then
 			nxt_alu2 <= ALU_CHOOSE2_EXEFWD;
-		elsif reg2 = reg_prev1 and reg1_prev_type = WB_MEM then
+		elsif reg2 = reg_prev1 then
 			nxt_alu2 <= ALU_CHOOSE2_MEMFWD;
 		else
 			nxt_alu2 <= ALU_CHOOSE2_RI;
