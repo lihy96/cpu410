@@ -34,7 +34,7 @@ use work.constants.all;
 
 entity pc_reg is
     port ( 
-			rst, clk, pc_pause: in  STD_LOGIC;
+			rst, clk, pause: in  STD_LOGIC;
 			new_pc : in  STD_LOGIC_VECTOR(15 downto 0);
          	pc_output : out  STD_LOGIC_VECTOR(15 downto 0)
 	 );
@@ -48,7 +48,7 @@ begin
 	begin
 		if rst = Pc_reset then
 			mypc <= Pc_origin_address;
-		elsif (falling_edge(clk)) then
+		elsif (pause /= Pc_pause and falling_edge(clk)) then
 		--pc_pause /= Pc_pause and 
 			mypc <= new_pc;
 		end if;

@@ -143,23 +143,27 @@ begin
 		if (prev_reg1_type = WB_MEM and ((prev_reg1 = reg1 and prev_reg1 /= IMG_REG) or (prev_reg1 = reg2 and prev_reg1 /= IMG_REG))) or
 		   ((prev_reg1_type = WB_MEM or prev_reg1_type = WB_EXE) and prev_reg1 = reg0 and prev_reg1 /= IMG_REG) or
 		   (prev_reg2_type = WB_MEM and prev_reg2 = reg0 and reg0 /= IMG_REG)
-		   then
-			pause <= '1';
+		   then -- pause at once!
+			--pause <= '1';
+			pc_pause_ctrl <= Pc_pause;
+			latch_1_pause_ctrl <= IF_ID_LATCH_PAUSE;
+			ctrl_choose <= '1';
+			
 		else
-			pause <= '0';
+			--pause <= '0';
+			pc_pause_ctrl <= not Pc_pause;
+			latch_1_pause_ctrl <= not IF_ID_LATCH_PAUSE;
+			ctrl_choose <= '0';
 		end if;
+
+		--if pause = '1' then -- we need to pause
+		--else
+			
+		--end if ;
 		if rising_edge(clk) then
 			prev_reg2 <= prev_reg1;
 			prev_reg2_type <= prev_reg1_type;
-			if pause = '1' then -- we need to pause
-				pc_pause_ctrl <= Pc_pause;
-				latch_1_pause_ctrl <= IF_ID_LATCH_PAUSE;
-				ctrl_choose <= '1';
-			else
-				pc_pause_ctrl <= not Pc_pause;
-				latch_1_pause_ctrl <= not IF_ID_LATCH_PAUSE;
-				ctrl_choose <= '0';
-			end if ;
+			
 		end if;
 	end process ;
 

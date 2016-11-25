@@ -214,7 +214,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component pc_reg
       port ( rst       : in    std_logic; 
              clk       : in    std_logic; 
-             pc_pause  : in    std_logic; 
+             pause  : in    std_logic; 
              new_pc    : in    std_logic_vector (15 downto 0); 
              pc_output : out   std_logic_vector (15 downto 0));
    end component;
@@ -483,7 +483,7 @@ begin
    PcReg : pc_reg
       port map (clk=>XLXN_102,
                 new_pc(15 downto 0)=>XLXN_35(15 downto 0),
-                pc_pause=>XLXN_59,
+                pause=>XLXN_59,
                 rst=>PcReg_rst_openSignal,
                 pc_output(15 downto 0)=>XLXN_18(15 downto 0));
    
