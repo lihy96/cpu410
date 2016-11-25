@@ -24,7 +24,7 @@ begin
 	constant NOP: std_logic_vector(15 downto 0) := "0000100000000000";
 	constant LI_R1_1: std_logic_vector(15 downto 0) := "0110100100000001";
 	constant LI_R2_1: std_logic_vector(15 downto 0) := "0110101000000001";
-	constant LI_R3_8: std_logic_vector(15 downto 0) := "0110101110000101";
+	constant LI_R3_85: std_logic_vector(15 downto 0) := "0110101110000101";
 	constant SLL_R3_R3_0: std_logic_vector(15 downto 0) := "0011001101100000";
 	constant LI_R4_9: std_logic_vector(15 downto 0) := "0110110000001001";
 	constant SW_R3_R1_0: std_logic_vector(15 downto 0) := "1101101100100000";
@@ -33,7 +33,7 @@ begin
 	constant ADDU_R1_R2_R2: std_logic_vector(15 downto 0) := "1110000101001001";
 	constant ADDIU_R3_2: std_logic_vector(15 downto 0) := "0100101100000010";
 	constant ADDIU_R4_FF: std_logic_vector(15 downto 0) := "0100110011111111";
-	constant BNEZ_R4_F: std_logic_vector(15 downto 0) := "0010110011111001";
+	constant BNEZ_R4_F9: std_logic_vector(15 downto 0) := "0010110011111001";
 	begin
 		if ram2OE = '0' and ram2EN = '0' then
 			-- wait for 1 ns;
@@ -45,7 +45,7 @@ begin
 				when "0000000000000010" => 
 					data_out <= LI_R2_1;
 				when "0000000000000011" => 
-					data_out <= LI_R3_8;
+					data_out <= LI_R3_85;
 				when "0000000000000100" => 
 					data_out <= SLL_R3_R3_0;
 				when "0000000000000101" => 
@@ -63,11 +63,11 @@ begin
 				when "0000000000001011" => 
 					data_out <= ADDIU_R4_FF;
 				when "0000000000001100" => 
-					data_out <= BNEZ_R4_F;
+					data_out <= BNEZ_R4_F9;
 				when "0000000000001101" =>
 					data_out <= NOP;
 				when others =>
-			
+					data_out <= NOP;
 			end case ;
 		end if;
 	end process ;
