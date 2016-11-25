@@ -542,10 +542,17 @@ begin
                 outdata(15 downto 0)=>XLXN_75(15 downto 0));
  --75 本来是二选一输出，输出到regchoose2
  --72 本来上一锁存器的R2，下一锁存器的data_in，二选一的一个数据线
+<<<<<<< HEAD
  --77 本来三选一RegChoose2的输出，ALU的输入�
 
  --77 新：ALU的输入，二选一的输�
  --72 新：上一锁存器的R2，RegChoose2的一个输�
+=======
+ --77 本来三选一RegChoose2的输出，ALU的输入。
+
+ --77 新：ALU的输入，二选一的输出
+ --72 新：上一锁存器的R2，RegChoose2的一个输入
+>>>>>>> 03dd5f81fef7eec44188d40668e1faaad1db56e4
  --75 新：RegChoose2的输出，下一锁存器的data_in，二选一的一个数据线
    aluRIChoose : mux2
       port map (choose=>XLXN_74,
