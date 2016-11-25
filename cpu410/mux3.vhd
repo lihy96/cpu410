@@ -13,7 +13,9 @@ entity mux3 is
 end mux3;
 
 architecture Behavioral of mux3 is
+	signal outdata_origin: std_logic_vector(15 downto 0) := ZeroWord;
 begin
+	outdata <= outdata_origin;
 	process(data1, data2, data3, choose)
 	begin
 		case choose is

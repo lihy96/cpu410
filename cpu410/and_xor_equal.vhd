@@ -15,7 +15,9 @@ end and_xor_equal;
 architecture Behavioral of and_xor_equal is
 	signal state : std_logic;
 	signal data : std_logic;
+	signal out_and_gate_origin: std_logic := '0' ;
 begin
+	out_and_gate <= out_and_gate_origin;
 	process(reg1, reg2, b_inst, b_eq_ne)
 	begin
 		if ((b_inst = B_INST_YES) and 

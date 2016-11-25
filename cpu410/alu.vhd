@@ -14,7 +14,9 @@ entity alu is
 end alu;
 
 architecture Behavioral of alu is
+signal alu_res_origin: std_logic_vector(15 downto 0) := ZeroWord ;
 begin
+alu_res <= alu_res_origin;
 process(alu_op1, alu_op2, alu_inst)
 	variable res : std_logic_vector(15 downto 0) := ZeroWord;
 	begin

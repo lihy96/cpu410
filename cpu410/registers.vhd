@@ -18,8 +18,11 @@ end entity;
 
 architecture bhv of registers is
 signal reg_array: RegArray := (13 => OneWord, others => ZeroWord);
+signal r1_data_origin, r2_data_origin : std_logic_vector(15 downto 0) := ZeroWord;
 begin
 	--reg_array(conv_integer(unsigned(ONE_REG))) <= OneWord;	-- one reg 's value is 0000000000000001
+	r1_data <= r1_data_origin;
+	r2_data <= r2_data_origin;
 	process (clk)
 	begin
 		if falling_edge(clk) then	-- ??????????????????下降沿？？？？？

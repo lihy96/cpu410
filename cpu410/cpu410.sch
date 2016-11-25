@@ -70,6 +70,7 @@
         <signal name="XLXN_102" />
         <signal name="XLXN_103(15:0)" />
         <signal name="XLXN_104(3:0)" />
+        <signal name="XLXN_105" />
         <blockdef name="alu">
             <timestamp>2016-11-24T9:9:55</timestamp>
             <rect width="304" x="64" y="-192" height="192" />
@@ -601,7 +602,7 @@
             <blockpin signalname="XLXN_32" name="b_inst" />
             <blockpin signalname="XLXN_54" name="b_eq_ne" />
             <blockpin signalname="XLXN_42" name="wb_ctrl" />
-            <blockpin signalname="XLXN_42" name="mem_ctrl" />
+            <blockpin signalname="XLXN_105" name="mem_ctrl" />
             <blockpin signalname="XLXN_43" name="ex_ctrl" />
             <blockpin signalname="XLXN_38(15:0)" name="immd(15:0)" />
             <blockpin signalname="XLXN_61(1:0)" name="reg_wb_type(1:0)" />
@@ -625,7 +626,7 @@
         </block>
         <block symbolname="ctrl_mux" name="XLXI_27">
             <blockpin signalname="XLXN_42" name="in_wb_ctrl" />
-            <blockpin signalname="XLXN_42" name="in_mem_ctrl" />
+            <blockpin signalname="XLXN_105" name="in_mem_ctrl" />
             <blockpin signalname="XLXN_43" name="in_ex_ctrl" />
             <blockpin signalname="XLXN_48" name="pause_or_not" />
             <blockpin signalname="XLXN_61(1:0)" name="in_reg_wb_type(1:0)" />
@@ -901,9 +902,6 @@
         </branch>
         <branch name="XLXN_42">
             <wire x2="6912" y1="6224" y2="6224" x1="6672" />
-        </branch>
-        <branch name="XLXN_42">
-            <wire x2="6912" y1="6288" y2="6288" x1="6672" />
         </branch>
         <branch name="XLXN_43">
             <wire x2="6912" y1="6352" y2="6352" x1="6672" />
@@ -1207,6 +1205,9 @@
             <wire x2="10112" y1="8608" y2="8976" x1="10112" />
             <wire x2="14704" y1="8976" y2="8976" x1="10112" />
             <wire x2="14704" y1="8368" y2="8368" x1="14656" />
+        </branch>
+        <branch name="XLXN_105">
+            <wire x2="6912" y1="6288" y2="6288" x1="6672" />
         </branch>
     </sheet>
 </drawing>
