@@ -62,7 +62,7 @@ architecture Behavioral of mem_ctrl is
 	signal state : state_set := init;
 	
 begin
-	process(CLK)
+	process(CLK,RAM_READ_WRITE,RAM_ADDR,RAM_DATA)
 		variable temp:std_logic_vector(15 downto 0);
 		begin
 		if falling_edge(CLK) then
@@ -114,6 +114,9 @@ begin
 								wrn <= '1';
 								Ram1Data <= "ZZZZZZZZZZZZZZZZ";
 								Ram1Addr <= "00" & RAM_ADDR;
+							else --初始状态
+								state <= init;
+								RAM_OUTPUT <= ZeroWord;
 							end if;
 					end case;
 						
