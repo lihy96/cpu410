@@ -11,8 +11,9 @@ entity equal is
 end equal;
 
 architecture Behavioral of equal is
-
+	signal result_origin: std_logic_vector(15 downto 0) := ZeroWord ;
 begin
+	result <= result_origin;
 	process(data1, data2)
 	begin
 		if data1 = data2 then

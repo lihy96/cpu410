@@ -33,9 +33,14 @@ entity if_id_latch is
 	  );
 end if_id_latch;
 
-
 architecture Behavioral of if_id_latch is
+	signal out_pc_origin: std_logic_vector(15 downto 0) := ZeroWord;
+	signal out_pc_plus1_origin: std_logic_vector(15 downto 0) := ZeroWord;
+	signal out_inst_origin: std_logic_vector(15 downto 0) := ZeroWord;
 begin
+	out_pc <= out_pc_origin;
+	out_pc_plus1 <= out_pc_plus1_origin;
+	out_inst <= out_inst_origin;
 process(clk)
 	begin
 	if rising_edge(clk) then

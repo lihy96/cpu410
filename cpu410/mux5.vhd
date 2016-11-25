@@ -13,7 +13,9 @@ entity mux5 is
 end mux5;
 
 architecture Behavioral of mux5 is
+	signal outdata_origin: std_logic_vector(15 downto 0) := ZeroWord;
 begin
+	outdata <= outdata_origin;
 	process(data1, data2, data3, data4, data5, choose)
 	begin
 		case choose is

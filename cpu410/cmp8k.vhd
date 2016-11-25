@@ -14,7 +14,9 @@ end cmp8k;
 
 
 architecture Behavioral of cmp8k is
+signal res_origin: std_logic := '0' ;
 begin
+	res <= res_origin;
 	process(data_in)
 	begin
 		if data_in >= x"8000" then

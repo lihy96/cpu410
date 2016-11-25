@@ -12,8 +12,9 @@ entity mux2 is
 end mux2;
 
 architecture Behavioral of mux2 is
-
+	signal outdata_origin: std_logic_vector(15 downto 0) := ZeroWord;
 begin
+	outdata <= outdata_origin;
 	process(data1, data2, choose)
 	begin
 		case choose is
