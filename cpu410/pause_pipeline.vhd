@@ -56,11 +56,15 @@ begin
 	process(instr, clk, prev_reg, prev_reg_type, prev_reg1_type, prev_reg1, prev_reg2_type, prev_reg2)
 	begin
 		case instr(15 downto 11) is
-			when OP_ADDIU | OP_ADDIU3 | OP_LW | OP_SLTI | OP_SW_SP | OP_LI=>
+			when OP_ADDIU | OP_ADDIU3 | OP_LW | OP_SLTI | OP_LI=>
 			-- only rx refered at 8 to 10
 				reg0 <= IMG_REG;
 				reg1 <= '0' & instr(10 downto 8);
 				reg2 <= IMG_REG;
+			when OP_SW_SP =>
+				reg0 <= IMG_REG;
+				reg1 <= SP_REG;
+				reg2 <= '0' & instr(10 downto 8);
 			when OP_BEQZ | OP_BNEZ =>
 				reg0 <= '0' & instr(10 downto 8);	
 				reg1 <= IMG_REG;
@@ -83,10 +87,14 @@ begin
 						reg1 <= '0' & instr(10 downto 8);
 						reg2 <= '0' & instr(7 downto 5);
 				end case;
-			when OP_SHIFT | OP_SW =>-- SRA, SLL, SW
+			when OP_SHIFT=>-- SRA, SLL
 				reg0 <= IMG_REG;
 				reg2 <= IMG_REG;
 				reg1 <= '0' & instr(7 downto 5);
+			when OP_SW =>
+				reg0 <= IMG_REG;
+				reg1 <= '0' & instr(10 downto 8);
+				reg2 <= '0' & instr(7 downto 5);
 			when OP_SPECIAL => --ADDSP, BTEQZ, BTNEZ, MTSP, SW_RS
 			-- rx and special register refered
 				case instr(10 downto 8) is
@@ -104,8 +112,8 @@ begin
 						reg2 <= IMG_REG;
 					when SPECIAL_SW_RS =>
 						reg0 <= IMG_REG;
-						reg1 <= RA_REG;
-						reg2 <= IMG_REG;
+						reg1 <= SP_REG;
+						reg2 <= RA_REG;
 					when others =>
 						reg0 <= IMG_REG;
 						reg1 <= IMG_REG;

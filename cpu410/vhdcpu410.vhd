@@ -201,7 +201,7 @@ architecture BEHAVIORAL of vhdcpu410 is
 		-- control signal input
 		IN_WB_CTRL : in WB_CONTROL_TYPE;
 		IN_MEM_CTRL : in MEM_CTRL_TYPE;
-		IN_CMP_RS : in STD_LOGIC; --�Զ�д��ַ���бȽϺ�Ľ��
+		IN_CMP_RS : in STD_LOGIC; --¶Ô¶ÁÐ´µØÖ·½øÐÐ±È½ÏºóµÄ½á¹û
 		
 		-- control signal output
 		OUT_WB_CONTROL : out WB_CONTROL_TYPE;
@@ -406,9 +406,9 @@ architecture BEHAVIORAL of vhdcpu410 is
              reg_prev1     : in    std_logic_vector (3 downto 0); 
              reg_prev2     : in    std_logic_vector (3 downto 0); 
              reg_prev_type : in    std_logic_vector (1 downto 0); 
-             alu_choose1   : out   std_logic_vector (1 downto 0); 
-             alu_choose2   : out   std_logic_vector (1 downto 0); 
-             reg_choose1   : out   std_logic_vector (1 downto 0));
+             reg_choose1   : out   std_logic_vector (1 downto 0); 
+             reg_choose2   : out   std_logic_vector (1 downto 0); 
+             reg_choose0   : out   std_logic_vector (1 downto 0));
    end component;
    
    component clk_ctrl
@@ -467,7 +467,7 @@ begin
       port map (CLK=>XLXN_102,
                 IN_ADDR(15 downto 0)=>XLXN_12(15 downto 0),
                 IN_CMP_RS=>XLXN_15,
-                IN_DATA(15 downto 0)=>XLXN_72(15 downto 0),
+                IN_DATA(15 downto 0)=>XLXN_75(15 downto 0),
                 IN_MEM_CTRL=>XLXN_16,
                 IN_PC(15 downto 0)=>XLXN_25(15 downto 0),
                 IN_REG_NO(3 downto 0)=>XLXN_81(3 downto 0),
@@ -527,20 +527,32 @@ begin
                 r1_data(15 downto 0)=>XLXN_64(15 downto 0),
                 r2_data(15 downto 0)=>XLXN_63(15 downto 0));
    
-   AluChoose1 : mux3
+   RegChoose1 : mux3
       port map (choose(1 downto 0)=>XLXN_82(1 downto 0),
                 data1(15 downto 0)=>XLXN_71(15 downto 0),
                 data2(15 downto 0)=>XLXN_88(15 downto 0),
                 data3(15 downto 0)=>XLXN_99(15 downto 0),
                 outdata(15 downto 0)=>XLXN_76(15 downto 0));
    
-   AluChoose2 : mux3
+   RegChoose2 : mux3
       port map (choose(1 downto 0)=>XLXN_83(1 downto 0),
                 data1(15 downto 0)=>XLXN_88(15 downto 0),
-                data2(15 downto 0)=>XLXN_75(15 downto 0),
+                data2(15 downto 0)=>XLXN_72(15 downto 0),
                 data3(15 downto 0)=>XLXN_99(15 downto 0),
+                outdata(15 downto 0)=>XLXN_75(15 downto 0));
+ --75 本来是二选一输出，输出到regchoose2
+ --72 本来上一锁存器的R2，下一锁存器的data_in，二选一的一个数据线
+ --77 本来三选一RegChoose2的输出，ALU的输入�
+
+ --77 新：ALU的输入，二选一的输�
+ --72 新：上一锁存器的R2，RegChoose2的一个输�
+ --75 新：RegChoose2的输出，下一锁存器的data_in，二选一的一个数据线
+   aluRIChoose : mux2
+      port map (choose=>XLXN_74,
+                data1(15 downto 0)=>XLXN_75(15 downto 0),
+                data2(15 downto 0)=>XLXN_73(15 downto 0),
                 outdata(15 downto 0)=>XLXN_77(15 downto 0));
-   
+
    InstalledALU : alu
       port map (alu_inst(4 downto 0)=>XLXN_70(4 downto 0),
                 alu_op1(15 downto 0)=>XLXN_76(15 downto 0),
@@ -638,11 +650,6 @@ begin
                 data3(15 downto 0)=>XLXN_99(15 downto 0),
                 outdata(15 downto 0)=>XLXN_65(15 downto 0));
    
-   aluRIChoose : mux2
-      port map (choose=>XLXN_74,
-                data1(15 downto 0)=>XLXN_72(15 downto 0),
-                data2(15 downto 0)=>XLXN_73(15 downto 0),
-                outdata(15 downto 0)=>XLXN_75(15 downto 0));
    
    fwdUnit : forward
       port map (clk=>XLXN_102,
@@ -651,9 +658,9 @@ begin
                 reg_prev_type(1 downto 0)=>XLXN_62(1 downto 0),
                 reg_prev1(3 downto 0)=>XLXN_10(3 downto 0),
                 reg_prev2(3 downto 0)=>XLXN_104(3 downto 0),
-                alu_choose1(1 downto 0)=>XLXN_82(1 downto 0),
-                alu_choose2(1 downto 0)=>XLXN_83(1 downto 0),
-                reg_choose1(1 downto 0)=>XLXN_84(1 downto 0));
+                reg_choose1(1 downto 0)=>XLXN_82(1 downto 0),
+                reg_choose2(1 downto 0)=>XLXN_83(1 downto 0),
+                reg_choose0(1 downto 0)=>XLXN_84(1 downto 0));
    
    ClkCtrl : clk_ctrl
       port map (clk=>clk,
