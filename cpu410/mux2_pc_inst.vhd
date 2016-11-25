@@ -22,7 +22,7 @@ begin
 			when "00" =>
 				outdata <= pc;
 			when MEM_READ =>
-				outdata <= addr;
+				outdata <= pc;
 			when MEM_WRITE => 
 				outdata <= addr;
 			when others =>
