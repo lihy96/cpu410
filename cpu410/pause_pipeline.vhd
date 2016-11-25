@@ -104,9 +104,9 @@ begin
 			when OP_B | OP_NOP =>-- DO NOTHING
 			when others =>
 		end case;
-		if (prev_reg1_type = WB_MEM and (prev_reg1 = reg1 or prev_reg1 = reg2)) or
-		   ((prev_reg1_type = WB_MEM or prev_reg1_type = WB_EXE) and prev_reg1 = reg0) or
-		   (prev_reg2_type = WB_MEM and prev_reg2 = reg0)
+		if (prev_reg1_type = WB_MEM and ((prev_reg1 = reg1 and prev_reg1 /= IMG_REG) or (prev_reg1 = reg2 and prev_reg1 /= IMG_REG))) or
+		   ((prev_reg1_type = WB_MEM or prev_reg1_type = WB_EXE) and prev_reg1 = reg0 and prev_reg1 /= IMG_REG) or
+		   (prev_reg2_type = WB_MEM and prev_reg2 = reg0 and reg0 /= IMG_REG)
 		   then
 			pause <= '1';
 		else

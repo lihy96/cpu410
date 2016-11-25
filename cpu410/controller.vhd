@@ -504,7 +504,14 @@ begin
 			when others =>
 				immd <= ZERO16;
 				ex_ctrl.ALU_OP <= THU_ID_NOP;
-
+				reg_wb_type <= WB_NONE;
+				wb_ctrl.WB_CHOOSE <= ALU_DATA;
+				wb_ctrl.REG_WN <= WriteDisable;
+				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
+				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
+				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+				reg_r2 <= IMG_REG;
+				reg_r1 <= IMG_REG;
 		end case;
 	end process;
 end architecture; -- arch

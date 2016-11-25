@@ -108,8 +108,8 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_103                      : std_logic_vector (15 downto 0);
    signal XLXN_104                      : std_logic_vector (3 downto 0);
 	--signal XLXI_4_clk_openSignal         : std_logic;
-   --signal XLXI_7_clk_openSignal         : std_logic;
-   signal XLXI_7_rst_openSignal         : std_logic;
+   --signal PcReg_clk_openSignal         : std_logic;
+   signal PcReg_rst_openSignal         : std_logic;
    --signal XLXI_13_clk_openSignal        : std_logic;
    signal XLXI_13_rst_openSignal        : std_logic;
    --signal XLXI_18_data_ready_openSignal : std_logic;
@@ -117,7 +117,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    --signal XLXI_18_tsre_openSignal       : std_logic;
    --signal XLXI_19_CLK_openSignal        : std_logic;
    --signal XLXI_28_clk_openSignal        : std_logic;
-   --signal XLXI_31_clk_openSignal        : std_logic;
+   --signal fwdUnit_clk_openSignal        : std_logic;
    --signal XLXI_32_clk_openSignal        : std_logic;
    component if_id_latch
       port ( clk          : in    std_logic; 
@@ -480,14 +480,14 @@ begin
                 OUT_REG_NO(3 downto 0)=>XLXN_10(3 downto 0),
                 OUT_WB_CONTROL=>XLXN_11);
    
-   XLXI_7 : pc_reg
+   PcReg : pc_reg
       port map (clk=>XLXN_102,
                 new_pc(15 downto 0)=>XLXN_35(15 downto 0),
                 pc_pause=>XLXN_59,
-                rst=>XLXI_7_rst_openSignal,
+                rst=>PcReg_rst_openSignal,
                 pc_output(15 downto 0)=>XLXN_18(15 downto 0));
    
-   XLXI_8 : pc_adder
+   PcAdder : pc_adder
       port map (pc_adder_in(15 downto 0)=>XLXN_18(15 downto 0),
                 pc_adder_out(15 downto 0)=>XLXN_22(15 downto 0));
    
@@ -502,7 +502,7 @@ begin
 --                Ram2OE=>open,
 --                Ram2WE=>open,
 --                Ram2Data=>open);
-	XLXI_10: fake_ram2
+	FakeRam2: fake_ram2
 	    Port map( 
            data_in => XLXN_8(15 downto 0),
 			  addr_in => XLXN_28(15 downto 0),
@@ -511,12 +511,12 @@ begin
            data_out => XLXN_21(15 downto 0)
          );
    
-   XLXI_12 : adder
+   BinstPcAdder : adder
       port map (imm(15 downto 0)=>XLXN_38(15 downto 0),
                 pc_old(15 downto 0)=>XLXN_23(15 downto 0),
                 pc_new(15 downto 0)=>XLXN_36(15 downto 0));
    
-   XLXI_13 : registers
+   RF : registers
       port map (clk=>XLXN_102,
                 rst=>XLXI_13_rst_openSignal,
                 r1_addr(3 downto 0)=>XLXN_68(3 downto 0),
@@ -527,27 +527,27 @@ begin
                 r1_data(15 downto 0)=>XLXN_64(15 downto 0),
                 r2_data(15 downto 0)=>XLXN_63(15 downto 0));
    
-   XLXI_14 : mux3
+   AluChoose1 : mux3
       port map (choose(1 downto 0)=>XLXN_82(1 downto 0),
                 data1(15 downto 0)=>XLXN_71(15 downto 0),
                 data2(15 downto 0)=>XLXN_88(15 downto 0),
                 data3(15 downto 0)=>XLXN_99(15 downto 0),
                 outdata(15 downto 0)=>XLXN_76(15 downto 0));
    
-   XLXI_15 : mux3
+   AluChoose2 : mux3
       port map (choose(1 downto 0)=>XLXN_83(1 downto 0),
                 data1(15 downto 0)=>XLXN_88(15 downto 0),
                 data2(15 downto 0)=>XLXN_75(15 downto 0),
                 data3(15 downto 0)=>XLXN_99(15 downto 0),
                 outdata(15 downto 0)=>XLXN_77(15 downto 0));
    
-   XLXI_16 : alu
+   InstalledALU : alu
       port map (alu_inst(4 downto 0)=>XLXN_70(4 downto 0),
                 alu_op1(15 downto 0)=>XLXN_76(15 downto 0),
                 alu_op2(15 downto 0)=>XLXN_77(15 downto 0),
                 alu_res(15 downto 0)=>XLXN_12(15 downto 0));
    
-   XLXI_18 : mem_ctrl
+   Ram1Controller : mem_ctrl
       port map (CLK=>XLXN_101,
                 data_ready=>data_ready,--XLXI_18_data_ready_openSignal,
                 RAM_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
@@ -564,7 +564,7 @@ begin
                 wrn=>wrn,
                 Ram1Data=>open);
    
-   XLXI_19 : wb_mux
+   WbMux : wb_mux
       port map (
         --CLK=>XLXI_19_CLK_openSignal,
                 IN_ALU_DATA(15 downto 0)=>XLXN_3(15 downto 0),
@@ -573,17 +573,17 @@ begin
                 IN_WB_CHOOSE=>XLXN_14,
                 OUT_WB_DATA(15 downto 0)=>XLXN_99(15 downto 0));
    
-   XLXI_20 : cmp8k
+   CmpWith8k : cmp8k
       port map (data_in(15 downto 0)=>XLXN_12(15 downto 0),
                 res=>XLXN_15);
    
-   XLXI_22 : mux2_pc_inst
+   PcMux2 : mux2_pc_inst
       port map (addr(15 downto 0)=>XLXN_88(15 downto 0),
                 choose(1 downto 0)=>XLXN_20(1 downto 0),
                 pc(15 downto 0)=>XLXN_18(15 downto 0),
                 outdata(15 downto 0)=>XLXN_28(15 downto 0));
    
-   XLXI_23 : controller
+   InstalledController : controller
       port map (instruction(15 downto 0)=>XLXN_29(15 downto 0),
                 b_eq_ne=>XLXN_54,
                 b_inst=>XLXN_32,
@@ -596,7 +596,7 @@ begin
                 reg_wb_type(1 downto 0)=>XLXN_61(1 downto 0),
                 wb_ctrl=>XLXN_42_wb);
    
-   XLXI_24 : mux3_pc
+   Mux3Pc : mux3_pc
       port map (b_or_not=>XLXN_56,
                 jr_or_not=>XLXN_31,
                 pc_add_n(15 downto 0)=>XLXN_36(15 downto 0),
@@ -604,14 +604,14 @@ begin
                 pc_from_reg(15 downto 0)=>XLXN_65(15 downto 0),
                 out_next_pc(15 downto 0)=>XLXN_35(15 downto 0));
    
-   XLXI_25 : and_xor_equal
+   FilalBorNot : and_xor_equal
       port map (b_eq_ne=>XLXN_54,
                 b_inst=>XLXN_32,
                 reg1(15 downto 0)=>XLXN_65(15 downto 0),
                 reg2(15 downto 0)=>XLXN_63(15 downto 0),
                 out_and_gate=>XLXN_56);
    
-   XLXI_27 : ctrl_mux
+   CtrlMux : ctrl_mux
       port map (in_ex_ctrl=>XLXN_43,
                 in_mem_ctrl=>XLXN_42_mem,
                 in_reg_wb_type(1 downto 0)=>XLXN_61(1 downto 0),
@@ -621,7 +621,7 @@ begin
                 out_latch_mem=>XLXN_60,
                 out_wb_ctrl=>XLXN_47);
    
-   XLXI_28 : pause_pipeline
+   PausePipeline : pause_pipeline
       port map (clk=>XLXN_102,
                 instr(15 downto 0)=>XLXN_29(15 downto 0),
                 prev_reg(3 downto 0)=>XLXN_81(3 downto 0),
@@ -631,20 +631,20 @@ begin
                 pc_pause_ctrl=>XLXN_59,
                 reg_bus(11 downto 0)=>XLXN_85(11 downto 0));
    
-   XLXI_29 : mux3
+   Reg1Mux3 : mux3
       port map (choose(1 downto 0)=>XLXN_84(1 downto 0),
                 data1(15 downto 0)=>XLXN_88(15 downto 0),
                 data2(15 downto 0)=>XLXN_64(15 downto 0),
                 data3(15 downto 0)=>XLXN_99(15 downto 0),
                 outdata(15 downto 0)=>XLXN_65(15 downto 0));
    
-   XLXI_30 : mux2
+   aluRIChoose : mux2
       port map (choose=>XLXN_74,
                 data1(15 downto 0)=>XLXN_72(15 downto 0),
                 data2(15 downto 0)=>XLXN_73(15 downto 0),
                 outdata(15 downto 0)=>XLXN_75(15 downto 0));
    
-   XLXI_31 : forward
+   fwdUnit : forward
       port map (clk=>XLXN_102,
                 reg_bus(11 downto 0)=>XLXN_85(11 downto 0),
                 reg_prev(3 downto 0)=>XLXN_81(3 downto 0),
@@ -655,7 +655,7 @@ begin
                 alu_choose2(1 downto 0)=>XLXN_83(1 downto 0),
                 reg_choose1(1 downto 0)=>XLXN_84(1 downto 0));
    
-   XLXI_32 : clk_ctrl
+   ClkCtrl : clk_ctrl
       port map (clk=>clk,
                 half_clk=>XLXN_102,
                 origin_clk=>XLXN_101,
@@ -665,7 +665,7 @@ begin
      --XLXI_13_rst_openSignal <= RstEnable;
      --wait for 1 ns;
      XLXI_13_rst_openSignal <= RstDisable;
-	  XLXI_7_rst_openSignal <= not Pc_reset;
+	  PcReg_rst_openSignal <= not Pc_reset;
      --wait;
    end process ; -- mp
    

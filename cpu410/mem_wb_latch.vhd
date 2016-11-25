@@ -51,19 +51,32 @@ entity mem_wb_latch is
 end mem_wb_latch;
 
 architecture Behavioral of mem_wb_latch is
-
+signal INNER_OUT_ADDR : STD_LOGIC_VECTOR(15 downto 0) := ZeroWord;
+signal INNER_OUT_DATA : STD_LOGIC_VECTOR(15 downto 0) := ZeroWord;
+signal INNER_OUT_PC : STD_LOGIC_VECTOR(15 downto 0) := ZeroWord;
+signal INNER_OUT_REG_NO : STD_LOGIC_VECTOR(3 downto 0) := IMG_REG;
+signal INNER_OUT_WB_CHOOSE : WB_CHOOSE_TYPE := ALU_DATA;
+signal INNER_OUT_REG_WN : STD_LOGIC := WriteDisable;
 begin
-	process(CLK)
+	OUT_ADDR <= INNER_OUT_ADDR;
+	OUT_DATA <= INNER_OUT_DATA;
+	OUT_PC <= INNER_OUT_PC;
+	OUT_REG_NO <= INNER_OUT_REG_NO;
+	-- to be added : control signals
+	--OUT_WB_FORWARD <= IN_WB_CONTROL.WB_FORWARD;
+	OUT_WB_CHOOSE <= INNER_OUT_WB_CHOOSE;
+	OUT_REG_WN <= INNER_OUT_REG_WN;
+	process(CLK,IN_ADDR,IN_DATA,IN_PC,IN_REG_NO,IN_WB_CONTROL,INNER_OUT_ADDR, INNER_OUT_DATA, INNER_OUT_PC, INNER_OUT_REG_NO, INNER_OUT_WB_CHOOSE, INNER_OUT_REG_WN)
 		begin
 		if (CLK'event and CLK = '1') then
-			OUT_ADDR <= IN_ADDR;
-			OUT_DATA <= IN_DATA;
-			OUT_PC <= IN_PC;
-			OUT_REG_NO <= IN_REG_NO;
+			INNER_OUT_ADDR <= IN_ADDR;
+			INNER_OUT_DATA <= IN_DATA;
+			INNER_OUT_PC <= IN_PC;
+			INNER_OUT_REG_NO <= IN_REG_NO;
 			-- to be added : control signals
 			--OUT_WB_FORWARD <= IN_WB_CONTROL.WB_FORWARD;
-			OUT_WB_CHOOSE <= IN_WB_CONTROL.WB_CHOOSE;
-			OUT_REG_WN <= IN_WB_CONTROL.REG_WN;
+			INNER_OUT_WB_CHOOSE <= IN_WB_CONTROL.WB_CHOOSE;
+			INNER_OUT_REG_WN <= IN_WB_CONTROL.REG_WN;
 		end if;
 	end process;
 
