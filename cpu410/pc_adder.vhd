@@ -25,6 +25,6 @@ begin
 	pc_adder_out <= pc_adder_out_origin;
 	process(pc_adder_in)
 	begin
-		pc_adder_out <= pc_adder_in + Pc_offset;
+		pc_adder_out_origin <= pc_adder_in + Pc_offset;
 	end process;
 end Behavioral;
