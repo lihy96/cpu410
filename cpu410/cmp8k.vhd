@@ -20,9 +20,9 @@ begin
 	process(data_in)
 	begin
 		if data_in >= x"8000" then
-			res <= Data_ram1;
+			res_origin <= Data_ram1;
 		else
-			res <= Inst_ram2;
+			res_origin <= Inst_ram2;
 		end if;
 	end process;
 end Behavioral;

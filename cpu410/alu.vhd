@@ -58,7 +58,7 @@ process(alu_op1, alu_op2, alu_inst)
 				NULL;
 		end case;
 
-		alu_res <= res;
+		alu_res_origin <= res;
 
 	end process;
 end Behavioral;

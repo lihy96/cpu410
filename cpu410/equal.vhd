@@ -17,9 +17,9 @@ begin
 	process(data1, data2)
 	begin
 		if data1 = data2 then
-			result <= EQUAL_YES;
+			result_origin <= EQUAL_YES;
 		else
-			result <= EQUAL_NO;
+			result_origin <= EQUAL_NO;
 		end if;
 	end process;
 end Behavioral;

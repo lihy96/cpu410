@@ -18,7 +18,7 @@ begin
 	pc_new <= pc_new_origin;
 	process(pc_old, imm)
 	begin
-		pc_new <= pc_old + imm;
+		pc_new_origin <= pc_old + imm;
 	end process;
 end Behavioral;
 
