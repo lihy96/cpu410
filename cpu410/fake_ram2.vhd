@@ -64,6 +64,8 @@ begin
 					data_out <= ADDIU_R4_FF;
 				when "0000000000001100" => 
 					data_out <= BNEZ_R4_F;
+				when "0000000000001101" =>
+					data_out <= NOP;
 				when others =>
 			
 			end case ;
