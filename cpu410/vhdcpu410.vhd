@@ -38,8 +38,14 @@ entity vhdcpu410 is
       rdn: out std_logic;
       tbre: in std_logic;
       tsre: in std_logic;
-      data_ready: in std_logic
-			);
+      data_ready: in std_logic;
+
+      Ram2OE: out std_logic;
+      Ram2EN: out std_logic;
+      Ram2WE: out std_logic;
+      Ram2Addr: out std_logic_vector(17 downto 0);
+      Ram2Data : inout std_logic_vector(15 downto 0)
+      );
 end vhdcpu410;
 
 architecture BEHAVIORAL of vhdcpu410 is
@@ -108,7 +114,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_102                      : std_logic;
    signal XLXN_103                      : std_logic_vector (15 downto 0);
    signal XLXN_104                      : std_logic_vector (3 downto 0);
-	--signal XLXI_4_clk_openSignal         : std_logic;
+  --signal XLXI_4_clk_openSignal         : std_logic;
    --signal PcReg_clk_openSignal         : std_logic;
    signal PcReg_rst_openSignal         : std_logic;
    --signal XLXI_13_clk_openSignal        : std_logic;
@@ -136,6 +142,18 @@ architecture BEHAVIORAL of vhdcpu410 is
   );
   signal state : state_set := init;
 
+    signal RAM2_CLK : STD_LOGIC;
+    signal RAM2_RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
+    signal RAM2_RAM_ADDR : STD_LOGIC_VECTOR(15 downto 0);
+    signal RAM2_RAM_DATA : STD_LOGIC_VECTOR(15 downto 0);
+    signal RAM2_RAM_OUTPUT : STD_LOGIC_VECTOR(15 downto 0);
+    type ram2_state_set is (
+      init,
+      writing,
+      reading
+    );
+    signal ram2_state : ram2_state_set := init;
+
    component if_id_latch
       port ( clk          : in    std_logic; 
              pause        : in    std_logic; 
@@ -149,83 +167,83 @@ architecture BEHAVIORAL of vhdcpu410 is
    
    component id_ex_latch
       port (
-		clk: in std_logic;
+    clk: in std_logic;
 
-		in_wb: in WB_CONTROL_TYPE;
-		out_wb_ctrl: out WB_CONTROL_TYPE;
+    in_wb: in WB_CONTROL_TYPE;
+    out_wb_ctrl: out WB_CONTROL_TYPE;
 
 
-		in_mem: in ID_EX_LATCH_MEM;
-		out_mem_ctrl: out MEM_CTRL_TYPE;
-		out_pause: out std_logic_vector(1 downto 0);
+    in_mem: in ID_EX_LATCH_MEM;
+    out_mem_ctrl: out MEM_CTRL_TYPE;
+    out_pause: out std_logic_vector(1 downto 0);
 
-		in_ex: in ID_EX_LATCH_EX;
-		out_reg_num_choose: out std_logic_vector(3 downto 0);
-		out_alu_op: out std_logic_vector(4 downto 0);
-		out_alu1_ri_choose: out std_logic;
+    in_ex: in ID_EX_LATCH_EX;
+    out_reg_num_choose: out std_logic_vector(3 downto 0);
+    out_alu_op: out std_logic_vector(4 downto 0);
+    out_alu1_ri_choose: out std_logic;
 
-		in_Rx_val, in_Ry_val: in std_logic_vector(15 downto 0);
-		out_Rx_val, out_Ry_val: out std_logic_vector(15 downto 0);
+    in_Rx_val, in_Ry_val: in std_logic_vector(15 downto 0);
+    out_Rx_val, out_Ry_val: out std_logic_vector(15 downto 0);
 
-		in_imme, in_pc : in std_logic_vector(15 downto 0);
-		out_imme, out_pc: out std_logic_vector(15 downto 0)
-	  );
+    in_imme, in_pc : in std_logic_vector(15 downto 0);
+    out_imme, out_pc: out std_logic_vector(15 downto 0)
+    );
    end component;
    
    component mem_wb_latch
       Port ( 
-		CLK : in STD_LOGIC;
-		
-		-- data input
-		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
-		
-		-- data output
-		OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
-		
-		-- control signal input
-		IN_WB_CONTROL : in WB_CONTROL_TYPE;
-		
-		-- control signal output
-		--OUT_WB_FORWARD : out STD_LOGIC;
-		OUT_WB_CHOOSE : out WB_CHOOSE_TYPE;
-		OUT_REG_WN : out STD_LOGIC
-		
-	);
+    CLK : in STD_LOGIC;
+    
+    -- data input
+    IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
+    
+    -- data output
+    OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
+    OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
+    OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
+    OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
+    
+    -- control signal input
+    IN_WB_CONTROL : in WB_CONTROL_TYPE;
+    
+    -- control signal output
+    --OUT_WB_FORWARD : out STD_LOGIC;
+    OUT_WB_CHOOSE : out WB_CHOOSE_TYPE;
+    OUT_REG_WN : out STD_LOGIC
+    
+  );
    end component;
    
    component ex_mem_latch
       Port ( 
-		CLK : in STD_LOGIC;
-		
-		-- data input
-		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
-		
-		-- data output
-		OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
-		OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
-		
-		-- control signal input
-		IN_WB_CTRL : in WB_CONTROL_TYPE;
-		IN_MEM_CTRL : in MEM_CTRL_TYPE;
-		IN_CMP_RS : in STD_LOGIC; --¶Ô¶ÁÐ´µØÖ·½øÐÐ±È½ÏºóµÄ½á¹û
-		
-		-- control signal output
-		OUT_WB_CONTROL : out WB_CONTROL_TYPE;
-		OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
-		OUT_RAM2_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0)
-		-- OUT_MEM_FORWARD : out STD_LOGIC
-	);
+    CLK : in STD_LOGIC;
+    
+    -- data input
+    IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_REG_NO : in STD_LOGIC_VECTOR(3 downto 0);
+    
+    -- data output
+    OUT_ADDR : out STD_LOGIC_VECTOR(15 downto 0);
+    OUT_DATA : out STD_LOGIC_VECTOR(15 downto 0);
+    OUT_PC : out STD_LOGIC_VECTOR(15 downto 0);
+    OUT_REG_NO : out STD_LOGIC_VECTOR(3 downto 0);
+    
+    -- control signal input
+    IN_WB_CTRL : in WB_CONTROL_TYPE;
+    IN_MEM_CTRL : in MEM_CTRL_TYPE;
+    IN_CMP_RS : in STD_LOGIC; --¶Ô¶ÁÐ´µØÖ·½øÐÐ±È½ÏºóµÄ½á¹û
+    
+    -- control signal output
+    OUT_WB_CONTROL : out WB_CONTROL_TYPE;
+    OUT_RAM1_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0);
+    OUT_RAM2_READ_WRITE : out STD_LOGIC_VECTOR(1 downto 0)
+    -- OUT_MEM_FORWARD : out STD_LOGIC
+  );
    end component;
    
    component pc_reg
@@ -241,25 +259,25 @@ architecture BEHAVIORAL of vhdcpu410 is
              pc_adder_out : out   std_logic_vector (15 downto 0));
    end component;
    
---   component inst_ram
---      port ( CLK            : in    std_logic; 
---             RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
---             RAM_ADDR       : in    std_logic_vector (15 downto 0); 
---             RAM_DATA       : in    std_logic_vector (15 downto 0); 
---             Ram2Data       : inout std_logic_vector (15 downto 0); 
---             Ram2OE         : out   std_logic; 
---             Ram2WE         : out   std_logic; 
---             Ram2EN         : out   std_logic; 
---             RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
---             Ram2Addr       : out   std_logic_vector (17 downto 0));
---   end component;
-	component fake_ram2
-		Port ( 
-           data_in, addr_in : in  STD_LOGIC_VECTOR (15 downto 0);
-           --ram2OE, ram2WE, ram2EN: in std_logic;
-			  RAM_READ_WRITE: in std_logic_vector(1 downto 0);
-           data_out: out  STD_LOGIC_VECTOR (15 downto 0));
-	end component;
+   --component inst_ram
+   --   port ( CLK            : in    std_logic; 
+   --          RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
+   --          RAM_ADDR       : in    std_logic_vector (15 downto 0); 
+   --          RAM_DATA       : in    std_logic_vector (15 downto 0); 
+   --          Ram2Data       : inout std_logic_vector (15 downto 0); 
+   --          Ram2OE         : out   std_logic; 
+   --          Ram2WE         : out   std_logic; 
+   --          Ram2EN         : out   std_logic; 
+   --          RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
+   --          Ram2Addr       : out   std_logic_vector (17 downto 0));
+   --end component;
+  --component fake_ram2
+  --  Port ( 
+  --         data_in, addr_in : in  STD_LOGIC_VECTOR (15 downto 0);
+  --         --ram2OE, ram2WE, ram2EN: in std_logic;
+  --      RAM_READ_WRITE: in std_logic_vector(1 downto 0);
+  --         data_out: out  STD_LOGIC_VECTOR (15 downto 0));
+  --end component;
    
    component adder
       port ( pc_old : in    std_logic_vector (15 downto 0); 
@@ -314,21 +332,21 @@ architecture BEHAVIORAL of vhdcpu410 is
    
    component wb_mux
       Port ( 
-		--CLK : in STD_LOGIC;
-		
-		-- data input
-		IN_ALU_DATA : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_MEM_DATA : in STD_LOGIC_VECTOR(15 downto 0);
-		IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
-		
-		-- data output
-		OUT_WB_DATA : out STD_LOGIC_VECTOR(15 downto 0);
-		
-		-- control signal input
-		IN_WB_CHOOSE : in WB_CHOOSE_TYPE
-		
-		-- control signal output
-	);
+    --CLK : in STD_LOGIC;
+    
+    -- data input
+    IN_ALU_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_MEM_DATA : in STD_LOGIC_VECTOR(15 downto 0);
+    IN_PC : in STD_LOGIC_VECTOR(15 downto 0);
+    
+    -- data output
+    OUT_WB_DATA : out STD_LOGIC_VECTOR(15 downto 0);
+    
+    -- control signal input
+    IN_WB_CHOOSE : in WB_CHOOSE_TYPE
+    
+    -- control signal output
+  );
    end component;
    
    component cmp8k
@@ -345,25 +363,25 @@ architecture BEHAVIORAL of vhdcpu410 is
    
    component controller
       port (
-		instruction : in std_logic_vector(15 downto 0);	-- input instruction
+    instruction : in std_logic_vector(15 downto 0); -- input instruction
 
-		--lu_inst: out std_logic_vector(4 downto 0);	-- instruction that put to alu
-		immd: out std_logic_vector(15 downto 0);	-- immediate that output
-		jr_or_not: out std_logic;
-		b_inst: out std_logic;
-		b_eq_ne: out std_logic;
+    --lu_inst: out std_logic_vector(4 downto 0);  -- instruction that put to alu
+    immd: out std_logic_vector(15 downto 0);  -- immediate that output
+    jr_or_not: out std_logic;
+    b_inst: out std_logic;
+    b_eq_ne: out std_logic;
 
-		wb_ctrl: out WB_CONTROL_TYPE;
+    wb_ctrl: out WB_CONTROL_TYPE;
 
-		reg_wb_type: out std_logic_vector(1 downto 0);
-		-- what kind of value will be written back?
-		-- an ALU calculated(known after EXE)?
-		-- or read from mem(known after MEM)?
-		mem_ctrl: out MEM_CTRL_TYPE;
-		ex_ctrl: out ID_EX_LATCH_EX;
-		reg_r1: out std_logic_vector(3 downto 0);
-		reg_r2: out std_logic_vector(3 downto 0)
-	);
+    reg_wb_type: out std_logic_vector(1 downto 0);
+    -- what kind of value will be written back?
+    -- an ALU calculated(known after EXE)?
+    -- or read from mem(known after MEM)?
+    mem_ctrl: out MEM_CTRL_TYPE;
+    ex_ctrl: out ID_EX_LATCH_EX;
+    reg_r1: out std_logic_vector(3 downto 0);
+    reg_r2: out std_logic_vector(3 downto 0)
+  );
    end component;
    
    component mux3_pc
@@ -385,16 +403,16 @@ architecture BEHAVIORAL of vhdcpu410 is
    
    component ctrl_mux
       Port ( 
-    	in_wb_ctrl: in WB_CONTROL_TYPE;
-    	in_mem_ctrl: in MEM_CTRL_TYPE;
-    	in_ex_ctrl: in ID_EX_LATCH_EX;
-		in_reg_wb_type: in std_logic_vector(1 downto 0);
-    	pause_or_not: in std_logic;
-    	out_wb_ctrl: out WB_CONTROL_TYPE;
-    	--out_mem_ctrl: out MEM_CTRL_TYPE;
-    	out_ex_ctrl: out ID_EX_LATCH_EX;
-		--out_reg_wb_type: out std_logic_vector(1 downto 0)
-		out_latch_mem: out ID_EX_LATCH_MEM
+      in_wb_ctrl: in WB_CONTROL_TYPE;
+      in_mem_ctrl: in MEM_CTRL_TYPE;
+      in_ex_ctrl: in ID_EX_LATCH_EX;
+    in_reg_wb_type: in std_logic_vector(1 downto 0);
+      pause_or_not: in std_logic;
+      out_wb_ctrl: out WB_CONTROL_TYPE;
+      --out_mem_ctrl: out MEM_CTRL_TYPE;
+      out_ex_ctrl: out ID_EX_LATCH_EX;
+    --out_reg_wb_type: out std_logic_vector(1 downto 0)
+    out_latch_mem: out ID_EX_LATCH_MEM
          );
    end component;
    
@@ -508,25 +526,25 @@ begin
       port map (pc_adder_in(15 downto 0)=>XLXN_18(15 downto 0),
                 pc_adder_out(15 downto 0)=>XLXN_22(15 downto 0));
    
---   XLXI_10 : inst_ram
---      port map (CLK=>XLXN_101,
---                RAM_ADDR(15 downto 0)=>XLXN_28(15 downto 0),
---                RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
---                RAM_READ_WRITE(1 downto 0)=>XLXN_20(1 downto 0),
---                RAM_OUTPUT(15 downto 0)=>XLXN_21(15 downto 0),
---                Ram2Addr=>open,
---                Ram2EN=>open,
---                Ram2OE=>open,
---                Ram2WE=>open,
---                Ram2Data=>open);
-	FakeRam2: fake_ram2
-	    Port map( 
-           data_in => XLXN_8(15 downto 0),
-			  addr_in => XLXN_28(15 downto 0),
-           --ram2OE, ram2WE, ram2EN: in std_logic;
-			  RAM_READ_WRITE(1 downto 0) => XLXN_20(1 downto 0),
-           data_out => XLXN_21(15 downto 0)
-         );
+   --XLXI_10 : inst_ram
+   --   port map (CLK=>XLXN_101,
+   --             RAM_ADDR(15 downto 0)=>XLXN_28(15 downto 0),
+   --             RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
+   --             RAM_READ_WRITE(1 downto 0)=>XLXN_20(1 downto 0),
+   --             RAM_OUTPUT(15 downto 0)=>XLXN_21(15 downto 0),
+   --             Ram2Addr=>open,
+   --             Ram2EN=>open,
+   --             Ram2OE=>open,
+   --             Ram2WE=>open,
+   --             Ram2Data=>open);
+  --FakeRam2: fake_ram2
+  --    Port map( 
+  --         data_in => XLXN_8(15 downto 0),
+  --      addr_in => XLXN_28(15 downto 0),
+  --         --ram2OE, ram2WE, ram2EN: in std_logic;
+  --      RAM_READ_WRITE(1 downto 0) => XLXN_20(1 downto 0),
+  --         data_out => XLXN_21(15 downto 0)
+  --       );
    
    BinstPcAdder : adder
       port map (imm(15 downto 0)=>XLXN_38(15 downto 0),
@@ -682,7 +700,7 @@ begin
      --XLXI_13_rst_openSignal <= RstEnable;
      --wait for 1 ns;
      XLXI_13_rst_openSignal <= RstDisable;
-	   PcReg_rst_openSignal <= not Pc_reset;
+     PcReg_rst_openSignal <= not Pc_reset;
      --wait;
    end process ; -- mp
 
@@ -700,7 +718,7 @@ begin
         when init =>
           case RAM1_RAM_ADDR is
             when COM_DATA_ADDR => --串口读写
-              if RAM1_RAM_READ_WRITE = MEM_WRITE then --串口写
+              if RAM1_RAM_READ_WRITE = MEM_WRITE then --串口�
                 state <= uart_writing;
                 Ram1EN <= '1';
                 Ram1OE <= '1';
@@ -708,7 +726,7 @@ begin
                 rdn <= '1';
                 wrn <= '0';
                 Ram1Data <= RAM1_RAM_DATA;
-              elsif RAM1_RAM_READ_WRITE = MEM_READ then -- 串口读
+              elsif RAM1_RAM_READ_WRITE = MEM_READ then -- 串口�
                 state <= uart_reading;
                 Ram1EN <= '1';
                 Ram1OE <= '1';
@@ -718,7 +736,7 @@ begin
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
               end if;
               
-            when COM_STATUS_ADDR => --串口状态
+            when COM_STATUS_ADDR => --串口状�
               state <= uart_status;
               temp:= "0000000000000001";
               temp(0) := tsre and tbre;
@@ -726,7 +744,7 @@ begin
               RAM1_RAM_OUTPUT <= temp;
             
             when others =>
-              if RAM1_RAM_READ_WRITE = MEM_WRITE then --内存写
+              if RAM1_RAM_READ_WRITE = MEM_WRITE then --内存�
                 state <= writing;
                 Ram1EN <= '0';
                 Ram1OE <= '1';
@@ -735,7 +753,7 @@ begin
                 wrn <= '1';
                 Ram1Data <= RAM1_RAM_DATA;
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
-              elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存读
+              elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存�
                 state <= reading;
                 Ram1EN <= '0';
                 Ram1OE <= '1';
@@ -744,7 +762,7 @@ begin
                 wrn <= '1';
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
-              else --初始状态
+              else --初始状�
                 state <= init;
                 RAM1_RAM_OUTPUT <= ZeroWord;
               end if;
@@ -776,6 +794,47 @@ begin
           temp(0) := tsre and tbre;
           temp(1) := data_ready;
           RAM1_RAM_OUTPUT <= temp;
+          
+      end case;
+    end if;
+  end process;
+
+  RAM2_CLK <= XLXN_101;
+  RAM2_RAM_ADDR <= XLXN_28;
+  RAM2_RAM_DATA <= XLXN_8;
+  RAM2_RAM_READ_WRITE <= XLXN_20;
+  XLXN_21 <= RAM2_RAM_OUTPUT;
+
+  ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA)
+    begin
+    if (falling_edge(RAM2_CLK)) then
+		Ram2EN <= '0';
+      case ram2_state is
+        when init =>
+          if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存�
+            ram2_state <= writing;
+            Ram2OE <= '1';
+            Ram2WE <= '1';
+            Ram2Data <= RAM2_RAM_DATA;
+            Ram2Addr <= "00" & RAM2_RAM_ADDR;
+          elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存�
+            ram2_state <= reading;
+            --Ram2EN <= '0';
+            Ram2OE <= '1';
+            Ram2WE <= '1';
+            Ram2Data <= "ZZZZZZZZZZZZZZZZ";
+            Ram2Addr <= "00" & RAM2_RAM_ADDR;
+          end if;
+            
+        when writing =>
+          Ram2WE <= '0';
+          RAM2_RAM_OUTPUT <= "1111111111111111";
+          ram2_state <= init;
+        
+        when reading =>
+          Ram2OE <= '0';
+          RAM2_RAM_OUTPUT <= Ram2Data;
+          ram2_state <= init;
           
       end case;
     end if;
