@@ -277,24 +277,31 @@ architecture BEHAVIORAL of vhdcpu410 is
              alu_res  : out   std_logic_vector (15 downto 0));
    end component;
    
-   component mem_ctrl
-      port ( CLK            : in    std_logic; 
-             data_ready     : in    std_logic; 
-             tbre           : in    std_logic; 
-             tsre           : in    std_logic; 
-             RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
-             RAM_ADDR       : in    std_logic_vector (15 downto 0); 
-             RAM_DATA       : in    std_logic_vector (15 downto 0); 
-             Ram1Data       : inout std_logic_vector (15 downto 0); 
-             Ram1OE         : out   std_logic; 
-             Ram1WE         : out   std_logic; 
-             Ram1EN         : out   std_logic; 
-             rdn            : out   std_logic; 
-             wrn            : out   std_logic; 
-             RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
-             Ram1Addr       : out   std_logic_vector (17 downto 0));
-   end component;
-   
+--   component mem_ctrl
+--      port ( CLK            : in    std_logic; 
+--             data_ready     : in    std_logic; 
+--             tbre           : in    std_logic; 
+--             tsre           : in    std_logic; 
+--             RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
+--             RAM_ADDR       : in    std_logic_vector (15 downto 0); 
+--             RAM_DATA       : in    std_logic_vector (15 downto 0); 
+--             Ram1Data       : inout std_logic_vector (15 downto 0); 
+--             Ram1OE         : out   std_logic; 
+--             Ram1WE         : out   std_logic; 
+--             Ram1EN         : out   std_logic; 
+--             rdn            : out   std_logic; 
+--             wrn            : out   std_logic; 
+--             RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
+--             Ram1Addr       : out   std_logic_vector (17 downto 0));
+--   end component;
+	component fake_ram1
+		port(	clk: in std_logic;
+		ram_read_write: in std_logic_vector(1 downto 0) ;
+		in_addr: in std_logic_vector(15 downto 0) ;
+		in_data: in std_logic_vector(15 downto 0) ;
+		out_data: out std_logic_vector(15 downto 0));
+	end component;
+	
    component wb_mux
       Port ( 
 		--CLK : in STD_LOGIC;
@@ -552,22 +559,28 @@ begin
                 alu_op2(15 downto 0)=>XLXN_77(15 downto 0),
                 alu_res(15 downto 0)=>XLXN_12(15 downto 0));
    
-   Ram1Controller : mem_ctrl
-      port map (CLK=>XLXN_101,
-                data_ready=>data_ready,--XLXI_18_data_ready_openSignal,
-                RAM_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
-                RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
-                RAM_READ_WRITE(1 downto 0)=>XLXN_6(1 downto 0),
-                tbre=>tbre,--XLXI_18_tbre_openSignal,
-                tsre=>tsre,--XLXI_18_tsre_openSignal,
-                RAM_OUTPUT(15 downto 0)=>XLXN_5(15 downto 0),
-                Ram1Addr=>Ram1Addr,
-                Ram1EN=>Ram1EN,
-                Ram1OE=>Ram1OE,
-                Ram1WE=>Ram1WE,
-                rdn=>rdn,
-                wrn=>wrn,
-                Ram1Data=>open);
+--   Ram1Controller : mem_ctrl
+--      port map (CLK=>XLXN_101,
+--                data_ready=>data_ready,--XLXI_18_data_ready_openSignal,
+--                RAM_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
+--                RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
+--                RAM_READ_WRITE(1 downto 0)=>XLXN_6(1 downto 0),
+--                tbre=>tbre,--XLXI_18_tbre_openSignal,
+--                tsre=>tsre,--XLXI_18_tsre_openSignal,
+--                RAM_OUTPUT(15 downto 0)=>XLXN_5(15 downto 0),
+--                Ram1Addr=>Ram1Addr,
+--                Ram1EN=>Ram1EN,
+--                Ram1OE=>Ram1OE,
+--                Ram1WE=>Ram1WE,
+--                rdn=>rdn,
+--                wrn=>wrn,
+--                Ram1Data=>open);
+	FakeRam1: fake_ram1
+		port map(clk => xlxn_101,
+					ram_read_write => XLXN_6,
+					in_addr => xlxn_88,
+					in_data => xlxn_8,
+					out_data => xlxn_5);
    
    WbMux : wb_mux
       port map (
