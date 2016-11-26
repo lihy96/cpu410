@@ -48,7 +48,7 @@ begin
 	begin
 		if rst = Pc_reset then
 			mypc <= Pc_origin_address;
-		elsif (pause /= Pc_pause and falling_edge(clk)) then
+		elsif (pause /= Pc_pause and rising_edge(clk)) then
 		--pc_pause /= Pc_pause and 
 			mypc <= new_pc;
 		end if;
