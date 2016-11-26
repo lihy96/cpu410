@@ -49,21 +49,131 @@ type COLOR_TYPE is record
 end record;
 constant color_black : COLOR_TYPE := (others => "000");
 constant color_white : COLOR_TYPE := (others => "111");
-type ColorArray is array(2047 downto 0) of COLOR_TYPE;
-signal char_seq : ColorArray := (20 => color_white ,63 => color_white , 64 => color_white, others => color_black);
+type char_index_type is array(1199 downto 0) of STD_LOGIC_VECTOR(4 downto 0);
+--type char_point_array_type is array(255 downto 0) of STD_LOGIC;--infomation of each pixel of a char
+type char_table_type is array(31 downto 0) of STD_LOGIC_VECTOR(255 downto 0);
+constant Char_Space : STD_LOGIC_VECTOR(255 downto 0) := (others => '0');
+constant Char_Full : STD_LOGIC_VECTOR(255 downto 0) := (others => '1');
+--constant some : STD_LOGIC_VECTOR(0 to 255) := "1111111111111111111111111111111111111100001111111111110000111111111111000011111111111100001111111111001111001111111100111100111111000000000000111100000000000011110011111111001111001111111100110011111111111100001111111111110011111111111111111111111111111111";
+constant Char_H : STD_LOGIC_VECTOR(0 to 255) := "0000000000000000000000000000000000110000000011000011000000001100001100000000110000110000000011000011111111111100001111111111110000110000000011000011000000001100001100000000110000110000000011000011000000001100001100000000110000000000000000000000000000000000";
+constant Char_F : STD_LOGIC_VECTOR(0 to 255) := "0000000000000000000000000000000000111111111111000011111111111100001100000000000000110000000000000011111111111100001111111111110000110000000000000011000000000000001100000000000000110000000000000011000000000000001100000000000000000000000000000000000000000000";
+constant Char_Y : STD_LOGIC_VECTOR(0 to 255) := "0000000000000000000000000000000011110000000011001111000000001100001111000011000000111100001100000000111111000000000011111100000000000011000000000000001100000000000000110000000000000011000000000000001100000000000000110000000000000000000000000000000000000000";
+constant Char_A : STD_LOGIC_VECTOR(0 to 255) := 
+																	"0000000000000000" & 
+																	"0000000000000000" & 
+																	"0000001111000000" & 
+																	"0000001111000000" & 
+																	"0000001111000000" & 
+																	"0000001111000000" & 
+																	"0000110000110000" & 
+																	"0000110000110000" & 
+																	"0011111111111100" & 
+																	"0011111111111100" & 
+																	"0011000000001100" & 
+																	"0011000000001100" & 
+																	"1100000000000011" & 
+																	"1100000000000011" & 
+																	"0000000000000000" & 
+																	"0000000000000000";
+constant Char_B : STD_LOGIC_VECTOR(0 to 255) :=
+"0000000000000000" & 
+"0000000000000000" & 
+"0011111111110000" & 
+"0011111111110000" & 
+"0011000000001100" & 
+"0011000000001100" & 
+"0011111111110000" & 
+"0011111111110000" & 
+"0011000000001100" & 
+"0011000000001100" & 
+"0011000000000011" & 
+"0011000000000011" & 
+"0011111111111100" & 
+"0011111111111100" & 
+"0000000000000000" & 
+"0000000000000000";
+constant Char_C : STD_LOGIC_VECTOR(0 to 255) :=
+"0000000000000000" & 
+"0000000000000000" & 
+"0000111111110000" & 
+"0000111111110000" & 
+"0011000000001100" & 
+"0011000000001100" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011110000000011" & 
+"0011110000000011" & 
+"0000111111111100" & 
+"0000111111111100" & 
+"0000000000000000" & 
+"0000000000000000";
+constant Char_D : STD_LOGIC_VECTOR(0 to 255) :=
+"0000000000000000" & 
+"0000000000000000" & 
+"0011111111110000" & 
+"0011111111110000" & 
+"0011000000111100" & 
+"0011000000111100" & 
+"0011000000001100" & 
+"0011000000001100" & 
+"0011000000001100" & 
+"0011000000001100" & 
+"0011000000111100" & 
+"0011000000111100" & 
+"0011111111110000" & 
+"0011111111110000" & 
+"0000000000000000" & 
+"0000000000000000";
+constant Char_E : STD_LOGIC_VECTOR(0 to 255) :=
+"0000000000000000" & 
+"0000000000000000" & 
+"0011111111111100" & 
+"0011111111111100" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011111111111100" & 
+"0011111111111100" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011000000000000" & 
+"0011111111111100" & 
+"0011111111111100" & 
+"0000000000000000" & 
+"0000000000000000"; 
+constant char_table : char_table_type := (0 => Char_Space,
+														1=>Char_A,
+														2=>Char_B,
+														3=>Char_C,
+														4=>Char_D,
+														5=>Char_E,
+														6=>Char_F,
+														others => Char_Space);
+signal char_seq : char_index_type := (20 => "00001" ,21=>"00010",22=>"00011",23=>"00100",24=>"00101",25=>"00110",63 => "00001" , 64 => "00001", 65=>"00001", 255=>"00010",1197=>"00010",1198=>"00001",others => "00000");
 signal halfclk : std_logic := '0';
 signal posx : std_logic_vector(9 downto 0) := "0000000000";
 signal posy : std_logic_vector(9 downto 0) := "0000000000";
 
-signal out_flag : STD_LOGIC := '0';
-signal delta_x : INTEGER range 0 to 9 := 0;
-signal delta_y : INTEGER range 0 to 14 := 0;--åœ¨å­—ç¬¦è¡¨ä¸­çš„åç§»é�
-signal char_no : INTEGER range 0 to 2047 := 0;
+--signal out_flag : STD_LOGIC := '0';
+signal delta_x : INTEGER range 0 to 15 := 0;
+signal delta_y : INTEGER range 0 to 15 := 0;--åœ¨å­—ç¬¦è¡¨ä¸­çš„åç§»é�
+signal char_no : INTEGER range 0 to 1199 := 0;
+--signal delta : INTEGER range 0 to 149 := 0;
 --signal inner_color : COLOR_TYPE := (others => "000");
 
+
 begin
+
 process(CLK)
-	
+	variable index : INTEGER range 0 to 31 := 0;
+	variable delta_v : INTEGER range 0 to 255 := 0;
+	variable x0 : INTEGER range 0 to 40 := 0;
+	variable y0 : INTEGER range 0 to 30 := 0;
+	variable char_no_v : INTEGER range 0 to 1199 := 0;
+	variable delta_x_v : INTEGER range 0 to 15 := 0;
+	variable delta_y_v : INTEGER range 0 to 15 := 0;
 	begin
 		if rising_edge(CLK) then
 			halfclk <= not halfclk;
@@ -74,15 +184,32 @@ process(CLK)
 						--R(2 downto 0) <= "000"; 
 						--G(2 downto 0) <= "000"; 
 						--B(2 downto 0) <= "111";
-						R <= char_seq(char_no).RR;
-						G <= char_seq(char_no).GG;
-						B <= char_seq(char_no).BB;
+						x0 := conv_integer(to_stdlogicvector(to_bitvector(posx) srl 4));
+						y0 := conv_integer(to_stdlogicvector(to_bitvector(posy) srl 4));
+						delta_y_v := conv_integer(posy) - y0 * 16;
+						delta_x_v := conv_integer(posx) - x0 * 16;
+						char_no_v := y0 * 40;
+						char_no_v := char_no_v + x0;
+						delta_v := delta_y_v * 16;
+						delta_v := delta_v + delta_x_v;
+						delta_v := 255 - delta_v;
+						index := conv_integer(char_seq(char_no_v));
+						R <= (others => char_table(index)(delta_v));
+						G <= (others => char_table(index)(delta_v));
+						B <= (others => char_table(index)(delta_v));
+						--R <= char_table(conv_integer(char_seq(char_no)))(delta).RR;
+						--G <= char_table(conv_integer(char_seq(char_no)))(delta).GG;
+						--B <= char_table(conv_integer(char_seq(char_no)))(delta).BB;
+						--R <= char_seq(char_no)(delta).RR;
+						--G <= char_seq(char_no)(delta).GG;
+						--B <= char_seq(char_no)(delta).BB;
 
-						if delta_x = 9 then
+						if delta_x = 15 then
 							delta_x <= 0;
 							char_no <= char_no + 1;
 						else
 							delta_x <= delta_x + 1;
+							--delta <= delta + 1; 
 						end if;
 
 
@@ -104,11 +231,11 @@ process(CLK)
 					case posx is
 						when "1010000000" => --640
 							posx <= posx + 1;
-							if delta_y = 14 then
+							if delta_y = 15 then
 								delta_y <= 0;
 							else
 								delta_y <= delta_y + 1;
-								char_no  <= char_no - 64;
+								char_no  <= char_no - 40;
 							end if;
 						when "1100011111" => --799
 							posx <= "0000000000";
