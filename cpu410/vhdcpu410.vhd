@@ -33,6 +33,7 @@ entity vhdcpu410 is
       Ram1EN: out std_logic;
       Ram1WE: out std_logic;
       Ram1Addr: out std_logic_vector(17 downto 0);
+      Ram1Data : inout std_logic_vector(15 downto 0);
       wrn: out std_logic;
       rdn: out std_logic;
       tbre: in std_logic;
@@ -119,6 +120,22 @@ architecture BEHAVIORAL of vhdcpu410 is
    --signal XLXI_28_clk_openSignal        : std_logic;
    --signal fwdUnit_clk_openSignal        : std_logic;
    --signal XLXI_32_clk_openSignal        : std_logic;
+
+   signal RAM1_CLK : STD_LOGIC;
+   signal RAM1_RAM_ADDR : STD_LOGIC_VECTOR(15 downto 0);
+   signal RAM1_RAM_DATA : STD_LOGIC_VECTOR(15 downto 0);
+   signal RAM1_RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
+   signal RAM1_RAM_OUTPUT : STD_LOGIC_VECTOR(15 downto 0);
+    type state_set is (
+    init,
+    writing,
+    reading,
+    uart_writing,
+    uart_reading,
+    uart_status
+  );
+  signal state : state_set := init;
+
    component if_id_latch
       port ( clk          : in    std_logic; 
              pause        : in    std_logic; 
@@ -277,23 +294,23 @@ architecture BEHAVIORAL of vhdcpu410 is
              alu_res  : out   std_logic_vector (15 downto 0));
    end component;
    
-   component mem_ctrl
-      port ( CLK            : in    std_logic; 
-             data_ready     : in    std_logic; 
-             tbre           : in    std_logic; 
-             tsre           : in    std_logic; 
-             RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
-             RAM_ADDR       : in    std_logic_vector (15 downto 0); 
-             RAM_DATA       : in    std_logic_vector (15 downto 0); 
-             Ram1Data       : inout std_logic_vector (15 downto 0); 
-             Ram1OE         : out   std_logic; 
-             Ram1WE         : out   std_logic; 
-             Ram1EN         : out   std_logic; 
-             rdn            : out   std_logic; 
-             wrn            : out   std_logic; 
-             RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
-             Ram1Addr       : out   std_logic_vector (17 downto 0));
-   end component;
+   --component mem_ctrl
+   --   port ( CLK            : in    std_logic; 
+   --          data_ready     : in    std_logic; 
+   --          tbre           : in    std_logic; 
+   --          tsre           : in    std_logic; 
+   --          RAM_READ_WRITE : in    std_logic_vector (1 downto 0); 
+   --          RAM_ADDR       : in    std_logic_vector (15 downto 0); 
+   --          RAM_DATA       : in    std_logic_vector (15 downto 0); 
+   --          Ram1Data       : inout std_logic_vector (15 downto 0); 
+   --          Ram1OE         : out   std_logic; 
+   --          Ram1WE         : out   std_logic; 
+   --          Ram1EN         : out   std_logic; 
+   --          rdn            : out   std_logic; 
+   --          wrn            : out   std_logic; 
+   --          RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
+   --          Ram1Addr       : out   std_logic_vector (17 downto 0));
+   --end component;
    
    component wb_mux
       Port ( 
@@ -552,22 +569,22 @@ begin
                 alu_op2(15 downto 0)=>XLXN_77(15 downto 0),
                 alu_res(15 downto 0)=>XLXN_12(15 downto 0));
    
-   Ram1Controller : mem_ctrl
-      port map (CLK=>XLXN_101,
-                data_ready=>data_ready,--XLXI_18_data_ready_openSignal,
-                RAM_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
-                RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
-                RAM_READ_WRITE(1 downto 0)=>XLXN_6(1 downto 0),
-                tbre=>tbre,--XLXI_18_tbre_openSignal,
-                tsre=>tsre,--XLXI_18_tsre_openSignal,
-                RAM_OUTPUT(15 downto 0)=>XLXN_5(15 downto 0),
-                Ram1Addr=>Ram1Addr,
-                Ram1EN=>Ram1EN,
-                Ram1OE=>Ram1OE,
-                Ram1WE=>Ram1WE,
-                rdn=>rdn,
-                wrn=>wrn,
-                Ram1Data=>open);
+   --Ram1Controller : mem_ctrl
+   --   port map (CLK=>XLXN_101,
+   --             data_ready=>data_ready,--XLXI_18_data_ready_openSignal,
+   --             RAM_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
+   --             RAM_DATA(15 downto 0)=>XLXN_8(15 downto 0),
+   --             RAM_READ_WRITE(1 downto 0)=>XLXN_6(1 downto 0),
+   --             tbre=>tbre,--XLXI_18_tbre_openSignal,
+   --             tsre=>tsre,--XLXI_18_tsre_openSignal,
+   --             RAM_OUTPUT(15 downto 0)=>XLXN_5(15 downto 0),
+   --             Ram1Addr=>Ram1Addr,
+   --             Ram1EN=>Ram1EN,
+   --             Ram1OE=>Ram1OE,
+   --             Ram1WE=>Ram1WE,
+   --             rdn=>rdn,
+   --             wrn=>wrn,
+   --             Ram1Data=>open);
    
    WbMux : wb_mux
       port map (
@@ -665,9 +682,104 @@ begin
      --XLXI_13_rst_openSignal <= RstEnable;
      --wait for 1 ns;
      XLXI_13_rst_openSignal <= RstDisable;
-	  PcReg_rst_openSignal <= not Pc_reset;
+	   PcReg_rst_openSignal <= not Pc_reset;
      --wait;
    end process ; -- mp
+
+  RAM1_CLK <= XLXN_101;
+  RAM1_RAM_ADDR <= XLXN_88;
+  RAM1_RAM_DATA <= XLXN_8;
+  RAM1_RAM_READ_WRITE <= XLXN_6;
+  XLXN_5 <= RAM1_RAM_OUTPUT;
+
+   ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA)
+    variable temp:std_logic_vector(15 downto 0);
+    begin
+    if falling_edge(RAM1_CLK) then
+      case state is
+        when init =>
+          case RAM1_RAM_ADDR is
+            when COM_DATA_ADDR => --串口读写
+              if RAM1_RAM_READ_WRITE = MEM_WRITE then --串口写
+                state <= uart_writing;
+                Ram1EN <= '1';
+                Ram1OE <= '1';
+                Ram1WE <= '1';
+                rdn <= '1';
+                wrn <= '0';
+                Ram1Data <= RAM1_RAM_DATA;
+              elsif RAM1_RAM_READ_WRITE = MEM_READ then -- 串口读
+                state <= uart_reading;
+                Ram1EN <= '1';
+                Ram1OE <= '1';
+                Ram1WE <= '1';
+                rdn <= '0';
+                wrn <= '1';
+                Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+              end if;
+              
+            when COM_STATUS_ADDR => --串口状态
+              state <= uart_status;
+              temp:= "0000000000000001";
+              temp(0) := tsre and tbre;
+              temp(1) := data_ready;
+              RAM1_RAM_OUTPUT <= temp;
+            
+            when others =>
+              if RAM1_RAM_READ_WRITE = MEM_WRITE then --内存写
+                state <= writing;
+                Ram1EN <= '0';
+                Ram1OE <= '1';
+                Ram1WE <= '1';
+                rdn <= '1';
+                wrn <= '1';
+                Ram1Data <= RAM1_RAM_DATA;
+                Ram1Addr <= "00" & RAM1_RAM_ADDR;
+              elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存读
+                state <= reading;
+                Ram1EN <= '0';
+                Ram1OE <= '1';
+                Ram1WE <= '1';
+                rdn <= '1';
+                wrn <= '1';
+                Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+                Ram1Addr <= "00" & RAM1_RAM_ADDR;
+              else --初始状态
+                state <= init;
+                RAM1_RAM_OUTPUT <= ZeroWord;
+              end if;
+          end case;
+            
+        when writing =>
+          Ram1WE <= '0';
+          RAM1_RAM_OUTPUT <= "1111111111111111";
+          state <= init;
+        
+        when reading =>
+          Ram1OE <= '0';
+          RAM1_RAM_OUTPUT <= Ram1Data;
+          state <= init;
+          
+        when uart_writing =>
+          RAM1_RAM_OUTPUT <= "1111111111111111";
+          wrn <= '1';
+          state <= init;
+        
+        when uart_reading =>
+          RAM1_RAM_OUTPUT <= Ram1Data;
+          rdn <= '1';
+          state <= init;
+          
+        when uart_status =>
+          state <= init;
+          temp:= "0000000000000001";
+          temp(0) := tsre and tbre;
+          temp(1) := data_ready;
+          RAM1_RAM_OUTPUT <= temp;
+          
+      end case;
+    end if;
+  end process;
    
 end BEHAVIORAL;
 
