@@ -10,3 +10,4 @@ pro3/*/
 !cpu410/*.vhd
 !cpu410/*.sch
 !cpu410/*.ucf
+!cpu410/python_code/
