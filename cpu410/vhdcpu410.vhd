@@ -497,8 +497,9 @@ begin
 	  res => DYP1
 	);
 
-	L(13 downto 0) <= Ram2Data(15 downto 2);
-	L(15 downto 14) <= RAM2_RAM_READ_WRITE;
+	L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
+	L(15) <= XLXN_54;
+   L(14) <= XLXN_32;
 
    IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
@@ -804,7 +805,7 @@ begin
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
               end if;
               
-            when COM_STATUS_ADDR => --串口�
+            when COM_STATUS_ADDR => --串口?
               state <= uart_status;
               temp:= "0000000000000001";
               temp(0) := tsre and tbre;
@@ -816,7 +817,7 @@ begin
                 state <= writing;
                 Ram1EN <= '0';
                 Ram1OE <= '1';
-                Ram1WE <= '1';
+                Ram1WE <= '0';
                 rdn <= '1';
                 wrn <= '1';
                 Ram1Data <= RAM1_RAM_DATA;
@@ -824,25 +825,25 @@ begin
               elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存?
                 state <= reading;
                 Ram1EN <= '0';
-                Ram1OE <= '1';
+                Ram1OE <= '0';
                 Ram1WE <= '1';
                 rdn <= '1';
                 wrn <= '1';
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
-              else --初始�
+              else --初始?
                 state <= init;
                 RAM1_RAM_OUTPUT <= ZeroWord;
               end if;
           end case;
             
         when writing =>
-          Ram1WE <= '0';
+          Ram1WE <= '1';
           RAM1_RAM_OUTPUT <= "1111111111111111";
           state <= init;
         
         when reading =>
-          Ram1OE <= '0';
+          Ram1OE <= '1';
           RAM1_RAM_OUTPUT <= Ram1Data;
           state <= init;
           
@@ -882,25 +883,25 @@ begin
           if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存?
             ram2_state <= writing;
             Ram2OE <= '1';
-            Ram2WE <= '1';
+            Ram2WE <= '0';
             Ram2Data <= RAM2_RAM_DATA;
             Ram2Addr <= "00" & RAM2_RAM_ADDR;
           elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存?
             ram2_state <= reading;
             --Ram2EN <= '0';
-            Ram2OE <= '1';
+            Ram2OE <= '0';
             Ram2WE <= '1';
             Ram2Data <= "ZZZZZZZZZZZZZZZZ";
             Ram2Addr <= "00" & RAM2_RAM_ADDR;
           end if;
             
         when writing =>
-          Ram2WE <= '0';
+          Ram2WE <= '1';
           RAM2_RAM_OUTPUT <= "1111111111111111";
           ram2_state <= init;
         
         when reading =>
-          Ram2OE <= '0';
+          Ram2OE <= '1';
           RAM2_RAM_OUTPUT <= Ram2Data;
           ram2_state <= init;
           
