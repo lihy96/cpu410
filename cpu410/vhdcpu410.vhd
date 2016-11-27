@@ -44,7 +44,10 @@ entity vhdcpu410 is
       Ram2EN: out std_logic;
       Ram2WE: out std_logic;
       Ram2Addr: out std_logic_vector(17 downto 0);
-      Ram2Data : inout std_logic_vector(15 downto 0)
+      Ram2Data : inout std_logic_vector(15 downto 0);
+      DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
+      DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
+      L: out std_logic_vector(15 downto 0)
       );
 end vhdcpu410;
 
@@ -477,8 +480,26 @@ architecture BEHAVIORAL of vhdcpu410 is
              half_clk    : out   std_logic;
              quarter_clk : out   std_logic);
    end component;
-   
+   component decoder
+     port(
+       data: in std_logic_vector(3 downto 0);
+       res: out std_logic_vector(6 downto 0) 
+       );
+   end component;
+
 begin
+	dsp1: decoder port map (
+	 data => XLXN_18(7 downto 4),
+	  res => DYP0
+	);
+	dsp0: decoder port map (
+	  data => XLXN_18(3 downto 0),
+	  res => DYP1
+	);
+
+	L(13 downto 0) <= Ram2Data(15 downto 2);
+	L(15 downto 14) <= RAM2_RAM_READ_WRITE;
+
    IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
                 in_inst(15 downto 0)=>XLXN_21(15 downto 0),
@@ -650,7 +671,7 @@ begin
    --             rdn=>rdn,
    --             wrn=>wrn,
    --             Ram1Data=>open);
-      
+
    WbMux : wb_mux
       port map (
         --CLK=>XLXI_19_CLK_openSignal,
@@ -783,7 +804,7 @@ begin
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
               end if;
               
-            when COM_STATUS_ADDR => --串口状?
+            when COM_STATUS_ADDR => --串口�
               state <= uart_status;
               temp:= "0000000000000001";
               temp(0) := tsre and tbre;
@@ -809,7 +830,7 @@ begin
                 wrn <= '1';
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
-              else --初始状?
+              else --初始�
                 state <= init;
                 RAM1_RAM_OUTPUT <= ZeroWord;
               end if;
