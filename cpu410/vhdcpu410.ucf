@@ -80,7 +80,7 @@ NET "tsre" LOC = N9;
 
 # PlanAhead Generated physical constraints 
 
-NET "clk" LOC = U9;
+NET "clk" LOC = B8;
 NET "DYP0[6]" LOC = C7;
 NET "DYP0[5]" LOC = D7;
 NET "DYP0[4]" LOC = E7;
