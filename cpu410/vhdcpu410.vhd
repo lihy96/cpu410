@@ -452,9 +452,9 @@ architecture BEHAVIORAL of vhdcpu410 is
              prev_reg           : in    std_logic_vector (3 downto 0); 
              instr              : in    std_logic_vector (15 downto 0); 
              prev_reg_type      : in    std_logic_vector (1 downto 0); 
-             latch_1_pause_ctrl : out   std_logic; 
+             latch_pause_ctrl   : out   std_logic; 
              pc_pause_ctrl      : out   std_logic; 
-             ctrl_choose        : out   std_logic; 
+             --ctrl_choose        : out   std_logic; 
              reg_bus            : out   std_logic_vector (11 downto 0));
    end component;
    
@@ -740,7 +740,7 @@ begin
                 prev_reg(3 downto 0)=>XLXN_81(3 downto 0),
                 prev_reg_type(1 downto 0)=>XLXN_62(1 downto 0),
                 ctrl_choose=>XLXN_48,
-                latch_1_pause_ctrl=>XLXN_58,
+                latch_pause_ctrl=>XLXN_58,
                 pc_pause_ctrl=>XLXN_59,
                 reg_bus(11 downto 0)=>XLXN_85(11 downto 0));
    

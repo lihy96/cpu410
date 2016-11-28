@@ -30,14 +30,16 @@ use work.constants.all;
 --use UNISIM.VComponents.all;
 
 entity pause_pipeline is
-    Port ( latch_1_pause_ctrl : out  STD_LOGIC;
+    Port ( latch_pause_ctrl : out  STD_LOGIC;
            pc_pause_ctrl : out  STD_LOGIC;
-           ctrl_choose : out  STD_LOGIC; -- '1' for pause, that is to choose all '0' this period
+           --ctrl_choose : out  STD_LOGIC; -- '1' for pause, that is to choose all '0' this period
            reg_bus: out std_logic_vector(11 downto 0) ;
            clk: in STD_LOGIC;
            prev_reg : in  STD_LOGIC_VECTOR (3 downto 0);
            instr : in  STD_LOGIC_VECTOR (15 downto 0);
-           prev_reg_type : in  STD_LOGIC_VECTOR (1 downto 0));
+           prev_reg_type : in  STD_LOGIC_VECTOR (1 downto 0);
+           ram2_read_write: in std_logic_vector(1 downto 0)
+           );
 end pause_pipeline;
 
 architecture Behavioral of pause_pipeline is
@@ -142,18 +144,19 @@ begin
 		end case;
 		if (prev_reg1_type = WB_MEM and ((prev_reg1 = reg1 and prev_reg1 /= IMG_REG) or (prev_reg1 = reg2 and prev_reg1 /= IMG_REG))) or
 		   ((prev_reg1_type = WB_MEM or prev_reg1_type = WB_EXE) and prev_reg1 = reg0 and prev_reg1 /= IMG_REG) or
-		   (prev_reg2_type = WB_MEM and prev_reg2 = reg0 and reg0 /= IMG_REG)
+		   (prev_reg2_type = WB_MEM and prev_reg2 = reg0 and reg0 /= IMG_REG) or
+		   ram2_read_write = MEM_WRITE
 		   then -- pause at once!
 			--pause <= '1';
 			pc_pause_ctrl <= Pc_pause;
-			latch_1_pause_ctrl <= IF_ID_LATCH_PAUSE;
-			ctrl_choose <= '1';
+			latch_pause_ctrl <= IF_ID_LATCH_PAUSE;
+			--ctrl_choose <= '1';
 			
 		else
 			--pause <= '0';
 			pc_pause_ctrl <= not Pc_pause;
-			latch_1_pause_ctrl <= not IF_ID_LATCH_PAUSE;
-			ctrl_choose <= '0';
+			latch_pause_ctrl <= not IF_ID_LATCH_PAUSE;
+			--ctrl_choose <= '0';
 		end if;
 
 		--if pause = '1' then -- we need to pause
