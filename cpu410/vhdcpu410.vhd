@@ -47,7 +47,8 @@ entity vhdcpu410 is
       Ram2Data : inout std_logic_vector(15 downto 0);
       DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
       DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
-      L: out std_logic_vector(15 downto 0)
+      L: out std_logic_vector(15 downto 0);
+		rst: in std_logic
       );
 end vhdcpu410;
 
@@ -569,7 +570,7 @@ begin
       port map (clk=>XLXN_102,
                 new_pc(15 downto 0)=>XLXN_35(15 downto 0),
                 pause=>XLXN_59,
-                rst=>PcReg_rst_openSignal,
+                rst=>rst,
                 pc_output(15 downto 0)=>XLXN_18(15 downto 0));
    
    PcAdder : pc_adder

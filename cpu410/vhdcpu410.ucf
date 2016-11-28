@@ -111,3 +111,4 @@ NET "L[2]" LOC = A11;
 NET "L[1]" LOC = E10;
 NET "L[0]" LOC = D10;
 NET "L[8]" LOC = A12;
+NET "rst" LOC = U10;
