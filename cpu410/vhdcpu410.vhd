@@ -157,6 +157,8 @@ architecture BEHAVIORAL of vhdcpu410 is
     );
     signal ram2_state : ram2_state_set := init;
 
+    signal RAM_WORKING_FLAG : STD_LOGIC := '1';
+
    component if_id_latch
       port ( clk          : in    std_logic; 
              pause        : in    std_logic; 
@@ -516,7 +518,8 @@ begin
                 in_ex=>XLXN_45,
                 in_imme(15 downto 0)=>XLXN_38(15 downto 0),
                 in_mem=>XLXN_60,
-                in_pc(15 downto 0)=>XLXN_103(15 downto 0),
+                --in_pc(15 downto 0)=>XLXN_103(15 downto 0),
+                in_pc(15 downto 0)=>XLXN_23(15 downto 0),
                 in_Rx_val(15 downto 0)=>XLXN_65(15 downto 0),
                 in_Ry_val(15 downto 0)=>XLXN_63(15 downto 0),
                 in_wb=>XLXN_47,
@@ -782,7 +785,7 @@ begin
    ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA)
     variable temp:std_logic_vector(15 downto 0);
     begin
-    if falling_edge(RAM1_CLK) then
+    if (falling_edge(RAM1_CLK) and RAM_WORKING_FLAG = '0') then
       case state is
         when init =>
           case RAM1_RAM_ADDR is
@@ -876,7 +879,7 @@ begin
 
   ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA)
     begin
-    if (falling_edge(RAM2_CLK)) then
+    if (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
 		Ram2EN <= '0';
       case ram2_state is
         when init =>
@@ -906,6 +909,13 @@ begin
           ram2_state <= init;
           
       end case;
+    end if;
+  end process;
+
+  main_clk_process : process(XLXN_102)
+  begin
+    if rising_edge(XLXN_102) then
+      RAM_WORKING_FLAG <= '0';
     end if;
   end process;
    
