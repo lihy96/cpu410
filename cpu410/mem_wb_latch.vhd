@@ -26,6 +26,7 @@ use work.constants.all;
 entity mem_wb_latch is
 	Port ( 
 		CLK : in STD_LOGIC;
+		pause : in STD_LOGIC;
 		
 		-- data input
 		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -68,7 +69,7 @@ begin
 	OUT_REG_WN <= INNER_OUT_REG_WN;
 	process(CLK,IN_ADDR,IN_DATA,IN_PC,IN_REG_NO,IN_WB_CONTROL,INNER_OUT_ADDR, INNER_OUT_DATA, INNER_OUT_PC, INNER_OUT_REG_NO, INNER_OUT_WB_CHOOSE, INNER_OUT_REG_WN)
 		begin
-		if (CLK'event and CLK = '1') then
+		if (rising_edge(CLK) and pause /= IF_ID_LATCH_PAUSE) then
 			INNER_OUT_ADDR <= IN_ADDR;
 			INNER_OUT_DATA <= IN_DATA;
 			INNER_OUT_PC <= IN_PC;

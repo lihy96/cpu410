@@ -48,7 +48,7 @@ entity vhdcpu410 is
       DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
       DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
       L: out std_logic_vector(15 downto 0);
-		rst: in std_logic
+      PC_RST : in std_logic
       );
 end vhdcpu410;
 
@@ -174,6 +174,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component id_ex_latch
       port (
     clk: in std_logic;
+    pause : in std_logic;
 
     in_wb: in WB_CONTROL_TYPE;
     out_wb_ctrl: out WB_CONTROL_TYPE;
@@ -199,6 +200,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component mem_wb_latch
       Port ( 
     CLK : in STD_LOGIC;
+    pause : in std_logic;
     
     -- data input
     IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -226,6 +228,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component ex_mem_latch
       Port ( 
     CLK : in STD_LOGIC;
+    pause : in std_logic;
     
     -- data input
     IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -516,6 +519,7 @@ begin
    
    IdExLatch : id_ex_latch
       port map (clk=>XLXN_102,
+                pause=>XLXN_58,
                 in_ex=>XLXN_45,
                 in_imme(15 downto 0)=>XLXN_38(15 downto 0),
                 in_mem=>XLXN_60,
@@ -537,6 +541,7 @@ begin
    
    MemWbLatch : mem_wb_latch
       port map (CLK=>XLXN_102,
+                pause=>XLXN_58,
                 IN_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
                 IN_DATA(15 downto 0)=>XLXN_5(15 downto 0),
                 IN_PC(15 downto 0)=>XLXN_9(15 downto 0),
@@ -551,6 +556,7 @@ begin
    
    ExMemLatch : ex_mem_latch
       port map (CLK=>XLXN_102,
+                pause=>XLXN_58,
                 IN_ADDR(15 downto 0)=>XLXN_12(15 downto 0),
                 IN_CMP_RS=>XLXN_15,
                 IN_DATA(15 downto 0)=>XLXN_75(15 downto 0),
@@ -570,7 +576,7 @@ begin
       port map (clk=>XLXN_102,
                 new_pc(15 downto 0)=>XLXN_35(15 downto 0),
                 pause=>XLXN_59,
-                rst=>rst,
+                rst=>PC_RST,
                 pc_output(15 downto 0)=>XLXN_18(15 downto 0));
    
    PcAdder : pc_adder
@@ -786,7 +792,9 @@ begin
    ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA)
     variable temp:std_logic_vector(15 downto 0);
     begin
-    if (falling_edge(RAM1_CLK) and RAM_WORKING_FLAG = '0') then
+    if (PC_RST = '0') then
+      state <= init;
+    elsif (falling_edge(RAM1_CLK) and RAM_WORKING_FLAG = '0') then
       case state is
         when init =>
           case RAM1_RAM_ADDR is
@@ -880,7 +888,9 @@ begin
 
   ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA)
     begin
-    if (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
+    if (PC_RST = '0') then
+      ram2_state <= init;
+    elsif (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
 		Ram2EN <= '0';
       case ram2_state is
         when init =>
@@ -915,7 +925,9 @@ begin
 
   main_clk_process : process(XLXN_102)
   begin
-    if rising_edge(XLXN_102) then
+    if PC_RST = '0' then
+      RAM_WORKING_FLAG <= '1';
+    elsif rising_edge(XLXN_102) then
       RAM_WORKING_FLAG <= '0';
     end if;
   end process;
