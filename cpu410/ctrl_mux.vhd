@@ -9,7 +9,7 @@ entity ctrl_mux is
     	in_mem_ctrl: in MEM_CTRL_TYPE;
     	in_ex_ctrl: in ID_EX_LATCH_EX;
 		in_reg_wb_type: in std_logic_vector(1 downto 0);
-    	pause_or_not: in std_logic;
+    	--pause_or_not: in std_logic;
     	out_wb_ctrl: out WB_CONTROL_TYPE;
     	--out_mem_ctrl: out MEM_CTRL_TYPE;
     	out_ex_ctrl: out ID_EX_LATCH_EX;
@@ -26,8 +26,8 @@ begin
 	out_ex_ctrl <= in_ex_ctrl;
 	out_latch_mem.ID_EX_LATCH_MEM_MEMCTRL <= in_mem_ctrl;
 	out_latch_mem.ID_EX_LATCH_MEM_PAUSE <= in_reg_wb_type;
-	process(in_wb_ctrl, in_mem_ctrl, in_ex_ctrl, pause_or_not, in_reg_wb_type)
-	begin
+	--process(in_wb_ctrl, in_mem_ctrl, in_ex_ctrl, pause_or_not, in_reg_wb_type)
+	--begin
 		--case pause_or_not  is
 		--	when '1' => -- choose the do nothing
 		--		out_wb_ctrl.WB_CHOOSE <= ALU_DATA;
@@ -40,7 +40,7 @@ begin
 		--		out_latch_mem.ID_EX_LATCH_MEM_PAUSE <= WB_NONE;
 		--	when others => -- choose the ctrl result
 				
-		end case ;
-	end process;
+	--	end case ;
+	--end process;
 end Behavioral;
 

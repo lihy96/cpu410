@@ -441,7 +441,7 @@ architecture BEHAVIORAL of vhdcpu410 is
       in_mem_ctrl: in MEM_CTRL_TYPE;
       in_ex_ctrl: in ID_EX_LATCH_EX;
     in_reg_wb_type: in std_logic_vector(1 downto 0);
-      pause_or_not: in std_logic;
+      --pause_or_not: in std_logic;
       out_wb_ctrl: out WB_CONTROL_TYPE;
       --out_mem_ctrl: out MEM_CTRL_TYPE;
       out_ex_ctrl: out ID_EX_LATCH_EX;
@@ -458,7 +458,8 @@ architecture BEHAVIORAL of vhdcpu410 is
              latch_pause_ctrl   : out   std_logic; 
              pc_pause_ctrl      : out   std_logic; 
              --ctrl_choose        : out   std_logic; 
-             reg_bus            : out   std_logic_vector (11 downto 0));
+             reg_bus            : out   std_logic_vector (11 downto 0);
+             ram2_read_write: in std_logic_vector(1 downto 0));
    end component;
    
    component mux2
@@ -735,7 +736,7 @@ begin
                 in_mem_ctrl=>XLXN_42_mem,
                 in_reg_wb_type(1 downto 0)=>XLXN_61(1 downto 0),
                 in_wb_ctrl=>XLXN_42_wb,
-                pause_or_not=>XLXN_48,
+                --pause_or_not=>XLXN_48,
                 out_ex_ctrl=>XLXN_45,
                 out_latch_mem=>XLXN_60,
                 out_wb_ctrl=>XLXN_47);
@@ -745,10 +746,11 @@ begin
                 instr(15 downto 0)=>XLXN_29(15 downto 0),
                 prev_reg(3 downto 0)=>XLXN_81(3 downto 0),
                 prev_reg_type(1 downto 0)=>XLXN_62(1 downto 0),
-                ctrl_choose=>XLXN_48,
+                --ctrl_choose=>XLXN_48,
                 latch_pause_ctrl=>XLXN_58,
                 pc_pause_ctrl=>XLXN_59,
-                reg_bus(11 downto 0)=>XLXN_85(11 downto 0));
+                reg_bus(11 downto 0)=>XLXN_85(11 downto 0),
+                ram2_read_write => XLXN_20);
    
    Reg1Mux3 : mux3
       port map (choose(1 downto 0)=>XLXN_84(1 downto 0),
