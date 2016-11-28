@@ -63,17 +63,17 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
          DYP0 : OUT  std_logic_vector(6 downto 0);
          DYP1 : OUT  std_logic_vector(6 downto 0);
          L : OUT  std_logic_vector(15 downto 0);
-         rst : IN  std_logic
+         PC_RST : IN  std_logic
         );
     END COMPONENT;
     
 
    --Inputs
    signal clk : std_logic := '0';
-   signal tbre : std_logic := '0';
-   signal tsre : std_logic := '0';
-   signal data_ready : std_logic := '0';
-   signal rst : std_logic := '1';
+   signal tbre : std_logic := '1';
+   signal tsre : std_logic := '1';
+   signal data_ready : std_logic := '1';
+   signal PC_RST : std_logic := '1';
 
 	--BiDirs
    signal Ram1Data : std_logic_vector(15 downto 0);
@@ -123,7 +123,7 @@ BEGIN
           DYP0 => DYP0,
           DYP1 => DYP1,
           L => L,
-          rst => rst
+          PC_RST => PC_RST
         );
 
    -- Clock process definitions

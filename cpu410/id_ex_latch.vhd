@@ -7,6 +7,7 @@ use work.constants.all;
 entity id_ex_latch is
 	port (
 		clk: in std_logic;
+		pause : in std_logic;
 
 		in_wb: in WB_CONTROL_TYPE;
 		out_wb_ctrl: out WB_CONTROL_TYPE;
@@ -58,7 +59,7 @@ begin
 	out_pc <= out_pc_origin;
 process(clk)
 	begin
-	if rising_edge(clk) then
+	if (rising_edge(clk) and pause /= IF_ID_LATCH_PAUSE) then
 		out_wb_ctrl_origin <= in_wb;
 
 		out_mem_ctrl_origin <= in_mem.ID_EX_LATCH_MEM_MEMCTRL;

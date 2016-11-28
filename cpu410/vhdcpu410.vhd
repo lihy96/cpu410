@@ -174,6 +174,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component id_ex_latch
       port (
     clk: in std_logic;
+    pause : in std_logic;
 
     in_wb: in WB_CONTROL_TYPE;
     out_wb_ctrl: out WB_CONTROL_TYPE;
@@ -199,6 +200,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component mem_wb_latch
       Port ( 
     CLK : in STD_LOGIC;
+    pause : in std_logic;
     
     -- data input
     IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -226,6 +228,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component ex_mem_latch
       Port ( 
     CLK : in STD_LOGIC;
+    pause : in std_logic;
     
     -- data input
     IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -516,6 +519,7 @@ begin
    
    IdExLatch : id_ex_latch
       port map (clk=>XLXN_102,
+                pause=>XLXN_58,
                 in_ex=>XLXN_45,
                 in_imme(15 downto 0)=>XLXN_38(15 downto 0),
                 in_mem=>XLXN_60,
@@ -537,6 +541,7 @@ begin
    
    MemWbLatch : mem_wb_latch
       port map (CLK=>XLXN_102,
+                pause=>XLXN_58,
                 IN_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
                 IN_DATA(15 downto 0)=>XLXN_5(15 downto 0),
                 IN_PC(15 downto 0)=>XLXN_9(15 downto 0),
@@ -551,6 +556,7 @@ begin
    
    ExMemLatch : ex_mem_latch
       port map (CLK=>XLXN_102,
+                pause=>XLXN_58,
                 IN_ADDR(15 downto 0)=>XLXN_12(15 downto 0),
                 IN_CMP_RS=>XLXN_15,
                 IN_DATA(15 downto 0)=>XLXN_75(15 downto 0),
