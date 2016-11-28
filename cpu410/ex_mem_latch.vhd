@@ -71,6 +71,8 @@ signal INNER_OUT_WB_CONTROL : WB_CONTROL_TYPE := (	WB_CHOOSE => ALU_DATA,
 													REG_WN => WriteDisable);
 signal INNER_OUT_RAM1_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0) := MEM_NONE;
 signal INNER_OUT_RAM2_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0) := MEM_READ;
+
+signal pause_flag : std_logic := '0';
 begin
 	OUT_ADDR <= INNER_OUT_ADDR;
 	OUT_DATA <= INNER_OUT_DATA;
@@ -82,27 +84,33 @@ begin
 	process(CLK,IN_ADDR,IN_DATA,IN_PC,IN_REG_NO,IN_WB_CTRL,IN_MEM_CTRL,IN_CMP_RS,
 		INNER_OUT_ADDR,INNER_OUT_DATA,INNER_OUT_PC,INNER_OUT_REG_NO,INNER_OUT_WB_CONTROL,INNER_OUT_RAM2_READ_WRITE,INNER_OUT_RAM1_READ_WRITE)
 		begin
-		if (rising_edge(CLK) and pause /= IF_ID_LATCH_PAUSE) then
-			INNER_OUT_ADDR <= IN_ADDR;
-			INNER_OUT_DATA <= IN_DATA;
-			INNER_OUT_PC <= IN_PC;
-			INNER_OUT_REG_NO <= IN_REG_NO;
-			-- to be added : control signals
-			--OUT_WB_CONTROL <= IN_WB_CTRL.WB_CONTROL_SIGNAL;
-			INNER_OUT_WB_CONTROL <= IN_WB_CTRL;
-			
-			--if (IN_CMP_RS = Data_ram1) then --读的是RAM1
-			--	INNER_OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE;--读写RAM1
-			--	INNER_OUT_RAM2_READ_WRITE <= MEM_READ; --不读不写RAM2
-			--else
-			--	INNER_OUT_RAM1_READ_WRITE <= "11"; --不读不写RAM1
-			--	INNER_OUT_RAM2_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE; --读写RAM2
-			--end if;
-			INNER_OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE;
-			if IN_CMP_RS = Inst_ram2 and IN_MEM_CTRL.RAM_READ_WRITE = MEM_WRITE then
-				INNER_OUT_RAM2_READ_WRITE <= MEM_WRITE;
+		if (rising_edge(CLK)) then
+			if(pause /= IF_ID_LATCH_PAUSE or pause_flag = '1') then
+				INNER_OUT_ADDR <= IN_ADDR;
+				INNER_OUT_DATA <= IN_DATA;
+				INNER_OUT_PC <= IN_PC;
+				INNER_OUT_REG_NO <= IN_REG_NO;
+				-- to be added : control signals
+				--OUT_WB_CONTROL <= IN_WB_CTRL.WB_CONTROL_SIGNAL;
+				INNER_OUT_WB_CONTROL <= IN_WB_CTRL;
+				
+				--if (IN_CMP_RS = Data_ram1) then --读的是RAM1
+				--	INNER_OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE;--读写RAM1
+				--	INNER_OUT_RAM2_READ_WRITE <= MEM_READ; --不读不写RAM2
+				--else
+				--	INNER_OUT_RAM1_READ_WRITE <= "11"; --不读不写RAM1
+				--	INNER_OUT_RAM2_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE; --读写RAM2
+				--end if;
+				INNER_OUT_RAM1_READ_WRITE <= IN_MEM_CTRL.RAM_READ_WRITE;
+				if IN_CMP_RS = Inst_ram2 and IN_MEM_CTRL.RAM_READ_WRITE = MEM_WRITE then
+					INNER_OUT_RAM2_READ_WRITE <= MEM_WRITE;
+				else
+					INNER_OUT_RAM2_READ_WRITE <= MEM_READ;
+				end if;
+
+				pause_flag <= '0';
 			else
-				INNER_OUT_RAM2_READ_WRITE <= MEM_READ;
+				pause_flag <= '1';
 			end if;
 		end if;
 	end process;
