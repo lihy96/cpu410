@@ -516,7 +516,7 @@ begin
                 in_ex=>XLXN_45,
                 in_imme(15 downto 0)=>XLXN_38(15 downto 0),
                 in_mem=>XLXN_60,
-                in_pc(15 downto 0)=>XLXN_103(15 downto 0),
+                in_pc(15 downto 0)=>XLXN_23(15 downto 0),
                 in_Rx_val(15 downto 0)=>XLXN_65(15 downto 0),
                 in_Ry_val(15 downto 0)=>XLXN_63(15 downto 0),
                 in_wb=>XLXN_47,
