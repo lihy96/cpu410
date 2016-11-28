@@ -47,7 +47,8 @@ entity vhdcpu410 is
       Ram2Data : inout std_logic_vector(15 downto 0);
       DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
       DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
-      L: out std_logic_vector(15 downto 0)
+      L: out std_logic_vector(15 downto 0);
+      PC_RST : in std_logic
       );
 end vhdcpu410;
 
@@ -569,7 +570,7 @@ begin
       port map (clk=>XLXN_102,
                 new_pc(15 downto 0)=>XLXN_35(15 downto 0),
                 pause=>XLXN_59,
-                rst=>PcReg_rst_openSignal,
+                rst=>PC_RST,
                 pc_output(15 downto 0)=>XLXN_18(15 downto 0));
    
    PcAdder : pc_adder
@@ -785,7 +786,9 @@ begin
    ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA)
     variable temp:std_logic_vector(15 downto 0);
     begin
-    if (falling_edge(RAM1_CLK) and RAM_WORKING_FLAG = '0') then
+    if (PC_RST = '0') then
+      state <= init;
+    elsif (falling_edge(RAM1_CLK) and RAM_WORKING_FLAG = '0') then
       case state is
         when init =>
           case RAM1_RAM_ADDR is
@@ -879,7 +882,9 @@ begin
 
   ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA)
     begin
-    if (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
+    if (PC_RST = '0') then
+      ram2_state <= init;
+    elsif (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
 		Ram2EN <= '0';
       case ram2_state is
         when init =>
@@ -914,7 +919,9 @@ begin
 
   main_clk_process : process(XLXN_102)
   begin
-    if rising_edge(XLXN_102) then
+    if PC_RST = '0' then
+      RAM_WORKING_FLAG <= '1';
+    elsif rising_edge(XLXN_102) then
       RAM_WORKING_FLAG <= '0';
     end if;
   end process;

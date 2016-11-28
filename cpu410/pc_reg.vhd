@@ -46,7 +46,7 @@ begin
 	pc_output <= mypc;
 	process(clk, rst)
 	begin
-		if rst = Pc_reset then
+		if rst = '0' then
 			mypc <= Pc_origin_address;
 		elsif (pause /= Pc_pause and rising_edge(clk)) then
 		--pc_pause /= Pc_pause and 
