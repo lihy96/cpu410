@@ -42,15 +42,22 @@ end pc_reg;
 
 architecture Behavioral of pc_reg is
 signal mypc: std_logic_vector(15 downto 0) := (others =>'0') ;
+signal pause_flag: STD_LOGIC := '0';
 begin
 	pc_output <= mypc;
 	process(clk, rst)
 	begin
 		if rst = '0' then
 			mypc <= Pc_origin_address;
-		elsif (pause /= Pc_pause and rising_edge(clk)) then
-		--pc_pause /= Pc_pause and 
-			mypc <= new_pc;
+		elsif (rising_edge(clk)) then
+			if pause /= Pc_pause or pause_flag = '1'
+			then
+			--pc_pause /= Pc_pause and 
+				mypc <= new_pc;
+				pause_flag <= '0';
+			else
+				pause_flag <= '1';
+			end if;
 		end if;
 	end process;
 end Behavioral;

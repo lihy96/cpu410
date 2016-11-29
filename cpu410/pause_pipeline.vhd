@@ -50,7 +50,7 @@ signal prev_reg1: std_logic_vector(3 downto 0);
 signal prev_reg2: std_logic_vector(3 downto 0) ;
 signal prev_reg1_type: std_logic_vector(1 downto 0);
 signal prev_reg2_type: std_logic_vector(1 downto 0);
-signal pause: std_logic;
+--signal pause: std_logic;
 begin
 	prev_reg1 <= prev_reg;
 	prev_reg1_type <= prev_reg_type;

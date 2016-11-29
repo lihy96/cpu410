@@ -505,7 +505,7 @@ begin
 	);
 
 	L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
-	L(15) <= XLXN_54;
+	L(15) <= XLXN_18(8);
    L(14) <= XLXN_32;
 
    IfIdLatch : if_id_latch
