@@ -55,7 +55,7 @@ begin
 	prev_reg1 <= prev_reg;
 	prev_reg1_type <= prev_reg_type;
 	reg_bus <= reg1 & reg2 & reg0;
-	process(instr, clk, prev_reg, prev_reg_type, prev_reg1_type, prev_reg1, prev_reg2_type, prev_reg2)
+	process(instr, clk, prev_reg, prev_reg_type, prev_reg1_type, prev_reg1, prev_reg2_type, prev_reg2, ram2_read_write)
 	begin
 		case instr(15 downto 11) is
 			when OP_ADDIU | OP_ADDIU3 | OP_LW | OP_SLTI | OP_LI=>
@@ -143,8 +143,11 @@ begin
 				reg2 <= IMG_REG;
 		end case;
 		if (prev_reg1_type = WB_MEM and ((prev_reg1 = reg1 and prev_reg1 /= IMG_REG) or (prev_reg1 = reg2 and prev_reg1 /= IMG_REG))) or
+		   -- like "LW R0 R0 0; ADDU R0 R0 R0;""
 		   ((prev_reg1_type = WB_MEM or prev_reg1_type = WB_EXE) and prev_reg1 = reg0 and prev_reg1 /= IMG_REG) or
+		   -- like "XXX R0; BNEZ R0"
 		   (prev_reg2_type = WB_MEM and prev_reg2 = reg0 and reg0 /= IMG_REG) or
+		   -- like "LW R6 R0 0; XXXXXXXX; BNEZ R0"
 		   ram2_read_write = MEM_WRITE
 		   then -- pause at once!
 			--pause <= '1';
