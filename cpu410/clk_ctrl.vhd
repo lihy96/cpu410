@@ -49,9 +49,9 @@ begin
 		if(rising_edge(clk)) then
 			count <= count + "001";		
 		end if;
-		quarter_clk <= not count(2);
-		half_clk <= not count(1);
-		origin_clk <= not count(0);
+		quarter_clk <= not count(1);
+		half_clk <= not count(0);
+		origin_clk <= clk;
 	end process;
 
 end Behavioral;
