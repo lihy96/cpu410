@@ -34,7 +34,7 @@ begin
 		end if;
 	end process;
 
-	process (clk, rst, r1_addr, r2_addr, write_addr, write_data, write_en)
+	process (clk, rst, r1_addr, write_addr, write_data, write_en, reg_array)
 	begin
 		if rst = RstEnable then
 			r1_data_origin <= ZeroWord;
@@ -45,7 +45,7 @@ begin
 		end if;
 	end process;
 
-	process (clk, rst, r2_addr, write_addr, write_data, write_en)
+	process (clk, rst, r2_addr, write_addr, write_data, write_en, reg_array)
 	begin
 		if rst = RstEnable then
 			r2_data_origin <= ZeroWord;
