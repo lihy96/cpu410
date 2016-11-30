@@ -85,7 +85,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_43                       : ID_EX_LATCH_EX;
    signal XLXN_45                       : ID_EX_LATCH_EX; --change to record
    signal XLXN_47                       : WB_CONTROL_TYPE;
-   signal XLXN_48                       : std_logic;
+   --signal XLXN_48                       : std_logic;
    signal XLXN_54                       : std_logic;
    signal XLXN_56                       : std_logic;
    signal XLXN_58                       : std_logic;
@@ -116,7 +116,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal XLXN_99                       : std_logic_vector (15 downto 0);
    signal XLXN_101                      : std_logic;
    signal XLXN_102                      : std_logic;
-   signal XLXN_103                      : std_logic_vector (15 downto 0);
+   --signal XLXN_103                      : std_logic_vector (15 downto 0);
    signal XLXN_104                      : std_logic_vector (3 downto 0);
   --signal XLXI_4_clk_openSignal         : std_logic;
    --signal PcReg_clk_openSignal         : std_logic;
@@ -136,6 +136,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal RAM1_RAM_DATA : STD_LOGIC_VECTOR(15 downto 0);
    signal RAM1_RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
    signal RAM1_RAM_OUTPUT : STD_LOGIC_VECTOR(15 downto 0);
+   signal inner_Ram2WE: STD_LOGIC;
     type state_set is (
     init,
     writing,
@@ -163,10 +164,10 @@ architecture BEHAVIORAL of vhdcpu410 is
    component if_id_latch
       port ( clk          : in    std_logic; 
              pause        : in    std_logic; 
-             in_pc        : in    std_logic_vector (15 downto 0); 
+             --in_pc        : in    std_logic_vector (15 downto 0); 
              in_pc_plus1  : in    std_logic_vector (15 downto 0); 
              in_inst      : in    std_logic_vector (15 downto 0); 
-             out_pc       : out   std_logic_vector (15 downto 0); 
+             --out_pc       : out   std_logic_vector (15 downto 0); 
              out_pc_plus1 : out   std_logic_vector (15 downto 0); 
              out_inst     : out   std_logic_vector (15 downto 0));
    end component;
@@ -200,7 +201,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component mem_wb_latch
       Port ( 
     CLK : in STD_LOGIC;
-    pause : in std_logic;
+    --pause : in std_logic;
     
     -- data input
     IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -228,7 +229,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    component ex_mem_latch
       Port ( 
     CLK : in STD_LOGIC;
-    pause : in std_logic;
+    --pause : in std_logic;
     
     -- data input
     IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
@@ -275,7 +276,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    --          RAM_DATA       : in    std_logic_vector (15 downto 0); 
    --          Ram2Data       : inout std_logic_vector (15 downto 0); 
    --          Ram2OE         : out   std_logic; 
-   --          Ram2WE         : out   std_logic; 
+   --          inner_Ram2WE         : out   std_logic; 
    --          Ram2EN         : out   std_logic; 
    --          RAM_OUTPUT     : out   std_logic_vector (15 downto 0); 
    --          Ram2Addr       : out   std_logic_vector (17 downto 0));
@@ -283,7 +284,7 @@ architecture BEHAVIORAL of vhdcpu410 is
   --component fake_ram2
   --  Port ( 
   --         data_in, addr_in : in  STD_LOGIC_VECTOR (15 downto 0);
-  --         --ram2OE, ram2WE, ram2EN: in std_logic;
+  --         --ram2OE, inner_ram2WE, ram2EN: in std_logic;
   --      RAM_READ_WRITE: in std_logic_vector(1 downto 0);
   --         data_out: out  STD_LOGIC_VECTOR (15 downto 0));
   --end component;
@@ -504,18 +505,21 @@ begin
 	  res => DYP1
 	);
 
-	L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
-	L(15) <= XLXN_18(8);
-   L(14) <= XLXN_32;
+	--L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
+	--L(15) <= XLXN_18(8);
+   --L(14) <= inner_Ram2WE;
+	L(15 downto 8) <= XLXN_63(7 downto 0);
+	L(7 downto 0) <= XLXN_64(7 downto 0);
+   Ram2WE <= inner_Ram2WE;
 
    IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
                 in_inst(15 downto 0)=>XLXN_21(15 downto 0),
-                in_pc(15 downto 0)=>XLXN_18(15 downto 0),
+                --in_pc(15 downto 0)=>XLXN_18(15 downto 0),
                 in_pc_plus1(15 downto 0)=>XLXN_22(15 downto 0),
                 pause=>XLXN_58,
                 out_inst(15 downto 0)=>XLXN_29(15 downto 0),
-                out_pc(15 downto 0)=>XLXN_103(15 downto 0),
+                --out_pc(15 downto 0)=>XLXN_103(15 downto 0),
                 out_pc_plus1(15 downto 0)=>XLXN_23(15 downto 0));
    
    IdExLatch : id_ex_latch
@@ -542,7 +546,7 @@ begin
    
    MemWbLatch : mem_wb_latch
       port map (CLK=>XLXN_102,
-                pause=>XLXN_58,
+                --pause=>XLXN_58,
                 IN_ADDR(15 downto 0)=>XLXN_88(15 downto 0),
                 IN_DATA(15 downto 0)=>XLXN_5(15 downto 0),
                 IN_PC(15 downto 0)=>XLXN_9(15 downto 0),
@@ -557,7 +561,7 @@ begin
    
    ExMemLatch : ex_mem_latch
       port map (CLK=>XLXN_102,
-                pause=>XLXN_58,
+                --pause=>XLXN_58,
                 IN_ADDR(15 downto 0)=>XLXN_12(15 downto 0),
                 IN_CMP_RS=>XLXN_15,
                 IN_DATA(15 downto 0)=>XLXN_75(15 downto 0),
@@ -593,13 +597,13 @@ begin
    --             Ram2Addr=>open,
    --             Ram2EN=>open,
    --             Ram2OE=>open,
-   --             Ram2WE=>open,
+   --             inner_Ram2WE=>open,
    --             Ram2Data=>open);
   --FakeRam2: fake_ram2
   --    Port map( 
   --         data_in => XLXN_8(15 downto 0),
   --      addr_in => XLXN_28(15 downto 0),
-  --         --ram2OE, ram2WE, ram2EN: in std_logic;
+  --         --ram2OE, inner_ram2WE, ram2EN: in std_logic;
   --      RAM_READ_WRITE(1 downto 0) => XLXN_20(1 downto 0),
   --         data_out => XLXN_21(15 downto 0)
   --       );
@@ -791,7 +795,7 @@ begin
   RAM1_RAM_READ_WRITE <= XLXN_6;
   XLXN_5 <= RAM1_RAM_OUTPUT;
 
-   ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA)
+   ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA, PC_RST)
     variable temp:std_logic_vector(15 downto 0);
     begin
     if (PC_RST = '0') then
@@ -819,7 +823,7 @@ begin
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
               end if;
               
-            when COM_STATUS_ADDR => --串口?
+            when COM_STATUS_ADDR => --串口?             
               state <= uart_status;
               temp:= "0000000000000001";
               temp(0) := tsre and tbre;
@@ -888,7 +892,7 @@ begin
   RAM2_RAM_READ_WRITE <= XLXN_20;
   XLXN_21 <= RAM2_RAM_OUTPUT;
 
-  ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA)
+  ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA, Pc_RST)
     begin
     if (PC_RST = '0') then
       ram2_state <= init;
@@ -899,20 +903,20 @@ begin
           if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存?
             ram2_state <= writing;
             Ram2OE <= '1';
-            Ram2WE <= '0';
+            inner_Ram2WE <= '0';
             Ram2Data <= RAM2_RAM_DATA;
             Ram2Addr <= "00" & RAM2_RAM_ADDR;
           elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存?
             ram2_state <= reading;
             --Ram2EN <= '0';
             Ram2OE <= '0';
-            Ram2WE <= '1';
+            inner_Ram2WE <= '1';
             Ram2Data <= "ZZZZZZZZZZZZZZZZ";
             Ram2Addr <= "00" & RAM2_RAM_ADDR;
           end if;
             
         when writing =>
-          Ram2WE <= '1';
+          inner_Ram2WE <= '1';
           RAM2_RAM_OUTPUT <= "1111111111111111";
           ram2_state <= init;
         
@@ -925,7 +929,7 @@ begin
     end if;
   end process;
 
-  main_clk_process : process(XLXN_102)
+  main_clk_process : process(XLXN_102, PC_RST)
   begin
     if PC_RST = '0' then
       RAM_WORKING_FLAG <= '1';
