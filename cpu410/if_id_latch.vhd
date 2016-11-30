@@ -27,27 +27,27 @@ entity if_id_latch is
 	port (
 		clk: in std_logic;
 		pause: in std_logic;
-		in_pc,  in_pc_plus1,  in_inst:   in std_logic_vector(15 downto 0);
-		out_pc, out_pc_plus1, out_inst: out std_logic_vector(15 downto 0)
+		in_pc_plus1,  in_inst:   in std_logic_vector(15 downto 0);
+		out_pc_plus1, out_inst: out std_logic_vector(15 downto 0)
 
 	  );
 end if_id_latch;
 
 architecture Behavioral of if_id_latch is
-	signal out_pc_origin: std_logic_vector(15 downto 0) := ZeroWord;
+	--signal out_pc_origin: std_logic_vector(15 downto 0) := ZeroWord;
 	signal out_pc_plus1_origin: std_logic_vector(15 downto 0) := ZeroWord;
 	signal out_inst_origin: std_logic_vector(15 downto 0) := ZeroWord;
 
 	signal pause_flag : std_logic := '0';
 begin
-	out_pc <= out_pc_origin;
+	--out_pc <= out_pc_origin;
 	out_pc_plus1 <= out_pc_plus1_origin;
 	out_inst <= out_inst_origin;
 process(clk)
 	begin
 	if rising_edge(clk) then
 		if (pause /= IF_ID_LATCH_PAUSE or pause_flag = '1') then
-			out_pc_origin <= in_pc;
+			--out_pc_origin <= in_pc;
 			out_pc_plus1_origin <= in_pc_plus1;
 			out_inst_origin <= in_inst;
 
