@@ -26,7 +26,7 @@ use work.constants.all;
 entity mem_wb_latch is
 	Port ( 
 		CLK : in STD_LOGIC;
-		pause : in STD_LOGIC;
+		--pause : in STD_LOGIC;
 		
 		-- data input
 		IN_ADDR : in STD_LOGIC_VECTOR(15 downto 0);
