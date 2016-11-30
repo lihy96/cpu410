@@ -32,7 +32,8 @@ end id_ex_latch;
 
 
 architecture Behavioral of id_ex_latch is
-	signal out_wb_ctrl_origin : WB_CONTROL_TYPE := (WB_CHOOSE => PC_DATA, REG_WN => '0');
+-- TODO: PC_DATA -> ALU_DATA
+	signal out_wb_ctrl_origin : WB_CONTROL_TYPE := (WB_CHOOSE => PC_DATA, REG_WN => WriteDisable);
 	signal out_mem_ctrl_origin : MEM_CTRL_TYPE := (RAM_READ_WRITE => "00");
 	signal out_pause_origin : std_logic_vector(1 downto 0) := "00";
 	
@@ -81,6 +82,11 @@ process(clk)
 			pause_flag <= '0';
 		else
 			pause_flag <= '1';
+			out_pause_origin <= WB_NONE;
+			out_mem_ctrl_origin.RAM_READ_WRITE <= MEM_NONE;
+			out_reg_num_choose_origin <= IMG_REG;
+			out_wb_ctrl_origin.REG_WN <= WriteDisable;
+
 		end if;
 	end if;
 end process;
