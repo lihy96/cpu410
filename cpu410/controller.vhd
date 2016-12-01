@@ -182,6 +182,7 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.ALU_OP <= THU_ID_NOP;
 						reg_wb_type <= WB_NONE;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 						reg_r1 <= IMG_REG;
 						reg_r2 <= IMG_REG;
@@ -197,6 +198,8 @@ begin
 				mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 				ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 				ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_INS;
+				reg_r1 <= IMG_REG;
+				reg_r2 <= IMG_REG;
 
 			when OP_SHIFT =>
 				case( instruction(1 downto 0) ) is
@@ -254,6 +257,7 @@ begin
 						wb_ctrl.REG_WN <= WriteDisable;
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.ALU_OP <= THU_ID_NOP;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						reg_wb_type <= WB_NONE;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 						reg_r1 <= IMG_REG;
@@ -391,6 +395,7 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.ALU_OP <= THU_ID_NOP;
 						reg_wb_type <= WB_NONE;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 						reg_r2 <= IMG_REG;
 						reg_r1 <= IMG_REG;
@@ -429,6 +434,7 @@ begin
 						mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 						ex_ctrl.ALU_OP <= THU_ID_NOP;
 						reg_wb_type <= WB_NONE;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 						reg_r2 <= IMG_REG;
 						reg_r1 <= IMG_REG;
@@ -497,6 +503,7 @@ begin
 								mem_ctrl.RAM_READ_WRITE <= MEM_NONE;
 								ex_ctrl.ALU_OP <= THU_ID_NOP;
 								reg_wb_type <= WB_NONE;
+								ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 								ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
 								reg_r2 <= IMG_REG;
 								reg_r1 <= IMG_REG;
@@ -514,13 +521,13 @@ begin
 						reg_r1 <= '0' & instruction(10 downto 8);
 						reg_r2 <= '0' & instruction(7 downto 5);
 
-					when LOGIC_SRAV =>
-						immd(15 downto 0) <= ZERO16;
-						ex_ctrl.ALU_OP <= THU_ID_SRA;
+					--when LOGIC_SRAV =>
+					--	immd(15 downto 0) <= ZERO16;
+					--	ex_ctrl.ALU_OP <= THU_ID_SRA;
 
-					when LOGIC_NOT =>
-						immd(15 downto 0) <= ZERO16;
-						ex_ctrl.ALU_OP <= THU_ID_NOT;
+					--when LOGIC_NOT =>
+					--	immd(15 downto 0) <= ZERO16;
+					--	ex_ctrl.ALU_OP <= THU_ID_NOT;
 
 					when LOGIC_SLLV =>
 						immd(15 downto 0) <= ZERO16;
@@ -555,6 +562,7 @@ begin
 						ex_ctrl.ALU_OP <= THU_ID_NOP;
 						reg_wb_type <= WB_NONE;
 						ex_ctrl.ALU1_RI_CHOOSE <= ALU_SRC2_FROM_REG;
+						ex_ctrl.REG_WB_CHOOSE <= IMG_REG;
 						reg_r2 <= IMG_REG;
 						reg_r1 <= IMG_REG;
 

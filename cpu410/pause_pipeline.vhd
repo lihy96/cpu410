@@ -83,6 +83,10 @@ begin
 							reg0 <= '0'&instr(10 downto 8);
 							reg1 <= IMG_REG;
 							reg2 <= IMG_REG;
+						else
+							reg0 <= IMG_REG;
+							reg1 <= '0' & instr(10 downto 8);
+							reg2 <= '0' & instr(7 downto 5);
 						end if;
 					when others =>
 						reg0 <= IMG_REG;
