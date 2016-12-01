@@ -97,7 +97,7 @@ package constants is
 	constant ADD_SUB_U_SUBU: std_logic_vector(1 downto 0) := "11";	-- 23
 
 	-- 5 & 10 & 11 & 16 & 20 & 26 & 27
-	constant LOGIC_AND: std_logic_vector(4 downto 0) := "10011";	-- 5
+	constant LOGIC_AND: std_logic_vector(4 downto 0) := "01100";	-- 5
 	constant LOGIC_CMP: std_logic_vector(4 downto 0) := "01010";	-- 10
 	constant LOGIC_PC: std_logic_vector(4 downto 0) := "00000";	-- see sub
 		--sub function code for pc inst(7 downto 5)

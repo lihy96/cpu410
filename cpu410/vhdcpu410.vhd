@@ -35,7 +35,7 @@ entity vhdcpu410 is
       Ram1Addr: out std_logic_vector(17 downto 0);
       Ram1Data : inout std_logic_vector(15 downto 0);
       outwrn: out std_logic;
-      rdn: out std_logic;
+      outrdn: out std_logic;
       tbre: in std_logic;
       tsre: in std_logic;
       data_ready: in std_logic;
@@ -53,7 +53,8 @@ entity vhdcpu410 is
 end vhdcpu410;
 
 architecture BEHAVIORAL of vhdcpu410 is
-   signal wrn                           : std_logic := '1';
+   signal wrn                           : STD_LOGIC;
+   signal rdn                           : std_logic;
    signal XLXN_2                        : std_logic_vector (15 downto 0);
    signal XLXN_3                        : std_logic_vector (15 downto 0);
    signal XLXN_4                        : std_logic_vector (15 downto 0);
@@ -509,8 +510,16 @@ begin
 	--L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
 	--L(15) <= XLXN_18(8);
    --L(14) <= Ram2WE;
-  L(15) <= wrn;
-	L(14 downto 8) <= XLXN_63(6 downto 0);
+   outrdn <= rdn;
+   outwrn <= wrn;
+
+   L(15) <= data_ready;
+   L(14) <= tbre;
+   L(13) <= tsre;
+   L(12) <= rdn;
+   L(11) <= wrn;
+   L(10 downto 8) <= "000";
+	--L(14 downto 8) <= XLXN_63(6 downto 0);
 	L(7 downto 0) <= XLXN_64(7 downto 0);
 
    IfIdLatch : if_id_latch
@@ -797,7 +806,7 @@ begin
   XLXN_5 <= RAM1_RAM_OUTPUT;
 
    ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA, PC_RST)
-    variable temp:std_logic_vector(15 downto 0);
+    --variable temp:std_logic_vector(15 downto 0);
     begin
     if (PC_RST = '0') then
       state <= init;
@@ -834,10 +843,10 @@ begin
               
             when COM_STATUS_ADDR => --串口?             
               state <= uart_status;
-              temp:= "0000000000000000";
-              temp(0) := tsre and tbre;
-              temp(1) := data_ready;
-              RAM1_RAM_OUTPUT <= temp;
+              --temp:= "0000000000000000";
+              --temp(0) := tsre and tbre;
+              --temp(1) := data_ready;
+              RAM1_RAM_OUTPUT <= "00000000000000" & data_ready & (tsre and tbre);
               Ram1EN <= '1';
               Ram1OE <= '1';
               Ram1WE <= '1';
@@ -928,10 +937,10 @@ begin
           --Ram1Addr <= (others=>'0');
         when uart_status =>
           state <= init;
-          temp:= "0000000000000000";
-          temp(0) := tsre and tbre;
-          temp(1) := data_ready;
-          RAM1_RAM_OUTPUT <= temp;
+          --temp:= "0000000000000000";
+          --temp(0) := tsre and tbre;
+          --temp(1) := data_ready;
+          RAM1_RAM_OUTPUT <= "00000000000000" & data_ready & (tsre and tbre);
           
           Ram1EN <= '1';
           Ram1OE <= '1';
