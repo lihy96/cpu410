@@ -55,7 +55,7 @@ process(alu_op1, alu_op2, alu_inst)
 				end if;
 
 			when others =>
-				NULL;
+				res := ZeroWord;
 		end case;
 
 		alu_res_origin <= res;

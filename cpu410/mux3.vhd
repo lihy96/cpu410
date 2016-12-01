@@ -26,7 +26,7 @@ begin
 			when "10" =>
 				outdata_origin <= data3;
 			when others =>
-				outdata_origin <= HIGH_RESIST;
+				outdata_origin <= ZeroWord;
 		end case;
 	end process;
 end Behavioral;

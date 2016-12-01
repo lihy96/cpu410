@@ -42,16 +42,17 @@ entity clk_ctrl is
 end clk_ctrl;
 
 architecture Behavioral of clk_ctrl is
-signal count : STD_LOGIC_VECTOR(2 downto 0) := "111";
+signal count : STD_LOGIC_VECTOR(10 downto 0) := (others=>'1');
+signal adder : STD_LOGIC_VECTOR(10 downto 0) := (0=>'1',others=>'0');
 begin
 	process(clk,count)
 	begin
 		if(rising_edge(clk)) then
-			count <= count + "001";		
+			count <= count + adder;		
 		end if;
-		quarter_clk <= not count(1);
-		half_clk <= not count(0);
-		origin_clk <= clk;
+		quarter_clk <= not count(10);
+		half_clk <= not count(9);
+		origin_clk <= not count(8);
 	end process;
 
 end Behavioral;
