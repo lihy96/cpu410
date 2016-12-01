@@ -45,6 +45,7 @@ architecture Behavioral of clk_ctrl is
 signal count : STD_LOGIC_VECTOR(10 downto 0) := (others=>'1');
 signal adder : STD_LOGIC_VECTOR(10 downto 0) := (0=>'1',others=>'0');
 begin
+	adder <= (0=>'1',others=>'0');
 	process(clk,count)
 	begin
 		if(rising_edge(clk)) then
