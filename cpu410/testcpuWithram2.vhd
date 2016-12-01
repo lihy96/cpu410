@@ -51,8 +51,8 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
          Ram1WE : OUT  std_logic;
          Ram1Addr : OUT  std_logic_vector(17 downto 0);
          Ram1Data : INOUT  std_logic_vector(15 downto 0);
-         wrn : OUT  std_logic;
-         rdn : OUT  std_logic;
+         outwrn : OUT  std_logic;
+         outrdn : OUT  std_logic;
          tbre : IN  std_logic;
          tsre : IN  std_logic;
          data_ready : IN  std_logic;
@@ -72,7 +72,7 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
    signal clk : std_logic := '0';
    signal tbre : std_logic := '1';
    signal tsre : std_logic := '1';
-   signal data_ready : std_logic := '1';
+   signal data_ready : std_logic := '0';
    signal PC_RST : std_logic := '1';
 
 	--BiDirs
@@ -117,7 +117,7 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         --17 => x"4cff", -- ADDIU R4 ffff
         --18 => x"2cf7", -- BNEZ R4 fff7
         --19 => x"0800", -- NOP
-        --20 => x"13ff", -- B 03ff
+        --20 => x"17ff", -- B 07ff
         --21 => x"0800", -- NOP
         16#0000# => x"0000", --LI R6 00bf
         16#0001# => x"0000", --LI R0 00ff
@@ -283,7 +283,7 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#00a1# => x"ef40", -- MFPC R7
         16#00a2# => x"4f03", -- ADDIU R7 0003
         16#00a3# => x"0800", -- NOP
-        16#00a4# => x"1031", -- B 0031
+        16#00a4# => x"1031", -- B 0031 testR
         16#00a5# => x"0800", -- NOP
         16#00a6# => x"6ebf", -- LI R6 00bf
         16#00a7# => x"36c0", -- SLL R6 R6 0000
@@ -299,14 +299,14 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#00b1# => x"e82a", -- CMP R0 R1
         16#00b2# => x"604d", -- BTEQZ 004d D
         16#00b3# => x"0800", -- NOP
-        16#00b4# => x"6841", -- LI R0 0041 检测是否为A命令
+        16#00b4# => x"6841", -- LI R0 0041 检测是否为A命令 魔改开?        
         16#00b5# => x"e82a", -- CMP R0 R1
         16#00b6# => x"600e", -- BTEQZ 000e
         16#00b7# => x"0800", -- NOP
         16#00b8# => x"6855", -- LI R0 0055 检测是否为U
         16#00b9# => x"e82a", -- CMP R0 R1
         16#00ba# => x"6007", -- BTEQZ 0007
-        16#00bb# => x"0800", -- NOP
+        16#00bb# => x"0800", -- NOP 魔改完毕
         16#00bc# => x"6847", -- LI R0 0047 是否为G
         16#00bd# => x"e82a", -- CMP R0 R1
         16#00be# => x"6009", -- BTEQZ 0009
@@ -322,7 +322,7 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#00c8# => x"0800", -- NOP
         16#00c9# => x"1103", -- B 0103
         16#00ca# => x"0800", -- NOP
-        16#00cb# => x"0800", -- NOP
+        16#00cb# => x"0800", -- NOP是否能写，测试开?        
         16#00cc# => x"6ebf", -- LI R6 00bf
         16#00cd# => x"36c0", -- SLL R6 R6 0000
         16#00ce# => x"4e01", -- ADDIU R6 0001
@@ -333,12 +333,12 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#00d3# => x"0800", -- NOP
         16#00d4# => x"ef00", -- JR R7
         16#00d5# => x"0800", -- NOP
-        16#00d6# => x"0800", -- NOP
+        16#00d6# => x"0800", -- NOP是否能读 测试开?        
         16#00d7# => x"6ebf", -- LI R6 00bf
         16#00d8# => x"36c0", -- SLL R6 R6 0000
         16#00d9# => x"4e01", -- ADDIU R6 0001
         16#00da# => x"9e00", -- LW R6 R0 0000
-        16#00db# => x"6e02", -- LI R6 0002
+        16#00db# => x"6e02", -- LI R6 0002是否能读
         16#00dc# => x"e8cc", -- AND R0 R6
         16#00dd# => x"20f8", -- BEQZ R0 fff8
         16#00de# => x"0800", -- NOP
@@ -681,15 +681,16 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         --others => ZeroWord);
 
    -- Clock period definitions
-   constant clk_period : time := 50 us;
+   constant clk_period : time := 20 ns;
    type cmd_typs is array(0 to 20) of std_logic_vector(15 downto 0) ;
    constant cmds: cmd_typs := (0=>x"0052", 
     --0=> x"0055", 1=> x"0000", 2=> x"0040", 3=>x"0002", 4=>x"0000",
-	 --1 => x"0000", 2 => x"0040", 3 => x"00ff", 4 => x"0068", -- 4000: LI R0 ff
+	 -- 1 => x"0000", 2 => x"0040", 3 => x"00ff", 4 => x"0068", -- 4000: LI R0 ff
     --5 => x"0001", 6 => x"0040", 7 => x"00fe", 8 => x"0068", -- 4001: LI R0 FE
---    9 => x"0000", 10=> x"0000", 
---	 11=> x"0055", 12=> x"0000", 13=> x"0040", 14=>x"0002", 15=>x"0000",-- U 4000 0002
-   -- 7 => x"0055", 8 => x"0000", 9 => x"0040", 10=>x"0002", 11=>x"0000",    
+    --ef00
+    --9 => x"0000", 10=> x"0000", 
+	 --11=> x"0055", 12=> x"0000", 13=> x"0040", 14=>x"0002", 15=>x"0000",-- U 4000 0002
+    --7 => x"0055", 8 => x"0000", 9 => x"0040", 10=>x"0002", 11=>x"0000",    
    others=>"0000100000000000");
    signal index: integer:= 0;
    signal state: std_logic := '0';
@@ -705,8 +706,8 @@ BEGIN
           Ram1WE => Ram1WE,
           Ram1Addr => Ram1Addr,
           Ram1Data => Ram1Data,
-          wrn => wrn,
-          rdn => rdn,
+          outwrn => wrn,
+          outrdn => rdn,
           tbre => tbre,
           tsre => tsre,
           data_ready => data_ready,
