@@ -48,7 +48,14 @@ entity vhdcpu410 is
       DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
       DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
       L: out std_logic_vector(15 downto 0);
-      PC_RST : in std_logic
+      PC_RST : in std_logic;
+
+      -- VGA
+      VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+      VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+      VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+      VGA_HS : out  STD_LOGIC;
+      VGA_VS : out  STD_LOGIC
       );
 end vhdcpu410;
 
@@ -162,6 +169,8 @@ architecture BEHAVIORAL of vhdcpu410 is
     signal ram2_state : ram2_state_set := init;
 
     signal RAM_WORKING_FLAG : STD_LOGIC := '1';
+
+    signal VGA_TEST : char_index_type := (others=>"00100");
 
    component if_id_latch
       port ( clk          : in    std_logic; 
@@ -497,6 +506,17 @@ architecture BEHAVIORAL of vhdcpu410 is
        );
    end component;
 
+   component vga
+        Port ( CLK : in  STD_LOGIC;
+         R : out  STD_LOGIC_VECTOR (2 downto 0);
+         G : out  STD_LOGIC_VECTOR (2 downto 0);
+         B : out  STD_LOGIC_VECTOR (2 downto 0);
+         HS : out  STD_LOGIC;
+         VS : out  STD_LOGIC;
+
+         VGA_input : in char_index_type);
+    end component;
+
 begin
 	dsp1: decoder port map (
 	 data => XLXN_18(7 downto 4),
@@ -790,6 +810,16 @@ begin
                 half_clk=>XLXN_102,
                 origin_clk=>XLXN_101,
                 quarter_clk=>open);
+
+    VGACtrl : vga
+      port map ( CLK=>XLXN_101,
+         R=>VGA_R,
+         G=>VGA_G,
+         B=>VGA_B,
+         HS=>VGA_HS,
+         VS=>VGA_VS,
+         VGA_input=>VGA_TEST);
+
    process(clk)
    begin
      --XLXI_13_rst_openSignal <= RstEnable;

@@ -114,3 +114,17 @@ NET "L[8]" LOC = A12;
 # PlanAhead Generated physical constraints 
 
 NET "PC_RST" LOC = U10;
+
+# VGA
+
+NET "VGA_HS" LOC = D6;
+NET "VGA_VS" LOC = E6;
+NET "VGA_R[1]" LOC = C3;
+NET "VGA_R[2]" LOC = A4;
+NET "VGA_R[0]" LOC = A7;
+NET "VGA_G[2]" LOC = C5;
+NET "VGA_G[1]" LOC = C4;
+NET "VGA_G[0]" LOC = B4;
+NET "VGA_B[2]" LOC = B6;
+NET "VGA_B[1]" LOC = A6;
+NET "VGA_B[0]" LOC = D5;

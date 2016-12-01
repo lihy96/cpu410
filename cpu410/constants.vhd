@@ -252,6 +252,10 @@ package constants is
 	-- clock by lihy
 	constant Clock_wait_num_before_work: integer := 10000;
 
+
+	-- for VGA
+	type char_index_type is array(2399 downto 0) of STD_LOGIC_VECTOR(4 downto 0);
+
 end package;
 
 
