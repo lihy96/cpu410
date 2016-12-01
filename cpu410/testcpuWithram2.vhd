@@ -30,7 +30,7 @@ USE ieee.std_logic_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 USE ieee.numeric_std.ALL;
-use work.constants.all;
+--use work.constants.all;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -95,12 +95,12 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
    signal L : std_logic_vector(15 downto 0);
 
   type RAM_type is array(4095 downto 0) of std_logic_vector(15 downto 0) ;
-  signal ram1: RAM_type := (others => ZeroWord);
+  signal ram1: RAM_type := (others => x"0000");
   signal ram2: RAM_type := (
         --0 => x"6b20", -- LI R3 0020
         --1 => x"6920", -- LI R1 0020
         --2 => x"db20", -- SW R3 R1 0000
-        --3 => x"e125", -- ADDU R1 R1 R1
+        --3 => x"e125", -- ADDU R1 nsR1 R1
         --4 => x"db21", -- SW R3 R1 0001
         --5 => x"6901", -- LI R1 0001
         --6 => x"6a01", -- LI R2 0001
@@ -655,10 +655,10 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#0215# => x"de20", -- SW R6 R1 0000
         16#0216# => x"168a", -- B fe8a
         16#0217# => x"0800", -- NOP
-        others => ZeroWord);
+        others => x"0000");
 
    -- Clock period definitions
-   constant clk_period : time := 10 ns;
+   constant clk_period : time := 50 us;
    type cmd_typs is array(0 to 20) of std_logic_vector(15 downto 0) ;
    constant cmds: cmd_typs := (0=>x"0052", 
     --0=> x"0055", 1=> x"0000", 2=> x"0040", 3=>x"0002", 4=>x"0000",
