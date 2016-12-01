@@ -34,7 +34,7 @@ entity vhdcpu410 is
       Ram1WE: out std_logic;
       Ram1Addr: out std_logic_vector(17 downto 0);
       Ram1Data : inout std_logic_vector(15 downto 0);
-      wrn: out std_logic;
+      outwrn: out std_logic;
       rdn: out std_logic;
       tbre: in std_logic;
       tsre: in std_logic;
@@ -53,6 +53,7 @@ entity vhdcpu410 is
 end vhdcpu410;
 
 architecture BEHAVIORAL of vhdcpu410 is
+   signal wrn                           : std_logic := '1';
    signal XLXN_2                        : std_logic_vector (15 downto 0);
    signal XLXN_3                        : std_logic_vector (15 downto 0);
    signal XLXN_4                        : std_logic_vector (15 downto 0);
@@ -508,7 +509,8 @@ begin
 	--L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
 	--L(15) <= XLXN_18(8);
    --L(14) <= Ram2WE;
-	L(15 downto 8) <= XLXN_63(7 downto 0);
+  L(15) <= wrn;
+	L(14 downto 8) <= XLXN_63(6 downto 0);
 	L(7 downto 0) <= XLXN_64(7 downto 0);
 
    IfIdLatch : if_id_latch
@@ -832,7 +834,7 @@ begin
               
             when COM_STATUS_ADDR => --串口?             
               state <= uart_status;
-              temp:= "0000000000000001";
+              temp:= "0000000000000000";
               temp(0) := tsre and tbre;
               temp(1) := data_ready;
               RAM1_RAM_OUTPUT <= temp;
@@ -860,7 +862,7 @@ begin
                 Ram1WE <= '1';
                 rdn <= '1';
                 wrn <= '1';
-                --Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+                Ram1Data <= "ZZZZZZZZZZZZZZZZ";
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
               else --初始?
                 state <= init;
@@ -926,7 +928,7 @@ begin
           --Ram1Addr <= (others=>'0');
         when uart_status =>
           state <= init;
-          temp:= "0000000000000001";
+          temp:= "0000000000000000";
           temp(0) := tsre and tbre;
           temp(1) := data_ready;
           RAM1_RAM_OUTPUT <= temp;
@@ -969,7 +971,7 @@ begin
             Ram2Addr <= "00" & RAM2_RAM_ADDR;
           elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存?
             ram2_state <= reading;
-            Ram2EN <= '0';
+            --Ram2EN <= '0';
             Ram2OE <= '0';
             Ram2WE <= '1';
             Ram2Data <= "ZZZZZZZZZZZZZZZZ";
@@ -978,16 +980,16 @@ begin
             
         when writing =>
           Ram2WE <= '1';
-          Ram2EN <= '1';
+          --Ram2EN <= '1';
           Ram2OE <= '1';
-          Ram2Data <= (others=>('Z'));
+          --Ram2Data <= (others=>('Z'));
           RAM2_RAM_OUTPUT <= "1111111111111111";
           ram2_state <= init;
         
         when reading =>
           Ram2OE <= '1';
           Ram2WE <= '1';
-          Ram2EN <= '1';
+          --Ram2EN <= '1';
           --Ram2Data <= (others =>('Z'));
           RAM2_RAM_OUTPUT <= Ram2Data;
           ram2_state <= init;
