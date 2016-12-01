@@ -17,16 +17,10 @@ begin
 	process(pc, addr, choose)
 	begin
 		case choose is
-			when MEM_NONE => 
-				outdata <= pc;
-			when "00" =>
-				outdata <= pc;
-			when MEM_READ =>
-				outdata <= pc;
 			when MEM_WRITE => 
 				outdata <= addr;
 			when others =>
-
+				outdata <= pc;
 		end case;
 	end process;
 end Behavioral;

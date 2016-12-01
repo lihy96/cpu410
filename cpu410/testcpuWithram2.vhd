@@ -656,6 +656,29 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#0216# => x"168a", -- B fe8a
         16#0217# => x"0800", -- NOP
         others => x"0000");
+        --0 => x"6b20", -- LI R3 0020
+        --1 => x"6920", -- LI R1 0020
+        --2 => x"db20", -- SW R3 R1 0000
+        --3 => x"e125", -- ADDU R1 R1 R1
+        --4 => x"db21", -- SW R3 R1 0001
+        --5 => x"6901", -- LI R1 0001
+        --6 => x"6a01", -- LI R2 0001
+        --7 => x"6b02", -- LI R3 0002
+        --8 => x"3360", -- SLL R3 R3 0000
+        --9 => x"6c09", -- LI R4 0009
+        --10 => x"db20", -- SW R3 R1 0000
+        --11 => x"db41", -- SW R3 R2 0001
+        --12 => x"9b20", -- LW R3 R1 0000
+        --13 => x"9b41", -- LW R3 R2 0001
+        --14 => x"e145", -- ADDU R1 R2 R1
+        --15 => x"e149", -- ADDU R1 R2 R2
+        --16 => x"4b02", -- ADDIU R3 0002
+        --17 => x"4cff", -- ADDIU R4 ffff
+        --18 => x"2cf7", -- BNEZ R4 fff7
+        --19 => x"0800", -- NOP
+        --20 => x"13ff", -- B 03ff
+        --21 => x"0800", -- NOP
+        --others => ZeroWord);
 
    -- Clock period definitions
    constant clk_period : time := 50 us;
