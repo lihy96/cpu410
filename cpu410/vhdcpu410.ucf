@@ -113,6 +113,23 @@ NET "clk" LOC = B9;
 
 # PlanAhead Generated physical constraints 
 NET "PC_RST" LOC = U10;
+
 #Created by Constraints Editor (xc3s1200e-fg320-4) - 2016/12/02
 NET "clk" TNM_NET = clk;
 TIMESPEC TS_clk = PERIOD "clk" 20 ns HIGH 50%;
+
+
+# VGA
+
+NET "VGA_HS" LOC = D6;
+NET "VGA_VS" LOC = E6;
+NET "VGA_R[1]" LOC = C3;
+NET "VGA_R[2]" LOC = A4;
+NET "VGA_R[0]" LOC = A7;
+NET "VGA_G[2]" LOC = C5;
+NET "VGA_G[1]" LOC = C4;
+NET "VGA_G[0]" LOC = B4;
+NET "VGA_B[2]" LOC = B6;
+NET "VGA_B[1]" LOC = A6;
+NET "VGA_B[0]" LOC = D5;
+
