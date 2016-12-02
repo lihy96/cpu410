@@ -26,7 +26,7 @@ package constants is
 	constant RstEnable: std_logic := '1';
 	constant RstDisable: std_logic := '0'; 
 
-	constant Pc_reset: std_logic := '1';	--pc是否reset的控制信号
+	constant Pc_reset: std_logic := '0';	--pc是否reset的控制信号
 	constant Pc_pause: std_logic := '1';	--pc是否pause的控制信号
 	constant Pc_origin_address : std_logic_vector(15 downto 0) := "0000000000000000";	--pc的初始地址
 	constant Pc_offset: std_logic_vector(15 downto 0) := "0000000000000001";	--每次pc的偏移量
@@ -97,7 +97,7 @@ package constants is
 	constant ADD_SUB_U_SUBU: std_logic_vector(1 downto 0) := "11";	-- 23
 
 	-- 5 & 10 & 11 & 16 & 20 & 26 & 27
-	constant LOGIC_AND: std_logic_vector(4 downto 0) := "10011";	-- 5
+	constant LOGIC_AND: std_logic_vector(4 downto 0) := "01100";	-- 5
 	constant LOGIC_CMP: std_logic_vector(4 downto 0) := "01010";	-- 10
 	constant LOGIC_PC: std_logic_vector(4 downto 0) := "00000";	-- see sub
 		--sub function code for pc inst(7 downto 5)
@@ -251,6 +251,12 @@ package constants is
 
 	-- clock by lihy
 	constant Clock_wait_num_before_work: integer := 10000;
+
+
+	-- for VGA
+	type char_index_type is array(2399 downto 0) of STD_LOGIC_VECTOR(4 downto 0);
+
+	constant VGA_BEGIN_ADDR : STD_LOGIC_VECTOR(15 downto 0) := "1100000000000000"; --C000
 
 end package;
 

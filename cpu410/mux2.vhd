@@ -23,7 +23,7 @@ begin
 			when '1' =>
 				outdata_origin <= data2;
 			when others =>
-				outdata_origin <= HIGH_RESIST;
+				outdata_origin <= ZeroWord;
 		end case;
 	end process;
 end Behavioral;

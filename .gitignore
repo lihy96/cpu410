@@ -6,8 +6,12 @@ pro3/*
 pro3/*/
 *.xlsx
 *.pptx
+*.png
+flash.vhd
+flash.ucf
 # 不忽略下面指定的文件类型
 !cpu410/*.vhd
 !cpu410/*.sch
 !cpu410/*.ucf
 !cpu410/python_code/
+!cpu410/ipcore_dir/*.vhd

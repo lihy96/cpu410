@@ -1,0 +1,32 @@
+li r0 0
+li R1 1 
+li R2 1 
+li R3 85
+li r5 8
+sllv r5 R3
+li R4 9 
+sw R3 R1 0 
+sw R3 R2 1 
+addu R1 R2 R1 
+addu R1 R2 R2 
+addiu R3 2 
+addiu R4 FF
+slti r4 1
+BTNEZ R4 F8
+nop
+li r1 2
+srlv r1 r2
+sw r3 r2 1
+jr r7
+nop
+
+li r0 12
+sw_sp r0 7
+jr r7
+nop
+
+li r0 12
+sw_sp r0 7
+sw_rs 7
+jr r7
+nop

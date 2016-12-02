@@ -70,7 +70,7 @@ ARCHITECTURE behavior OF testcpu IS
    signal rdn : std_logic;
 
    -- Clock period definitions
-   constant clk_period : time := 2 ps;
+   constant clk_period : time := 2 ns;
  
 BEGIN
  

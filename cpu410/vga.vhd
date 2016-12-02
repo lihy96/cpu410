@@ -21,6 +21,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use work.constants.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -37,7 +38,9 @@ entity vga is
            G : out  STD_LOGIC_VECTOR (2 downto 0);
            B : out  STD_LOGIC_VECTOR (2 downto 0);
            HS : out  STD_LOGIC;
-           VS : out  STD_LOGIC);
+           VS : out  STD_LOGIC;
+
+           VGA_input : in char_index_type);
 end vga;
 
 architecture Behavioral of vga is
@@ -49,7 +52,7 @@ type COLOR_TYPE is record
 end record;
 constant color_black : COLOR_TYPE := (others => "000");
 constant color_white : COLOR_TYPE := (others => "111");
-type char_index_type is array(2399 downto 0) of STD_LOGIC_VECTOR(4 downto 0);
+--type char_index_type is array(2399 downto 0) of STD_LOGIC_VECTOR(4 downto 0);
 type char_table_type is array(31 downto 0) of STD_LOGIC_VECTOR(127 downto 0);
 constant Char_Space : STD_LOGIC_VECTOR(127 downto 0) := (others => '0');
 constant Char_Full : STD_LOGIC_VECTOR(127 downto 0) := (others => '1');
@@ -531,6 +534,7 @@ signal halfclk : std_logic := '0';
 signal posx : std_logic_vector(9 downto 0) := "0000000000";
 signal posy : std_logic_vector(9 downto 0) := "0000000000";
 begin
+	char_seq <= VGA_input;
 process(CLK)
 	variable index : INTEGER range 0 to 31 := 0;
 	variable delta_v : INTEGER range 0 to 127 := 0;
