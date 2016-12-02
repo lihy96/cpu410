@@ -88,7 +88,7 @@ begin
 							reg1 <= IMG_REG;
 							reg2 <= IMG_REG;
 						end if;
-					when LOGIC_SRLV =>
+					when LOGIC_SRLV | LOGIC_SLLV =>
 						reg0 <= IMG_REG;
 						reg1 <= '0' & instr(7 downto 5);
 						reg2 <= '0' & instr(10 downto 8);
