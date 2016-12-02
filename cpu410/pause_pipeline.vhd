@@ -58,7 +58,7 @@ begin
 	process(instr, clk, prev_reg, prev_reg_type, prev_reg1_type, prev_reg1, prev_reg2_type, prev_reg2, ram2_read_write)
 	begin
 		case instr(15 downto 11) is
-			when OP_ADDIU | OP_ADDIU3 | OP_LW | OP_SLTI | OP_LI=>
+			when OP_ADDIU | OP_ADDIU3 | OP_LW | OP_SLTI =>
 			-- only rx refered at 8 to 10
 				reg0 <= IMG_REG;
 				reg1 <= '0' & instr(10 downto 8);
@@ -83,11 +83,15 @@ begin
 							reg0 <= '0'&instr(10 downto 8);
 							reg1 <= IMG_REG;
 							reg2 <= IMG_REG;
-						else
+						else -- MFPC
 							reg0 <= IMG_REG;
-							reg1 <= '0' & instr(10 downto 8);
-							reg2 <= '0' & instr(7 downto 5);
+							reg1 <= IMG_REG;
+							reg2 <= IMG_REG;
 						end if;
+					when LOGIC_SRLV =>
+						reg0 <= IMG_REG;
+						reg1 <= '0' & instr(7 downto 5);
+						reg2 <= '0' & instr(10 downto 8);
 					when others =>
 						reg0 <= IMG_REG;
 						reg1 <= '0' & instr(10 downto 8);
@@ -114,8 +118,8 @@ begin
 						reg2 <= IMG_REG;
 					when SPECIAL_MTSP =>
 						reg0 <= IMG_REG;
-						reg1 <= '0' & instr(7 downto 5);
-						reg2 <= IMG_REG;
+						reg2 <= '0' & instr(7 downto 5);
+						reg1 <= IMG_REG;
 					when SPECIAL_SW_RS =>
 						reg0 <= IMG_REG;
 						reg1 <= SP_REG;
@@ -134,13 +138,13 @@ begin
 				reg2 <= IMG_REG;
 				case instr(7 downto 0) is
 					when IH_MFIH =>
-						reg1 <= IH_REG;
+						reg2 <= IH_REG;
 					when IH_MTIH =>
-						reg1 <= '0' & instr(10 downto 8);
+						reg2 <= '0' & instr(10 downto 8);
 					when others =>
 						reg1 <= IMG_REG;
 				end case ;
-			--when OP_B | OP_NOP =>-- DO NOTHING
+			--when OP_B | OP_NOP | LI =>-- DO NOTHING
 			when others =>
 				reg0 <= IMG_REG;
 				reg1 <= IMG_REG;
