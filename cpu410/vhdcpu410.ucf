@@ -112,5 +112,7 @@ NET "L[0]" LOC = D10;
 NET "L[8]" LOC = A12;
 
 # PlanAhead Generated physical constraints 
-
 NET "PC_RST" LOC = U10;
+#Created by Constraints Editor (xc3s1200e-fg320-4) - 2016/12/02
+NET "clk" TNM_NET = clk;
+TIMESPEC TS_clk = PERIOD "clk" 20 ns HIGH 50%;
