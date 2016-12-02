@@ -133,7 +133,7 @@ architecture BEHAVIORAL of vhdcpu410 is
    --signal fwdUnit_clk_openSignal        : std_logic;
    --signal XLXI_32_clk_openSignal        : std_logic;
 
-   signal RAM1_CLK : STD_LOGIC;
+   signal RAM_CLK : STD_LOGIC;
    signal RAM1_RAM_ADDR : STD_LOGIC_VECTOR(15 downto 0);
    signal RAM1_RAM_DATA : STD_LOGIC_VECTOR(15 downto 0);
    signal RAM1_RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
@@ -149,7 +149,7 @@ architecture BEHAVIORAL of vhdcpu410 is
   );
   signal state : state_set := init;
 
-    signal RAM2_CLK : STD_LOGIC;
+    --signal RAM2_CLK : STD_LOGIC;
     signal RAM2_RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
     signal RAM2_RAM_ADDR : STD_LOGIC_VECTOR(15 downto 0);
     signal RAM2_RAM_DATA : STD_LOGIC_VECTOR(15 downto 0);
@@ -518,9 +518,11 @@ begin
    L(13) <= tsre;
    L(12) <= rdn;
    L(11) <= wrn;
-   L(10 downto 8) <= "000";
+	L(10) <= '0';
+   L(9) <= XLXN_18(8);
+	L(8) <= XLXN_18(9);
 	--L(14 downto 8) <= XLXN_63(6 downto 0);
-	L(7 downto 0) <= XLXN_64(7 downto 0);
+	L(7 downto 0) <= XLXN_63(7 downto 0);
 
    IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
@@ -799,13 +801,13 @@ begin
      --wait;
    end process ; -- mp
 
-  RAM1_CLK <= XLXN_101;
+  RAM_CLK <= XLXN_101;
   RAM1_RAM_ADDR <= XLXN_88;
   RAM1_RAM_DATA <= XLXN_8;
   RAM1_RAM_READ_WRITE <= XLXN_6;
   XLXN_5 <= RAM1_RAM_OUTPUT;
 
-   ram1_process : process(RAM1_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA, PC_RST)
+   ram1_process : process(RAM_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA, PC_RST)
     --variable temp:std_logic_vector(15 downto 0);
     begin
     if (PC_RST = '0') then
@@ -817,8 +819,14 @@ begin
       rdn <= '1';
       wrn <= '1';
       Ram1Data <= (others=>'Z');
+
+      ram2_state <= init;
+      Ram2EN <= '1';
+      Ram2OE <= '1';
+      Ram2WE <= '1';
+      Ram2Data <= (others=>'Z');
       --Ram1Addr <= (others=>'0');
-    elsif (falling_edge(RAM1_CLK) and RAM_WORKING_FLAG = '0') then
+    elsif (falling_edge(RAM_CLK) and RAM_WORKING_FLAG = '0') then
       case state is
         when init =>
           case RAM1_RAM_ADDR is
@@ -950,26 +958,8 @@ begin
           --Ram1Data <= (others=>'Z');
           --Ram1Addr <= (others=>'0');
       end case;
-    end if;
-  end process;
 
-  RAM2_CLK <= XLXN_101;
-  RAM2_RAM_ADDR <= XLXN_28;
-  RAM2_RAM_DATA <= XLXN_8;
-  RAM2_RAM_READ_WRITE <= XLXN_20;
-  XLXN_21 <= RAM2_RAM_OUTPUT;
-
-  ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA, Pc_RST)
-    begin
-    if (PC_RST = '0') then
-      ram2_state <= init;
-
-      Ram2EN <= '1';
-      Ram2OE <= '1';
-      Ram2WE <= '1';
-      Ram2Data <= (others=>'Z');
-    elsif (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
-		Ram2EN <= '0';
+      Ram2EN <= '0';
       case ram2_state is
         when init =>
           if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存?
@@ -1006,6 +996,60 @@ begin
       end case;
     end if;
   end process;
+
+  --RAM2_CLK <= XLXN_101;
+  RAM2_RAM_ADDR <= XLXN_28;
+  RAM2_RAM_DATA <= XLXN_8;
+  RAM2_RAM_READ_WRITE <= XLXN_20;
+  XLXN_21 <= RAM2_RAM_OUTPUT;
+
+  --ram2_process :  process(RAM2_CLK,RAM2_RAM_READ_WRITE,RAM2_RAM_ADDR,RAM2_RAM_DATA, Pc_RST)
+  --  begin
+  --  if (PC_RST = '0') then
+  --    ram2_state <= init;
+
+  --    Ram2EN <= '1';
+  --    Ram2OE <= '1';
+  --    Ram2WE <= '1';
+  --    Ram2Data <= (others=>'Z');
+  --  elsif (falling_edge(RAM2_CLK) and RAM_WORKING_FLAG = '0') then
+		--Ram2EN <= '0';
+  --    case ram2_state is
+  --      when init =>
+  --        if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存?
+  --          ram2_state <= writing;
+  --          Ram2OE <= '1';
+  --          Ram2WE <= '0';
+  --          Ram2Data <= RAM2_RAM_DATA;
+  --          Ram2Addr <= "00" & RAM2_RAM_ADDR;
+  --        elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存?
+  --          ram2_state <= reading;
+  --          --Ram2EN <= '0';
+  --          Ram2OE <= '0';
+  --          Ram2WE <= '1';
+  --          Ram2Data <= "ZZZZZZZZZZZZZZZZ";
+  --          Ram2Addr <= "00" & RAM2_RAM_ADDR;
+  --        end if;
+            
+  --      when writing =>
+  --        Ram2WE <= '1';
+  --        --Ram2EN <= '1';
+  --        Ram2OE <= '1';
+  --        --Ram2Data <= (others=>('Z'));
+  --        RAM2_RAM_OUTPUT <= "1111111111111111";
+  --        ram2_state <= init;
+        
+  --      when reading =>
+  --        Ram2OE <= '1';
+  --        Ram2WE <= '1';
+  --        --Ram2EN <= '1';
+  --        --Ram2Data <= (others =>('Z'));
+  --        RAM2_RAM_OUTPUT <= Ram2Data;
+  --        ram2_state <= init;
+          
+  --    end case;
+  --  end if;
+  --end process;
 
   main_clk_process : process(XLXN_102, PC_RST)
   begin
