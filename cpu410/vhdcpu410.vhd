@@ -22,6 +22,7 @@
 library ieee;
 use ieee.std_logic_1164.ALL;
 use ieee.numeric_std.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.constants.all;
 --library UNISIM;
 --use UNISIM.Vcomponents.ALL;
@@ -55,11 +56,27 @@ entity vhdcpu410 is
       VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
       VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
       VGA_HS : out  STD_LOGIC;
-      VGA_VS : out  STD_LOGIC
+      VGA_VS : out  STD_LOGIC;
+		
+		
+		FlashByte: out std_logic;
+		FlashVpen: out std_logic;
+		FlashCE: out std_logic;
+		FlashOE: out std_logic;
+		FlashWE: out std_logic;
+		FlashRP: out std_logic;
+		FlashAddr: out std_logic_vector(22 downto 0);
+		FlashData: inout std_logic_vector(15 downto 0)
       );
 end vhdcpu410;
 
 architecture BEHAVIORAL of vhdcpu410 is
+    -- add by flash
+    signal working: std_logic := '0';
+    signal flas_state: std_logic_vector(3 downto 0) := "0000";
+    signal addr: std_logic_vector(15 downto 0);
+    signal fenpin: std_logic := '0';
+
    signal wrn                           : STD_LOGIC;
    signal rdn                           : std_logic;
    signal XLXN_2                        : std_logic_vector (15 downto 0);
@@ -146,6 +163,14 @@ architecture BEHAVIORAL of vhdcpu410 is
    signal RAM1_RAM_READ_WRITE : STD_LOGIC_VECTOR(1 downto 0);
    signal RAM1_RAM_OUTPUT : STD_LOGIC_VECTOR(15 downto 0);
    --signal Ram2WE: STD_LOGIC;
+
+  type flash_st_set is (
+    is_flash,
+    is_ram
+  );
+  signal fl_ram_state : flash_st_set := is_flash;
+
+
     type state_set is (
     init,
     writing,
@@ -837,6 +862,13 @@ begin
   RAM1_RAM_READ_WRITE <= XLXN_6;
   XLXN_5 <= RAM1_RAM_OUTPUT;
 
+  -- flash
+  FlashCE <= '0';
+  FlashByte <= '1';
+  FlashVpen <= '0'; 
+  FlashAddr(0) <= '0';
+  FlashAddr(22 downto 17) <= (others => '0');
+
    ram1_process : process(RAM_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA, PC_RST)
     --variable temp:std_logic_vector(15 downto 0);
     begin
@@ -855,174 +887,262 @@ begin
       Ram2OE <= '1';
       Ram2WE <= '1';
       Ram2Data <= (others=>'Z');
+
+      working <= '1';
+      flas_state <= "0000";
+      fl_ram_state <= is_flash;
+
       --Ram1Addr <= (others=>'0');
     elsif (falling_edge(RAM_CLK) and RAM_WORKING_FLAG = '0') then
-      case state is
-        when init =>
-          case RAM1_RAM_ADDR is
-            when COM_DATA_ADDR => --串口读写
-              if RAM1_RAM_READ_WRITE = MEM_WRITE then --串口?
-                state <= uart_writing;
-                Ram1EN <= '1';
-                Ram1OE <= '1';
-                Ram1WE <= '1';
-                rdn <= '1';
-                wrn <= '0';
-                Ram1Data <= RAM1_RAM_DATA;
-              elsif RAM1_RAM_READ_WRITE = MEM_READ then -- 串口?
-                state <= uart_reading;
-                Ram1EN <= '1';
-                Ram1OE <= '1';
-                Ram1WE <= '1';
-                rdn <= '0';
-                wrn <= '1';
-                Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-              end if;
+      case fl_ram_state is
+        when is_ram =>
+          case state is
+            when init =>
+              case RAM1_RAM_ADDR is
+                when COM_DATA_ADDR => --串口读写
+                  if RAM1_RAM_READ_WRITE = MEM_WRITE then --串口?
+                    state <= uart_writing;
+                    Ram1EN <= '1';
+                    Ram1OE <= '1';
+                    Ram1WE <= '1';
+                    rdn <= '1';
+                    wrn <= '0';
+                    Ram1Data <= RAM1_RAM_DATA;
+                  elsif RAM1_RAM_READ_WRITE = MEM_READ then -- 串口?
+                    state <= uart_reading;
+                    Ram1EN <= '1';
+                    Ram1OE <= '1';
+                    Ram1WE <= '1';
+                    rdn <= '0';
+                    wrn <= '1';
+                    Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+                  end if;
+                  
+                when COM_STATUS_ADDR => --串口?             
+                  state <= uart_status;
+                  --temp:= "0000000000000000";
+                  --temp(0) := tsre and tbre;
+                  --temp(1) := data_ready;
+                  RAM1_RAM_OUTPUT <= "00000000000000" & data_ready & (tsre and tbre);
+                  Ram1EN <= '1';
+                  Ram1OE <= '1';
+                  Ram1WE <= '1';
+                  rdn <= '1';
+                  wrn <= '1';
+                  Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+                
+                when others =>
+                  if RAM1_RAM_READ_WRITE = MEM_WRITE then --内存?
+                    state <= writing;
+                    Ram1EN <= '0';
+                    Ram1OE <= '1';
+                    Ram1WE <= '0';
+                    rdn <= '1';
+                    wrn <= '1';
+                    Ram1Data <= RAM1_RAM_DATA;
+                    Ram1Addr <= "00" & RAM1_RAM_ADDR;
+                  elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存?
+                    state <= reading;
+                    Ram1EN <= '0';
+                    Ram1OE <= '0';
+                    Ram1WE <= '1';
+                    rdn <= '1';
+                    wrn <= '1';
+                    Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+                    Ram1Addr <= "00" & RAM1_RAM_ADDR;
+                  else --初始?
+                    state <= init;
+                    RAM1_RAM_OUTPUT <= ZeroWord;
+
+                    Ram1EN <= '1';
+                    Ram1OE <= '1';
+                    Ram1WE <= '1';
+                    rdn <= '1';
+                    wrn <= '1';
+                    --Ram1Data <= (others=>'Z');
+                    --Ram1Addr <= (others=>'0');
+                  end if;
+              end case;
+                
+            when writing =>
+              Ram1WE <= '1';
+              RAM1_RAM_OUTPUT <= "1111111111111111";
+              state <= init;
+
+              Ram1EN <= '1';
+              Ram1OE <= '1';
+              rdn <= '1';
+              wrn <= '1';
+              --Ram1Data <= "ZZZZZZZZZZZZZZZZ";
+            
+            when reading =>
+              Ram1OE <= '1';
+              RAM1_RAM_OUTPUT <= Ram1Data;
+              state <= init;
+
+              Ram1EN <= '1';
+              --Ram1OE <= '1';
+              Ram1WE <= '1';
+              rdn <= '1';
+              wrn <= '1';
+              --Ram1Data <= "ZZZZZZZZZZZZZZZZ";
               
-            when COM_STATUS_ADDR => --串口?             
-              state <= uart_status;
+              
+            when uart_writing =>
+              RAM1_RAM_OUTPUT <= "1111111111111111";
+              wrn <= '1';
+              state <= init;
+            
+              Ram1EN <= '1';
+              Ram1OE <= '1';
+              Ram1WE <= '1';
+              rdn <= '1';
+              --wrn <= '1';
+              --Ram1Data <= (others=>'Z');
+              --Ram1Addr <= (others=>'0');
+            when uart_reading =>
+              RAM1_RAM_OUTPUT <= Ram1Data;
+              rdn <= '1';
+              state <= init;
+              
+              Ram1EN <= '1';
+              Ram1OE <= '1';
+              Ram1WE <= '1';
+              --rdn <= '1';
+              wrn <= '1';
+              --Ram1Data <= (others=>'Z');
+              --Ram1Addr <= (others=>'0');
+            when uart_status =>
+              state <= init;
               --temp:= "0000000000000000";
               --temp(0) := tsre and tbre;
               --temp(1) := data_ready;
               RAM1_RAM_OUTPUT <= "00000000000000" & data_ready & (tsre and tbre);
+              
               Ram1EN <= '1';
               Ram1OE <= '1';
               Ram1WE <= '1';
               rdn <= '1';
               wrn <= '1';
-              Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-            
-            when others =>
-              if RAM1_RAM_READ_WRITE = MEM_WRITE then --内存?
-                state <= writing;
-                Ram1EN <= '0';
-                Ram1OE <= '1';
-                Ram1WE <= '0';
-                rdn <= '1';
-                wrn <= '1';
-                Ram1Data <= RAM1_RAM_DATA;
-                Ram1Addr <= "00" & RAM1_RAM_ADDR;
-              elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存?
-                state <= reading;
-                Ram1EN <= '0';
-                Ram1OE <= '0';
-                Ram1WE <= '1';
-                rdn <= '1';
-                wrn <= '1';
-                Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-                Ram1Addr <= "00" & RAM1_RAM_ADDR;
-              else --初始?
-                state <= init;
-                RAM1_RAM_OUTPUT <= ZeroWord;
-
-                Ram1EN <= '1';
-                Ram1OE <= '1';
-                Ram1WE <= '1';
-                rdn <= '1';
-                wrn <= '1';
-                --Ram1Data <= (others=>'Z');
-                --Ram1Addr <= (others=>'0');
-              end if;
+              --Ram1Data <= (others=>'Z');
+              --Ram1Addr <= (others=>'0');
           end case;
+
+          Ram2EN <= '0';
+          case ram2_state is
+            when init =>
+              if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存?
+                ram2_state <= writing;
+                Ram2OE <= '1';
+                Ram2WE <= '0';
+                Ram2Data <= RAM2_RAM_DATA;
+                Ram2Addr <= "00" & RAM2_RAM_ADDR;
+              elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存?
+                ram2_state <= reading;
+                --Ram2EN <= '0';
+                Ram2OE <= '0';
+                Ram2WE <= '1';
+                Ram2Data <= "ZZZZZZZZZZZZZZZZ";
+                Ram2Addr <= "00" & RAM2_RAM_ADDR;
+              end if;
+                
+            when writing =>
+              Ram2WE <= '1';
+              --Ram2EN <= '1';
+              Ram2OE <= '1';
+              --Ram2Data <= (others=>('Z'));
+              RAM2_RAM_OUTPUT <= "1111111111111111";
+              ram2_state <= init;
             
-        when writing =>
-          Ram1WE <= '1';
-          RAM1_RAM_OUTPUT <= "1111111111111111";
-          state <= init;
-
-          Ram1EN <= '1';
-          Ram1OE <= '1';
-          rdn <= '1';
-          wrn <= '1';
-          --Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-        
-        when reading =>
-          Ram1OE <= '1';
-          RAM1_RAM_OUTPUT <= Ram1Data;
-          state <= init;
-
-          Ram1EN <= '1';
-          --Ram1OE <= '1';
-          Ram1WE <= '1';
-          rdn <= '1';
-          wrn <= '1';
-          --Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-          
-          
-        when uart_writing =>
-          RAM1_RAM_OUTPUT <= "1111111111111111";
-          wrn <= '1';
-          state <= init;
-        
-          Ram1EN <= '1';
-          Ram1OE <= '1';
-          Ram1WE <= '1';
-          rdn <= '1';
-          --wrn <= '1';
-          --Ram1Data <= (others=>'Z');
-          --Ram1Addr <= (others=>'0');
-        when uart_reading =>
-          RAM1_RAM_OUTPUT <= Ram1Data;
-          rdn <= '1';
-          state <= init;
-          
-          Ram1EN <= '1';
-          Ram1OE <= '1';
-          Ram1WE <= '1';
-          --rdn <= '1';
-          wrn <= '1';
-          --Ram1Data <= (others=>'Z');
-          --Ram1Addr <= (others=>'0');
-        when uart_status =>
-          state <= init;
-          --temp:= "0000000000000000";
-          --temp(0) := tsre and tbre;
-          --temp(1) := data_ready;
-          RAM1_RAM_OUTPUT <= "00000000000000" & data_ready & (tsre and tbre);
-          
-          Ram1EN <= '1';
-          Ram1OE <= '1';
-          Ram1WE <= '1';
-          rdn <= '1';
-          wrn <= '1';
-          --Ram1Data <= (others=>'Z');
-          --Ram1Addr <= (others=>'0');
-      end case;
-
-      Ram2EN <= '0';
-      case ram2_state is
-        when init =>
-          if RAM2_RAM_READ_WRITE = MEM_WRITE then --内存?
-            ram2_state <= writing;
-            Ram2OE <= '1';
-            Ram2WE <= '0';
-            Ram2Data <= RAM2_RAM_DATA;
-            Ram2Addr <= "00" & RAM2_RAM_ADDR;
-          elsif RAM2_RAM_READ_WRITE = MEM_READ then --内存?
-            ram2_state <= reading;
-            --Ram2EN <= '0';
-            Ram2OE <= '0';
-            Ram2WE <= '1';
-            Ram2Data <= "ZZZZZZZZZZZZZZZZ";
-            Ram2Addr <= "00" & RAM2_RAM_ADDR;
+            when reading =>
+              Ram2OE <= '1';
+              Ram2WE <= '1';
+              --Ram2EN <= '1';
+              --Ram2Data <= (others =>('Z'));
+              RAM2_RAM_OUTPUT <= Ram2Data;
+              ram2_state <= init;   
+          end case;
+        when is_flash =>
+          if fenpin = '0' then
+            fenpin <= '1';
+            if working = '1' then
+              case flas_state is
+                when "0000" =>  --0
+                  Ram2OE <= '1';
+                  Ram2WE <= '1';
+                  Ram1OE <= '1';
+                  Ram1WE <= '1';
+                  FlashRP <= '1';
+                  Ram2EN <= '0';
+                  Ram1EN <= '0';
+                  addr <= (others => '0');
+                  flas_state <= "0001";
+                when "0001" =>  --1
+                  FlashWE <= '0';
+                  FlashData <= "0000000011111111";
+                  flas_state <= "1110";
+                when "1110" => --14
+                  flas_state <= "0010";
+                when "0010" =>  --2
+                  FlashWE <= '1';
+                  FlashOE <= '0';
+                  FlashAddr(16 downto 1) <= addr;
+                  FlashData <= (others => 'Z');
+                  -- FlashData <= addr;
+                  flas_state <= "1001"; 
+                when "1001" =>   --9
+                  flas_state <= "1010"; 
+                when "1010" => --10
+                  flas_state <= "1100";
+                when "1100" => -- 12
+                  flas_state <= "1101";
+                when "1101" => -- 13
+                  flas_state <= "0011";
+                when "0011" =>  -- 3
+                  Ram2Addr <= "00" & addr;
+                  Ram2Data <= FlashData;
+                  Ram1Addr <= "00" & addr;
+                  Ram1Data <= FlashData;
+                  flas_state <= "0100";
+                when "0100" =>  --4
+                  Ram2WE <= '0';
+                  Ram1WE <= '0';
+                  flas_state <= "1011";
+                when "1011" =>  -- 11
+                  flas_state <= "0101";
+                when "0101" =>  --5
+                  Ram2WE <= '1';
+                  Ram1WE <= '1';
+                  addr <= addr + 1;
+                  -- if addr >= "0000000111111111" then
+                  if addr >= "0000001100000000" then
+                    flas_state <= "1000";
+                  else
+                    flas_state <= "0001";
+                  end if;
+                when "1000" => -- 8 finished
+                  FlashRP <= '0';
+                  FlashOE <= '1';
+                  FlashWE <= '1';
+                  Ram2OE <= '1';
+                  Ram2WE <= '1';
+                  Ram2EN <= '1';
+                  Ram1OE <= '1';
+                  Ram1WE <= '1';
+                  Ram1EN <= '1';
+                  flas_state <= "1111";
+                when "1111" => --15
+                  -- die flas_state        
+                  working <= '0';
+                when others =>
+                  flas_state <= "0000";
+              end case;
+            else
+              fl_ram_state <= is_ram;
+            end if; 
+          else
+            fenpin <= '0';
           end if;
-            
-        when writing =>
-          Ram2WE <= '1';
-          --Ram2EN <= '1';
-          Ram2OE <= '1';
-          --Ram2Data <= (others=>('Z'));
-          RAM2_RAM_OUTPUT <= "1111111111111111";
-          ram2_state <= init;
-        
-        when reading =>
-          Ram2OE <= '1';
-          Ram2WE <= '1';
-          --Ram2EN <= '1';
-          --Ram2Data <= (others =>('Z'));
-          RAM2_RAM_OUTPUT <= Ram2Data;
-          ram2_state <= init;
-          
       end case;
     end if;
   end process;
