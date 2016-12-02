@@ -57,7 +57,10 @@ entity vhdcpu410 is
       VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
       VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
       VGA_HS : out  STD_LOGIC;
-      VGA_VS : out  STD_LOGIC
+      VGA_VS : out  STD_LOGIC;
+      
+      ps2clk: in std_logic;
+      ps2data: in std_logic
       );
 end vhdcpu410;
 
@@ -519,7 +522,22 @@ architecture BEHAVIORAL of vhdcpu410 is
          VGA_input : in char_index_type);
     end component;
 
+    component keyboard_adapter
+      Port(
+        rdn: in std_logic;
+        clk50M: in std_logic;
+
+        ps2clk: in std_logic;
+        ps2data: in std_logic;
+
+        data_ready: out std_logic;
+        data: out std_logic_vector(15 downto 0));
+    end component;
+    signal keyboard_data_ready: std_logic;
+    signal keyboard_data: std_logic_vector(15 downto 0) ;
+    signal keyboard_rdn: std_logic;
 begin
+
 	--dsp1: decoder port map (
 	-- data => XLXN_18(7 downto 4),
 	--  res => DYP0
@@ -545,6 +563,15 @@ begin
 	--L(8) <= XLXN_18(9);
 	----L(14 downto 8) <= XLXN_63(6 downto 0);
 	--L(7 downto 0) <= XLXN_63(7 downto 0);
+  KeyboardAdapter: keyboard_adapter
+      port map (rdn <= keyboard_rdn,
+        clk50M <= clk,
+
+        ps2clk <= ps2clk,
+        ps2data <= ps2data,
+
+        data_ready <= keyboard_data_ready,
+        data <= keyboard_data);
 
    IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
@@ -878,7 +905,7 @@ begin
                 Ram1EN <= '1';
                 Ram1OE <= '1';
                 Ram1WE <= '1';
-                rdn <= '0';
+                keyboard_data_ready <= '0';
                 wrn <= '1';
                 Ram1Data <= "ZZZZZZZZZZZZZZZZ";
               end if;
@@ -972,8 +999,9 @@ begin
           --Ram1Data <= (others=>'Z');
           --Ram1Addr <= (others=>'0');
         when uart_reading =>
-          RAM1_RAM_OUTPUT <= Ram1Data;
-          rdn <= '1';
+          --RAM1_RAM_OUTPUT <= Ram1Data;
+          RAM1_RAM_OUTPUT <= keyboard_data;
+          keyboard_rdn <= '1';
           state <= init;
           
           Ram1EN <= '1';

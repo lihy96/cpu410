@@ -133,3 +133,29 @@ NET "VGA_B[2]" LOC = B6;
 NET "VGA_B[1]" LOC = A6;
 NET "VGA_B[0]" LOC = D5;
 
+NET "ps2clk" LOC = U6;
+NET "ps2data" LOC = V6;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
