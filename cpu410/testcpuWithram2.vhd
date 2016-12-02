@@ -72,7 +72,7 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
    signal clk : std_logic := '0';
    signal tbre : std_logic := '1';
    signal tsre : std_logic := '1';
-   signal data_ready : std_logic := '0';
+   signal data_ready : std_logic := '1';
    signal PC_RST : std_logic := '1';
 
 	--BiDirs
@@ -95,8 +95,9 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
    signal L : std_logic_vector(15 downto 0);
 
   type RAM_type is array(4095 downto 0) of std_logic_vector(15 downto 0) ;
+  type HUGE_RAM_TYPE is array (20480 downto 0) of std_logic_vector(15 downto 0) ;
   signal ram1: RAM_type := (others => x"0000");
-  signal ram2: RAM_type := (
+  signal ram2: HUGE_RAM_TYPE := (
         --0 => x"6b20", -- LI R3 0020
         --1 => x"6920", -- LI R1 0020
         --2 => x"db20", -- SW R3 R1 0000
@@ -655,6 +656,55 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         16#0215# => x"de20", -- SW R6 R1 0000
         16#0216# => x"168a", -- B fe8a
         16#0217# => x"0800", -- NOP
+
+        -- fib 18
+        --16#4000# => x"6901", -- LI R1 0001
+        --16#4001# => x"6a01", -- LI R2 0001
+        --16#4002# => x"6b85", -- LI R3 0085
+        --16#4003# => x"3360", -- SLL R3 R3 0000
+        --16#4004# => x"6c09", -- LI R4 0009
+        --16#4005# => x"db20", -- SW R3 R1 0000
+        --16#4006# => x"db41", -- SW R3 R2 0001
+        --16#4007# => x"9b20", -- LW R3 R1 0000
+        --16#4008# => x"9b41", -- LW R3 R2 0001
+        --16#4009# => x"e145", -- ADDU R1 R2 R1
+        --16#400a# => x"e149", -- ADDU R1 R2 R2
+        --16#400b# => x"4b02", -- ADDIU R3 0002
+        --16#400c# => x"4cff", -- ADDIU R4 ffff
+        --16#400d# => x"2cf7", -- BNEZ R4 fff7
+        --16#400e# => x"0800", -- NOP
+        --16#400f# => x"ef00", -- JR R7
+        --16#4010# => x"0800", -- NOP
+
+        --preformance
+        16#4000# => x"6dff", -- LI R5 00ff
+        16#4001# => x"0800", -- NOP
+        16#4002# => x"0800", -- NOP
+        16#4003# => x"0800", -- NOP
+        16#4004# => x"35a0", -- SLL R5 R5 0000
+        16#4005# => x"0800", -- NOP
+        16#4006# => x"0800", -- NOP
+        16#4007# => x"0800", -- NOP
+        16#4008# => x"4d82", -- ADDIU R5 ff82
+        16#4009# => x"6c60", -- LI R4 0060
+        16#400a# => x"0800", -- NOP
+        16#400b# => x"0800", -- NOP
+        16#400c# => x"0800", -- NOP
+        16#400d# => x"4c01", -- ADDIU R4 0001
+        16#400e# => x"6800", -- LI R0 0000
+        16#400f# => x"6901", -- LI R1 0001
+        16#4010# => x"6a02", -- LI R2 0002
+        16#4011# => x"2cfb", -- BNEZ R4 fffb
+        16#4012# => x"0800", -- NOP
+        16#4013# => x"4d01", -- ADDIU R5 0001
+        16#4014# => x"0800", -- NOP
+        16#4015# => x"0800", -- NOP
+        16#4016# => x"0800", -- NOP
+        16#4017# => x"2df1", -- BNEZ R5 fff1
+        16#4018# => x"0800", -- NOP
+        16#4019# => x"ef00", -- JR R7
+        16#401a# => x"0800", -- NOP
+
         others => x"0000");
         --0 => x"6b20", -- LI R3 0020
         --1 => x"6920", -- LI R1 0020
@@ -681,9 +731,10 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
         --others => ZeroWord);
 
    -- Clock period definitions
-   constant clk_period : time := 20 ns;
+   constant clk_period : time := 2 ps;
    type cmd_typs is array(0 to 20) of std_logic_vector(15 downto 0) ;
-   constant cmds: cmd_typs := (0=>x"0052", 
+   constant cmds: cmd_typs := (0=>x"0047", 
+    1=>x"0000", 2=>x"0040",
     --0=> x"0055", 1=> x"0000", 2=> x"0040", 3=>x"0002", 4=>x"0000",
 	 -- 1 => x"0000", 2 => x"0040", 3 => x"00ff", 4 => x"0068", -- 4000: LI R0 ff
     --5 => x"0001", 6 => x"0040", 7 => x"00fe", 8 => x"0068", -- 4001: LI R0 FE
@@ -691,7 +742,7 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
     --9 => x"0000", 10=> x"0000", 
 	 --11=> x"0055", 12=> x"0000", 13=> x"0040", 14=>x"0002", 15=>x"0000",-- U 4000 0002
     --7 => x"0055", 8 => x"0000", 9 => x"0040", 10=>x"0002", 11=>x"0000",    
-   others=>"0000100000000000");
+   others=>"0000000000000000");
    signal index: integer:= 0;
    signal state: std_logic := '0';
    signal state2: std_logic := '0';
@@ -774,9 +825,9 @@ BEGIN
         if Ram2EN = '0' then
           --state2 <= '1';
           if Ram2OE = '0' then 
-            Ram2Data <= ram2(conv_integer(Ram2Addr(11 downto 0)));
+            Ram2Data <= ram2(conv_integer(Ram2Addr(14 downto 0)));
           elsif Ram2WE = '0' then
-            ram2(conv_integer(Ram2Addr(11 downto 0))) <= Ram2Data;
+            ram2(conv_integer(Ram2Addr(14 downto 0))) <= Ram2Data;
           end if;
         end if;
       --when others =>
