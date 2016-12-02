@@ -135,14 +135,14 @@ begin
 				reg2 <= IMG_REG;
 			when OP_IH =>
 				reg0 <= IMG_REG;
-				reg2 <= IMG_REG;
+				reg1 <= IMG_REG;
 				case instr(7 downto 0) is
 					when IH_MFIH =>
 						reg2 <= IH_REG;
 					when IH_MTIH =>
 						reg2 <= '0' & instr(10 downto 8);
 					when others =>
-						reg1 <= IMG_REG;
+						reg2 <= IMG_REG;
 				end case ;
 			--when OP_B | OP_NOP | LI =>-- DO NOTHING
 			when others =>

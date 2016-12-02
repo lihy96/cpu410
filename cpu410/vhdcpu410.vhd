@@ -45,9 +45,9 @@ entity vhdcpu410 is
       Ram2WE: out std_logic;
       Ram2Addr: out std_logic_vector(17 downto 0);
       Ram2Data : inout std_logic_vector(15 downto 0);
-      DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
-      DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
-      L: out std_logic_vector(15 downto 0);
+      --DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
+      --DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
+      --L: out std_logic_vector(15 downto 0);
       PC_RST : in std_logic
       );
 end vhdcpu410;
@@ -490,22 +490,22 @@ architecture BEHAVIORAL of vhdcpu410 is
              half_clk    : out   std_logic;
              quarter_clk : out   std_logic);
    end component;
-   component decoder
-     port(
-       data: in std_logic_vector(3 downto 0);
-       res: out std_logic_vector(6 downto 0) 
-       );
-   end component;
+   --component decoder
+   --  port(
+   --    data: in std_logic_vector(3 downto 0);
+   --    res: out std_logic_vector(6 downto 0) 
+   --    );
+   --end component;
 
 begin
-	dsp1: decoder port map (
-	 data => XLXN_18(7 downto 4),
-	  res => DYP0
-	);
-	dsp0: decoder port map (
-	  data => XLXN_18(3 downto 0),
-	  res => DYP1
-	);
+	--dsp1: decoder port map (
+	-- data => XLXN_18(7 downto 4),
+	--  res => DYP0
+	--);
+	--dsp0: decoder port map (
+	--  data => XLXN_18(3 downto 0),
+	--  res => DYP1
+	--);
 
 	--L(13 downto 0) <= RAM2_RAM_OUTPUT(15 downto 2);
 	--L(15) <= XLXN_18(8);
@@ -513,16 +513,16 @@ begin
    outrdn <= rdn;
    outwrn <= wrn;
 
-   L(15) <= data_ready;
-   L(14) <= tbre;
-   L(13) <= tsre;
-   L(12) <= rdn;
-   L(11) <= wrn;
-	L(10) <= '0';
-   L(9) <= XLXN_18(8);
-	L(8) <= XLXN_18(9);
-	--L(14 downto 8) <= XLXN_63(6 downto 0);
-	L(7 downto 0) <= XLXN_63(7 downto 0);
+ --  L(15) <= data_ready;
+ --  L(14) <= tbre;
+ --  L(13) <= tsre;
+ --  L(12) <= rdn;
+ --  L(11) <= wrn;
+	--L(10) <= '0';
+ --  L(9) <= XLXN_18(8);
+	--L(8) <= XLXN_18(9);
+	----L(14 downto 8) <= XLXN_63(6 downto 0);
+	--L(7 downto 0) <= XLXN_63(7 downto 0);
 
    IfIdLatch : if_id_latch
       port map (clk=>XLXN_102,
