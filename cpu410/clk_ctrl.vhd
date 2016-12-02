@@ -36,22 +36,43 @@ entity clk_ctrl is
 	port(
 		clk : in STD_LOGIC;
 		origin_clk : out STD_LOGIC;
-		half_clk : out STD_LOGIC;
-		quarter_clk : out STD_LOGIC
+		half_clk : out STD_LOGIC
+		--quarter_clk : out STD_LOGIC
 	);
 end clk_ctrl;
 
 architecture Behavioral of clk_ctrl is
 signal count : STD_LOGIC_VECTOR(10 downto 0) := (others=>'1');
 signal adder : STD_LOGIC_VECTOR(10 downto 0) := (0=>'1',others=>'0');
+--signal twice_clk : STD_LOGIC;
+--signal gen_rst : STD_LOGIC := '0';
+--component gen_dcm_sp
+--	port ( CLKIN_IN        : in    std_logic; 
+--		 RST_IN          : in    std_logic; 
+--		 CLKIN_IBUFG_OUT : out   std_logic; 
+--		 CLK0_OUT        : out   std_logic; 
+--		 CLK2X_OUT       : out   std_logic; 
+--		 LOCKED_OUT      : out   std_logic);
+--end component;
+
 begin
 	adder <= (0=>'1',others=>'0');
+	--clk_gen : gen_dcm_sp
+	--port map (
+	--		CLKIN_IN=>clk, 
+	--	 RST_IN=>gen_rst, 
+	--	 CLKIN_IBUFG_OUT=>open, 
+	--	 CLK0_OUT=>open, 
+	--	 CLK2X_OUT=>twice_clk, 
+	--	 LOCKED_OUT=>open);
+	
 	process(clk,count)
 	begin
 		if(rising_edge(clk)) then
-			count <= count + adder;		
+			count <= count + adder;	
+			--gen_rst <= '0';
 		end if;
-		quarter_clk <= not count(1);
+		--quarter_clk <= not count(1);
 		half_clk <= not count(0);
 		origin_clk <= clk;
 	end process;

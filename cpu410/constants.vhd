@@ -256,6 +256,8 @@ package constants is
 	-- for VGA
 	type char_index_type is array(2399 downto 0) of STD_LOGIC_VECTOR(4 downto 0);
 
+	constant VGA_BEGIN_ADDR : STD_LOGIC_VECTOR(15 downto 0) := "1100000000000000"; --C000
+
 end package;
 
 

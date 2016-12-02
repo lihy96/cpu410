@@ -22,6 +22,8 @@
 library ieee;
 use ieee.std_logic_1164.ALL;
 use ieee.numeric_std.ALL;
+USE IEEE.std_logic_unsigned.all;
+USE IEEE.std_logic_arith.all;
 use work.constants.all;
 --library UNISIM;
 --use UNISIM.Vcomponents.ALL;
@@ -170,7 +172,7 @@ architecture BEHAVIORAL of vhdcpu410 is
 
     signal RAM_WORKING_FLAG : STD_LOGIC := '1';
 
-    signal VGA_TEST : char_index_type := (others=>"00100");
+    signal VGA_TEST : char_index_type := (others=>"00000");
 
    component if_id_latch
       port ( clk          : in    std_logic; 
@@ -496,8 +498,8 @@ architecture BEHAVIORAL of vhdcpu410 is
    component clk_ctrl
       port ( clk         : in    std_logic;
              origin_clk  : out   std_logic;
-             half_clk    : out   std_logic;
-             quarter_clk : out   std_logic);
+             half_clk    : out   std_logic);
+             --quarter_clk : out   std_logic);
    end component;
    --component decoder
    --  port(
@@ -810,8 +812,8 @@ begin
    ClkCtrl : clk_ctrl
       port map (clk=>clk,
                 half_clk=>XLXN_102,
-                origin_clk=>XLXN_101,
-                quarter_clk=>open);
+                origin_clk=>XLXN_101);
+                --quarter_clk=>open);
 
     VGACtrl : vga
       port map ( CLK=>clk,
@@ -839,6 +841,8 @@ begin
 
    ram1_process : process(RAM_CLK,RAM1_RAM_READ_WRITE,RAM1_RAM_ADDR,RAM1_RAM_DATA, PC_RST)
     --variable temp:std_logic_vector(15 downto 0);
+    variable VGA_offset_vector : STD_LOGIC_VECTOR(15 downto 0) := (others=>'0');
+    variable VGA_offset_integer : integer range 0 to 2399 := 0;
     begin
     if (PC_RST = '0') then
       state <= init;
@@ -902,6 +906,12 @@ begin
                 wrn <= '1';
                 Ram1Data <= RAM1_RAM_DATA;
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
+                
+                if RAM1_RAM_ADDR >= VGA_BEGIN_ADDR and RAM1_RAM_ADDR < VGA_BEGIN_ADDR + "0000100101100000" then --2400
+                  VGA_offset_vector := RAM1_RAM_ADDR - VGA_BEGIN_ADDR;
+                  VGA_offset_integer := conv_integer(VGA_offset_vector);
+                  VGA_TEST(VGA_offset_integer) <= RAM1_RAM_DATA(4 downto 0);
+                end if;
               elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存?
                 state <= reading;
                 Ram1EN <= '0';
