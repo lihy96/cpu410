@@ -61,9 +61,9 @@ ARCHITECTURE behavior OF testcpuWithram2 IS
          Ram2WE : OUT  std_logic;
          Ram2Addr : OUT  std_logic_vector(17 downto 0);
          Ram2Data : INOUT  std_logic_vector(15 downto 0);
-         DYP0 : OUT  std_logic_vector(6 downto 0);
-         DYP1 : OUT  std_logic_vector(6 downto 0);
-         L : OUT  std_logic_vector(15 downto 0);
+         --DYP0 : OUT  std_logic_vector(6 downto 0);
+         --DYP1 : OUT  std_logic_vector(6 downto 0);
+         --L : OUT  std_logic_vector(15 downto 0);
          PC_RST : IN  std_logic
         );
     END COMPONENT;
@@ -791,9 +791,9 @@ BEGIN
           Ram2WE => Ram2WE,
           Ram2Addr => Ram2Addr,
           Ram2Data => Ram2Data,
-          DYP0 => DYP0,
-          DYP1 => DYP1,
-          L => L,
+          --DYP0 => DYP0,
+          --DYP1 => DYP1,
+          --L => L,
           PC_RST => PC_RST
         );
 

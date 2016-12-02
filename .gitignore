@@ -14,4 +14,4 @@ flash.ucf
 !cpu410/*.sch
 !cpu410/*.ucf
 !cpu410/python_code/
-!cpu410/ipcore_dir/gen_dcm_sp.vhd
+!cpu410/ipcore_dir/*.vhd

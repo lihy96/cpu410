@@ -895,7 +895,7 @@ begin
               rdn <= '1';
               wrn <= '1';
               Ram1Data <= "ZZZZZZZZZZZZZZZZ";
-            
+
             when others =>
               if RAM1_RAM_READ_WRITE = MEM_WRITE then --内存?
                 state <= writing;
@@ -907,11 +907,11 @@ begin
                 Ram1Data <= RAM1_RAM_DATA;
                 Ram1Addr <= "00" & RAM1_RAM_ADDR;
                 
-                if RAM1_RAM_ADDR >= VGA_BEGIN_ADDR and RAM1_RAM_ADDR < VGA_BEGIN_ADDR + "0000100101100000" then --2400
-                  VGA_offset_vector := RAM1_RAM_ADDR - VGA_BEGIN_ADDR;
-                  VGA_offset_integer := conv_integer(VGA_offset_vector);
-                  VGA_TEST(VGA_offset_integer) <= RAM1_RAM_DATA(4 downto 0);
-                end if;
+                --if RAM1_RAM_ADDR >= VGA_BEGIN_ADDR and RAM1_RAM_ADDR < VGA_BEGIN_ADDR + "0000100101100000" then --2400
+                --  VGA_offset_vector := RAM1_RAM_ADDR - VGA_BEGIN_ADDR;
+                --  VGA_offset_integer := conv_integer(VGA_offset_vector);
+                --  VGA_TEST(VGA_offset_integer) <= RAM1_RAM_DATA(4 downto 0);
+                --end if;
               elsif RAM1_RAM_READ_WRITE = MEM_READ then --内存?
                 state <= reading;
                 Ram1EN <= '0';
